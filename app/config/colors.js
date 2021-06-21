@@ -1,0 +1,15 @@
+export default {
+	blue: "#3c5e99",
+	lightBlue: "#9daecc",
+	blueTransparent: "#3c5e9970",
+	positiveText: "#828282",
+	negativeText: "#5b5b5b",
+	whiteGray: "#cfcfcf",
+	white: "#ffffff",
+	whiteTransparent: "#ffffffcc",
+	black: "#000000",
+	disabled: "#333333",
+	red: "#dc0000",
+	gradientGreen: "#2b5d99",
+	gradientBlue: "#9ad6ab",
+};
