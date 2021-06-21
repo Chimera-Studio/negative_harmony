@@ -13,4 +13,4 @@ web-build/
 .DS_Store
 
 # sensitive info
-# app.json
+app.json
