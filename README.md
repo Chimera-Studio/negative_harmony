@@ -31,6 +31,7 @@ The second-page "Chords" is made available after selecting the key and scale on 
 -   [Boris Vida - Assets Designer](behance.net/lemondesignuk)
 
 [More by Chimera Studio](https://linktr.ee/chimerastudiotm)
+
 [Privacy Policy](https://sites.google.com/view/chimerastudio/home)
 
 ###### Copyright
