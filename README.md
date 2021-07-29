@@ -24,6 +24,15 @@ The first page "Scales" gives the option of selecting a scale or mode and then t
 
 The second-page "Chords" is made available after selecting the key and scale on the first page. Here the user is able to choose the desired chord type (major, minor, suspended, augmented...) and select the note from the chosen scale/mode which will then display the name of the selected chord, the notes inside the chord as well as the negative harmony chord name with the notes inside the "negative" chord. Chord notes displayed RED are non-diatonic (any notes or chords that are not native to the key).
 
+### New features and updates
+
+-   [ ] More chords
+-   [ ] Guitar chord diagrams
+-   [ ] Play sound examples
+-   [ ] Chord sequences
+-   [ ] Save favourite configurations
+-   [ ] Import and export MIDI
+
 ## The Chimera Team
 
 -   [Dario Dumlijan - Developer](https://linktr.ee/DarioDumlijan)
