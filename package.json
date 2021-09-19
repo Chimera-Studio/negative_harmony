@@ -8,26 +8,26 @@
     "eject": "expo eject"
   },
   "dependencies": {
-    "@react-native-async-storage/async-storage": "^1.13.0",
-    "expo": "~41.0.1",
-    "expo-ads-admob": "~10.0.4",
+    "@react-native-async-storage/async-storage": "~1.15.0",
+    "expo": "^42.0.0",
+    "expo-ads-admob": "~10.1.2",
     "expo-app-loading": "^1.0.3",
     "expo-blur": "~9.0.3",
-    "expo-font": "~9.1.0",
-    "expo-linear-gradient": "~9.1.0",
-    "expo-linking": "~2.2.3",
+    "expo-font": "~9.2.1",
+    "expo-linear-gradient": "~9.2.0",
+    "expo-linking": "~2.3.1",
     "expo-status-bar": "~1.0.4",
-    "expo-store-review": "~4.0.2",
-    "expo-tracking-transparency": "~1.0.1",
+    "expo-store-review": "~4.1.0",
+    "expo-tracking-transparency": "~1.1.2",
     "react": "16.13.1",
     "react-dom": "16.13.1",
-    "react-native": "https://github.com/expo/react-native/archive/sdk-41.0.0.tar.gz",
-    "react-native-svg": "12.1.0",
+    "react-native": "https://github.com/expo/react-native/archive/sdk-42.0.0.tar.gz",
+    "react-native-svg": "12.1.1",
     "react-native-svg-transformer": "^0.14.3",
     "react-native-web": "~0.13.12"
   },
   "devDependencies": {
-    "@babel/core": "^7.9.0"
+    "@babel/core": "~7.9.0"
   },
   "private": true
 }
