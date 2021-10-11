@@ -13,6 +13,7 @@
     "expo-ads-admob": "~10.1.2",
     "expo-app-loading": "^1.0.3",
     "expo-blur": "~9.0.3",
+    "expo-device": "~3.3.0",
     "expo-font": "~9.2.1",
     "expo-linear-gradient": "~9.2.0",
     "expo-linking": "~2.3.1",
@@ -24,8 +25,7 @@
     "react-native": "https://github.com/expo/react-native/archive/sdk-42.0.0.tar.gz",
     "react-native-svg": "12.1.1",
     "react-native-svg-transformer": "^0.14.3",
-    "react-native-web": "~0.13.12",
-    "expo-device": "~3.3.0"
+    "react-native-web": "~0.13.12"
   },
   "devDependencies": {
     "@babel/core": "~7.9.0"
