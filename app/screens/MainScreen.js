@@ -28,6 +28,7 @@ import {
   requestPermissionsAsync,
   getPermissionsAsync,
 } from "expo-ads-admob";
+import * as Device from "expo-device";
 import * as StoreReview from "expo-store-review";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -65,10 +66,20 @@ var negativeTonic;
 var negativeChordVal;
 
 var visibleScales = false;
-var chordsUnlocked = false;
+var chordsUnlocked = true;
 var personalisedAds = false;
 
-var scaleList = [
+const emulator = Device.isDevice;
+const admob_ios = {
+  banner: emulator ? admob.banner.ios : admob.banner.ios_test,
+  rewarded: emulator ? admob.rewarded.ios : admob.rewarded.ios_test,
+};
+const admob_android = {
+  banner: emulator ? admob.banner.android : admob.banner.android_test,
+  rewarded: emulator ? admob.rewarded.android : admob.rewarded.android_test,
+};
+
+const scaleList = [
   { name: "Major", value: "major" },
   { name: "Natural Minor", value: "naturalMinor" },
   { name: "Harmonic Minor", value: "harmonicMinor" },
@@ -86,7 +97,7 @@ var scaleList = [
   { name: "Locrian", value: "locrian" },
 ];
 
-var chordList = [
+const chordList = [
   { name: "Major", value: "major" },
   { name: "Minor", value: "minor" },
   { name: "Major 7", value: "major7" },
@@ -100,7 +111,7 @@ var chordList = [
   { name: "Augmented", value: "aug" },
 ];
 
-var musicScale = [
+const musicScale = [
   "C",
   "C♯ D♭",
   "D",
@@ -125,117 +136,117 @@ var positiveScaleTonics = [];
 var positiveChord = [];
 var negativeChord = [];
 
-var majorScale = [0, 2, 4, 5, 7, 9, 11, 0];
+const majorScale = [0, 2, 4, 5, 7, 9, 11, 0];
 /* majorScale Pattern: R + 2 + 2 + 1 + 2 + 2 + 2 + R */
 
-var naturalMinorScale = [0, 2, 3, 5, 7, 8, 10, 0];
+const naturalMinorScale = [0, 2, 3, 5, 7, 8, 10, 0];
 /* naturalMinorScale Pattern: R + 2 + 1 + 2 + 2 + 1 + 2 + R */
 
-var harmonicMinorScale = [0, 2, 3, 5, 7, 8, 11, 0];
+const harmonicMinorScale = [0, 2, 3, 5, 7, 8, 11, 0];
 /* harmonicMinorScale Pattern: R + 2 + 1 + 2 + 2 + 1 + 3 + R */
 
-var melodicMinorScale = [0, 2, 3, 5, 7, 9, 11, 0];
+const melodicMinorScale = [0, 2, 3, 5, 7, 9, 11, 0];
 /* melodicMinorScale Pattern: R + 2 + 1 + 2 + 2 + 2 + 2 + R */
 
-var chromaticScale = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 0];
+const chromaticScale = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 0];
 /* chromaticScale Pattern: R + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + R */
 
-var wholeToneScale = [0, 2, 4, 6, 8, 10, 0];
+const wholeToneScale = [0, 2, 4, 6, 8, 10, 0];
 /* wholeToneScale Pattern: R + 2 + 2 + 2 + 2 + 2 + R */
 
-var majorPentatonicScale = [0, 2, 4, 7, 9, 0];
+const majorPentatonicScale = [0, 2, 4, 7, 9, 0];
 /* majorPentatonicScale Pattern: R + 2 + 2 + 3 + 2 + R */
 
-var minorPentatonicScale = [0, 3, 5, 7, 10, 0];
+const minorPentatonicScale = [0, 3, 5, 7, 10, 0];
 /* minorPentatonicScale Pattern: R + 3 + 2 + 2 + 3 + R */
 
-var ionianScale = [0, 2, 4, 5, 7, 9, 11, 0];
+const ionianScale = [0, 2, 4, 5, 7, 9, 11, 0];
 /* ionianScale Pattern: R + 2 + 2 + 1 + 2 + 2 + 2 + R */
 
-var dorianScale = [0, 2, 3, 5, 7, 9, 10, 0];
+const dorianScale = [0, 2, 3, 5, 7, 9, 10, 0];
 /* dorianScale Pattern: R + 2 + 1 + 2 + 2 + 2 + 1 + R */
 
-var phrygianScale = [0, 1, 3, 5, 7, 8, 10, 0];
+const phrygianScale = [0, 1, 3, 5, 7, 8, 10, 0];
 /* phrygianScale Pattern: R + 1 + 2 + 2 + 2 + 1 + 2 + R */
 
-var lydianScale = [0, 2, 4, 6, 7, 9, 11, 0];
+const lydianScale = [0, 2, 4, 6, 7, 9, 11, 0];
 /* lydianScale Pattern: R + 2 + 2 + 2 + 1 + 2 + 2 + R */
 
-var mixolydianScale = [0, 2, 4, 5, 7, 9, 10, 0];
+const mixolydianScale = [0, 2, 4, 5, 7, 9, 10, 0];
 /* mixolydianScale Pattern: R + 2 + 2 + 1 + 2 + 2 + 1 + R */
 
-var aeolianScale = [0, 2, 3, 5, 7, 8, 10, 0];
+const aeolianScale = [0, 2, 3, 5, 7, 8, 10, 0];
 /* aeolianScale Pattern: R + 2 + 1 + 2 + 2 + 1 + 2 + R */
 
-var locrianScale = [0, 1, 3, 5, 6, 8, 10, 0];
+const locrianScale = [0, 1, 3, 5, 6, 8, 10, 0];
 /* locrianScale Pattern: R + 1 + 2 + 2 + 1 + 2 + 2 + R */
 
 /* ----------------------------------------------------- */
 
-var majorChord = [0, 4, 7];
+const majorChord = [0, 4, 7];
 /* majorChord Pattern: 0, 4, 1 */
 
-var minorChord = [0, 3, 7];
+const minorChord = [0, 3, 7];
 /* minorChord Pattern: 0, 9, 1 */
 
-var major7Chord = [0, 4, 7, 11];
+const major7Chord = [0, 4, 7, 11];
 /* major7Chord Pattern: 0, 4, 1, 5 */
 
-var minor7Chord = [0, 3, 7, 10];
+const minor7Chord = [0, 3, 7, 10];
 /* minor7Chord Pattern: 0, 9, 1, 10 */
 
-var m7b5Chord = [0, 3, 6, 10];
+const m7b5Chord = [0, 3, 6, 10];
 /* m7b5Chord Pattern: 0, 9, 6, 10 */
 
-var maj9Chord = [0, 4, 7, 11, 2];
+const maj9Chord = [0, 4, 7, 11, 2];
 /* maj9Chord Pattern: 0, 4, 1, 5, 2 */
 
-var m9Chord = [0, 3, 7, 10, 2];
+const m9Chord = [0, 3, 7, 10, 2];
 /* m9Chord Pattern: 0, 4, 1, 5, 2 */
 
-var m6Chord = [0, 3, 7, 9];
+const m6Chord = [0, 3, 7, 9];
 /* m6Chord Pattern: 0, 9, 1, 3 */
 
-var sus2Chord = [0, 2, 7];
+const sus2Chord = [0, 2, 7];
 /* sus2Chord Pattern: 0, 2, 1 */
 
-var sus4Chord = [0, 5, 7];
+const sus4Chord = [0, 5, 7];
 /* sus4Chord Pattern: 0, 11, 1 */
 
-var dimChord = [0, 3, 6];
+const dimChord = [0, 3, 6];
 /* dimChord Pattern: 0, 9, 6 */
 
-var augChord = [0, 4, 8];
+const augChord = [0, 4, 8];
 /* augChord Pattern: 0, 4, 8 */
 
-var chords5Chord = [0, 7, 0];
+const chords5Chord = [0, 7, 0];
 /* 5ChordsChord Pattern: 0, 1, 0 */
 
-var chords6Chord = [0, 4, 7, 9];
+const chords6Chord = [0, 4, 7, 9];
 /* 6ChordsChord Pattern: 0, 4, 1, 3 */
 
-var dominant7Chord = [0, 4, 7, 10];
+const dominant7Chord = [0, 4, 7, 10];
 /* dominant7Chord Pattern: 0, 4, 1, 10 */
 
-var diminished7Chord = [0, 9, 6, 8];
+const diminished7Chord = [0, 9, 6, 8];
 /* diminished7Chord Pattern: 0, 3, 6, 8 */
 
-var dom7sus4Chord = [0, 5, 7, 11];
+const dom7sus4Chord = [0, 5, 7, 11];
 /* dominant9Chord Pattern: 0, 11, 1, 5 */
 
-var m6NegChord = [0, 2, 6, 9];
+const m6NegChord = [0, 2, 6, 9];
 /* m6NegChord Pattern: 0, 2, 6, 3 */
 
 /*
-var dominant9Chord = [0, 4, 1, 10, 2];
+const dominant9Chord = [0, 4, 1, 10, 2];
 dominant9Chord Pattern: 0, 4, 7, 10, 2 */
 
 /*
-var dominant11Chord = [0, 4, 1, 10, 2, 5];
+const dominant11Chord = [0, 4, 1, 10, 2, 5];
 dominant11Chord Pattern: 0, 4, 7, 10, 2, 11 */
 
 /*
-var dominant13Chord = [0, 4, 1, 10, 2, 5, 0];
+const dominant13Chord = [0, 4, 1, 10, 2, 5, 0];
 dominant13Chord Pattern: 0, 4, 7, 10, 2, 11, 0 */
 
 /* ----------------------------------------------------- */
@@ -822,7 +833,7 @@ export const RewardedScreen = ({ rewardedCallback }) => {
     rewardedTimeOut();
 
     await AdMobRewarded.setAdUnitID(
-      Platform.OS === "ios" ? admob.rewarded.ios : admob.rewarded.android
+      Platform.OS === "ios" ? admob_ios.rewarded : admob_android.rewarded
     ); // 1. iOS, 2. Android
     await AdMobRewarded.requestAdAsync();
     await AdMobRewarded.showAdAsync();
@@ -2960,7 +2971,7 @@ function MainScreen() {
           <AdMobBanner
             bannerSize="smartBannerPortrait"
             adUnitID={
-              Platform.OS === "ios" ? admob.banners.ios : admob.banners.android
+              Platform.OS === "ios" ? admob_ios.banner : admob_android.banner
             } // Test ID, Replace with your-admob-unit-id
             servePersonalizedAds={personalisedAds}
           />
