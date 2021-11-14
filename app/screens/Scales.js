@@ -1,83 +1,47 @@
-import { StatusBar } from "expo-status-bar";
-import React, {
-  Component,
-  useRef,
-  forwardRef,
-  useImperativeHandle,
-  useState,
-  useEffect,
-} from "react";
+import React, { useRef, useState, useEffect } from "react";
 import {
-  SafeAreaView,
   Text,
   View,
   ScrollView,
   TouchableOpacity,
-  TouchableHighlight,
-  Animated,
   Modal,
-  Easing,
-  ActivityIndicator,
   Platform,
-  Dimensions,
 } from "react-native";
 import { Svg, Circle, Path, Polygon, G } from "react-native-svg";
-import {
-  AdMobBanner,
-  AdMobRewarded,
-  requestPermissionsAsync,
-  getPermissionsAsync,
-} from "expo-ads-admob";
-import * as Device from "expo-device";
-import * as StoreReview from "expo-store-review";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
-import styles from "../config/styles";
-import colors from "../config/colors";
-import admob from "../tokens";
+import Logo from "../elements/Logo";
+import Bottom from "../elements/Bottom";
 
-import GradientBG from "../screens/GradientBG";
-import WhiteBG from "../screens/WhiteBG";
+import colors from "../styles/colors";
+import styles from "../styles/styles";
 
-import Info from "../assets/img/info.svg";
 import Legend from "../assets/img/legend.svg";
 import Legend2 from "../assets/img/legend2Exp.svg";
 import Disclamer from "../assets/img/disclamer.svg";
 import ListArrow from "../assets/img/arrow.svg";
-import Icon from "../assets/img/icon.svg";
 
-var selectedScaleNameSaved = "Major";
-var selectedScaleValSaved = "major";
-var selectedScaleKeySaved = "C";
-var selectedScaleDisplaySaved = "major";
+let selectedScaleNameSaved = "Major";
+let selectedScaleValSaved = "major";
+let selectedScaleKeySaved = "C";
+let selectedScaleDisplaySaved = "major";
 
-var axisStatusSaved = false;
-var axisDegSaved = "0deg";
+let axisStatusSaved = false;
+let axisDegSaved = "0deg";
 
-var activeKeyXSaved = 0;
-var activeKeyYSaved = 0;
-var activeKeyGroupSaved = 0;
-var activeKeyFieldSaved = 0;
+let activeKeyXSaved = 0;
+let activeKeyYSaved = 0;
+let activeKeyGroupSaved = 0;
+let activeKeyFieldSaved = 0;
 
-var selectedTonic;
-var selectedTonicIndex;
-var selectedChordVal;
-var negativeTonic;
-var negativeChordVal;
+let selectedTonic;
+let selectedTonicIndex;
+let selectedChordVal;
+let negativeTonic;
+let negativeChordVal;
 
-var visibleScales = false;
-var chordsUnlocked = true;
-var personalisedAds = false;
-
-const emulator = Device.isDevice;
-const admob_ios = {
-  banner: emulator ? admob.banner.ios : admob.banner.ios_test,
-  rewarded: emulator ? admob.rewarded.ios : admob.rewarded.ios_test,
-};
-const admob_android = {
-  banner: emulator ? admob.banner.android : admob.banner.android_test,
-  rewarded: emulator ? admob.rewarded.android : admob.rewarded.android_test,
-};
+let visibleScales = false;
+let chordsUnlocked = true;
+let personalisedAds = false;
 
 const scaleList = [
   { name: "Major", value: "major" },
@@ -125,16 +89,16 @@ const musicScale = [
   "A♯ B♭",
   "B",
 ];
-var cloneScale = [];
-var cloneNegativeScale = [];
-var positiveScale = [];
-var negativeScale = [];
+let cloneScale = [];
+let cloneNegativeScale = [];
+let positiveScale = [];
+let negativeScale = [];
 
-var cloneChords = [];
-var cloneNegativeChords = [];
-var positiveScaleTonics = [];
-var positiveChord = [];
-var negativeChord = [];
+let cloneChords = [];
+let cloneNegativeChords = [];
+let positiveScaleTonics = [];
+let positiveChord = [];
+let negativeChord = [];
 
 const majorScale = [0, 2, 4, 5, 7, 9, 11, 0];
 /* majorScale Pattern: R + 2 + 2 + 1 + 2 + 2 + 2 + R */
@@ -390,11 +354,11 @@ function showInitialChords() {
 
   cloneChords = cloneScale.slice();
 
-  var rootNote = selectedTonicIndex;
-  for (var i = 0; i < rootNote; i++) cloneChords.push(cloneChords.shift());
+  let rootNote = selectedTonicIndex;
+  for (let i = 0; i < rootNote; i++) cloneChords.push(cloneChords.shift());
 
   cloneNegativeChords = cloneNegativeScale.slice();
-  for (var i = 0; i < rootNote; i++)
+  for (let i = 0; i < rootNote; i++)
     cloneNegativeChords.push(cloneNegativeChords.shift());
 
   showChords();
@@ -408,11 +372,11 @@ function showChords() {
 
   if (selectedChordVal == "major") {
     for (let i = 0; i < majorChord.length; i++) {
-      var obj = {};
+      let obj = {};
       obj["diatonic"] = true;
       obj["note"] = cloneChords[majorChord[pattern]];
       positiveChord.push(obj);
-      var objNeg = {};
+      let objNeg = {};
       objNeg["diatonic"] = true;
       objNeg["note"] = cloneNegativeChords[majorChord[pattern]];
       negativeChord.push(objNeg);
@@ -420,11 +384,11 @@ function showChords() {
     }
   } else if (selectedChordVal == "minor") {
     for (let i = 0; i < minorChord.length; i++) {
-      var obj = {};
+      let obj = {};
       obj["diatonic"] = true;
       obj["note"] = cloneChords[minorChord[pattern]];
       positiveChord.push(obj);
-      var objNeg = {};
+      let objNeg = {};
       objNeg["diatonic"] = true;
       objNeg["note"] = cloneNegativeChords[minorChord[pattern]];
       negativeChord.push(objNeg);
@@ -432,11 +396,11 @@ function showChords() {
     }
   } else if (selectedChordVal == "major7") {
     for (let i = 0; i < major7Chord.length; i++) {
-      var obj = {};
+      let obj = {};
       obj["diatonic"] = true;
       obj["note"] = cloneChords[major7Chord[pattern]];
       positiveChord.push(obj);
-      var objNeg = {};
+      let objNeg = {};
       objNeg["diatonic"] = true;
       objNeg["note"] = cloneNegativeChords[major7Chord[pattern]];
       negativeChord.push(objNeg);
@@ -444,11 +408,11 @@ function showChords() {
     }
   } else if (selectedChordVal == "minor7") {
     for (let i = 0; i < minor7Chord.length; i++) {
-      var obj = {};
+      let obj = {};
       obj["diatonic"] = true;
       obj["note"] = cloneChords[minor7Chord[pattern]];
       positiveChord.push(obj);
-      var objNeg = {};
+      let objNeg = {};
       objNeg["diatonic"] = true;
       objNeg["note"] = cloneNegativeChords[minor7Chord[pattern]];
       negativeChord.push(objNeg);
@@ -456,11 +420,11 @@ function showChords() {
     }
   } else if (selectedChordVal == "m7b5") {
     for (let i = 0; i < m7b5Chord.length; i++) {
-      var obj = {};
+      let obj = {};
       obj["diatonic"] = true;
       obj["note"] = cloneChords[m7b5Chord[pattern]];
       positiveChord.push(obj);
-      var objNeg = {};
+      let objNeg = {};
       objNeg["diatonic"] = true;
       objNeg["note"] = cloneNegativeChords[m7b5Chord[pattern]];
       negativeChord.push(objNeg);
@@ -468,11 +432,11 @@ function showChords() {
     }
   } else if (selectedChordVal == "maj9") {
     for (let i = 0; i < maj9Chord.length; i++) {
-      var obj = {};
+      let obj = {};
       obj["diatonic"] = true;
       obj["note"] = cloneChords[maj9Chord[pattern]];
       positiveChord.push(obj);
-      var objNeg = {};
+      let objNeg = {};
       objNeg["diatonic"] = true;
       objNeg["note"] = cloneNegativeChords[maj9Chord[pattern]];
       negativeChord.push(objNeg);
@@ -480,11 +444,11 @@ function showChords() {
     }
   } else if (selectedChordVal == "m6") {
     for (let i = 0; i < m6Chord.length; i++) {
-      var obj = {};
+      let obj = {};
       obj["diatonic"] = true;
       obj["note"] = cloneChords[m6Chord[pattern]];
       positiveChord.push(obj);
-      var objNeg = {};
+      let objNeg = {};
       objNeg["diatonic"] = true;
       objNeg["note"] = cloneNegativeChords[m6Chord[pattern]];
       negativeChord.push(objNeg);
@@ -492,11 +456,11 @@ function showChords() {
     }
   } else if (selectedChordVal == "sus2") {
     for (let i = 0; i < sus2Chord.length; i++) {
-      var obj = {};
+      let obj = {};
       obj["diatonic"] = true;
       obj["note"] = cloneChords[sus2Chord[pattern]];
       positiveChord.push(obj);
-      var objNeg = {};
+      let objNeg = {};
       objNeg["diatonic"] = true;
       objNeg["note"] = cloneNegativeChords[sus2Chord[pattern]];
       negativeChord.push(objNeg);
@@ -504,11 +468,11 @@ function showChords() {
     }
   } else if (selectedChordVal == "sus4") {
     for (let i = 0; i < sus4Chord.length; i++) {
-      var obj = {};
+      let obj = {};
       obj["diatonic"] = true;
       obj["note"] = cloneChords[sus4Chord[pattern]];
       positiveChord.push(obj);
-      var objNeg = {};
+      let objNeg = {};
       objNeg["diatonic"] = true;
       objNeg["note"] = cloneNegativeChords[sus4Chord[pattern]];
       negativeChord.push(objNeg);
@@ -516,11 +480,11 @@ function showChords() {
     }
   } else if (selectedChordVal == "dim") {
     for (let i = 0; i < dimChord.length; i++) {
-      var obj = {};
+      let obj = {};
       obj["diatonic"] = true;
       obj["note"] = cloneChords[dimChord[pattern]];
       positiveChord.push(obj);
-      var objNeg = {};
+      let objNeg = {};
       objNeg["diatonic"] = true;
       objNeg["note"] = cloneNegativeChords[dimChord[pattern]];
       negativeChord.push(objNeg);
@@ -528,11 +492,11 @@ function showChords() {
     }
   } else if (selectedChordVal == "aug") {
     for (let i = 0; i < augChord.length; i++) {
-      var obj = {};
+      let obj = {};
       obj["diatonic"] = true;
       obj["note"] = cloneChords[augChord[pattern]];
       positiveChord.push(obj);
-      var objNeg = {};
+      let objNeg = {};
       objNeg["diatonic"] = true;
       objNeg["note"] = cloneNegativeChords[augChord[pattern]];
       negativeChord.push(objNeg);
@@ -546,28 +510,28 @@ function showChords() {
     negativeTonic = negativeChord[negativeChord.length - 1].note;
   }
 
-  var negativeChordPattern = [];
+  let negativeChordPattern = [];
   for (let n = 0; n < negativeChord.length; n++) {
-    var checkChordNote = negativeChord[n].note;
+    let checkChordNote = negativeChord[n].note;
     for (let i = 0; i < cloneScale.length; i++) {
-      var tonicVal = i;
-      var tonicNote = cloneScale[i];
+      let tonicVal = i;
+      let tonicNote = cloneScale[i];
       if (checkChordNote == tonicNote) {
         negativeChordPattern.push(parseInt(tonicVal));
       }
     }
   }
 
-  for (var i = 0; i < negativeChordPattern.length; i++) {
-    var subtractor = negativeChordPattern[negativeChordPattern.length - 1];
-    var noteValReset = negativeChordPattern[i] - subtractor;
+  for (let i = 0; i < negativeChordPattern.length; i++) {
+    let subtractor = negativeChordPattern[negativeChordPattern.length - 1];
+    let noteValReset = negativeChordPattern[i] - subtractor;
     if (noteValReset <= -1) {
-      var newNoteValReset = 12 - Math.abs(noteValReset);
+      let newNoteValReset = 12 - Math.abs(noteValReset);
       negativeChordPattern[i] = parseInt(newNoteValReset);
     } else if (noteValReset == 0) {
       negativeChordPattern[i] = parseInt("0");
     } else {
-      var newVal = negativeChordPattern[i] - subtractor;
+      let newVal = negativeChordPattern[i] - subtractor;
       negativeChordPattern[i] = parseInt(newVal);
     }
   }
@@ -617,19 +581,19 @@ function showChords() {
 }
 
 function diatonicDetection() {
-  for (var n = 0; n < positiveChord.length; n++) {
-    var checkDiatonic = positiveChord[n].note;
-    for (var i = 0; i < positiveScale.length; i++) {
-      var scaleNote = positiveScale[i];
+  for (let n = 0; n < positiveChord.length; n++) {
+    let checkDiatonic = positiveChord[n].note;
+    for (let i = 0; i < positiveScale.length; i++) {
+      let scaleNote = positiveScale[i];
       if (checkDiatonic == scaleNote) {
         positiveChord[n].diatonic = false;
       }
     }
   }
-  for (var n = 0; n < negativeChord.length; n++) {
-    var checkDiatonic = negativeChord[n].note;
-    for (var i = 0; i < negativeScale.length; i++) {
-      var scaleNote = negativeScale[i];
+  for (let n = 0; n < negativeChord.length; n++) {
+    let checkDiatonic = negativeChord[n].note;
+    for (let i = 0; i < negativeScale.length; i++) {
+      let scaleNote = negativeScale[i];
       if (checkDiatonic == scaleNote) {
         negativeChord[n].diatonic = false;
       }
@@ -637,302 +601,7 @@ function diatonicDetection() {
   }
 }
 
-const delayTime = new Date().valueOf() + 60000;
-async function askForReview() {
-  if (chordsUnlocked == true && delayTime <= new Date().valueOf()) {
-    const numberDATE = new Date().valueOf();
-    const timeStamp = await AsyncStorage.getItem("reviewTimestamp");
-
-    if (
-      (Number(timeStamp) <= numberDATE || Number(timeStamp) == 0) &&
-      (await StoreReview.isAvailableAsync()) &&
-      (await StoreReview.hasAction())
-    ) {
-      StoreReview.requestReview();
-
-      const newTimeStamp =
-        numberDATE +
-        new Date(numberDATE)
-          .setMonth(new Date(numberDATE).getMonth() + 1)
-          .valueOf();
-      await AsyncStorage.setItem(
-        "reviewTimestamp",
-        JSON.stringify(newTimeStamp)
-      );
-    }
-  }
-}
-
-export class AnimatedIcon extends Component {
-  state = {
-    rotateAnim: new Animated.Value(0),
-  };
-
-  componentDidMount() {
-    this.startAnimation();
-  }
-
-  startAnimation() {
-    this.state.rotateAnim.setValue(0);
-    Animated.timing(this.state.rotateAnim, {
-      toValue: 1,
-      duration: 24000,
-      useNativeDriver: true,
-      easing: Easing.linear,
-    }).start(() => {
-      this.startAnimation();
-    });
-  }
-
-  render() {
-    return (
-      <Animated.View
-        style={[
-          styles.icon,
-          {
-            transform: [
-              {
-                rotate: this.state.rotateAnim.interpolate({
-                  inputRange: [0, 1],
-                  outputRange: ["0deg", "360deg"],
-                }),
-              },
-            ],
-          },
-        ]}
-      >
-        <Icon />
-      </Animated.View>
-    );
-  }
-}
-
-export const Exit = () => {
-  return (
-    <Svg height="100%" width="100%" viewBox="0 0 352 352">
-      <Path
-        fill={colors.blue}
-        d="M242.7,176L342.8,75.9c12.3-12.3,12.3-32.2,0-44.5L320.6,9.2c-12.3-12.3-32.2-12.3-44.5,0L176,109.3L75.9,9.2 C63.7-3.1,43.7-3.1,31.5,9.2L9.2,31.4c-12.3,12.3-12.3,32.2,0,44.5L109.3,176L9.2,276.1c-12.3,12.3-12.3,32.2,0,44.5l22.2,22.2 c12.3,12.3,32.2,12.3,44.5,0L176,242.7l100.1,100.1c12.3,12.3,32.2,12.3,44.5,0l22.2-22.2c12.3-12.3,12.3-32.2,0-44.5L242.7,176z"
-      />
-    </Svg>
-  );
-};
-
-export const DisclamerScreen = ({ disclamerCallback }) => {
-  const disclamerClose = () => {
-    if (chordsUnlocked == false) {
-      showInitialScales();
-      showInitialChords();
-      disclamerCallback(false);
-    } else {
-      visibleScales = true;
-      chordsUnlocked = true;
-      showInitialScales();
-      showInitialChords();
-      disclamerCallback(false);
-    }
-  };
-
-  return (
-    <View style={styles.disclamerWrapper}>
-      <TouchableOpacity style={styles.exit} onPress={disclamerClose}>
-        <Exit />
-      </TouchableOpacity>
-      <Text style={styles.discTitle}>Information</Text>
-      <View style={styles.discTextWrapper}>
-        <ScrollView showsVerticalScrollIndicator={false}>
-          <Text style={styles.discText}>
-            The notes in the chords coloured{" "}
-            <Text
-              style={{
-                fontFamily: "NegativeHarmonyBold",
-                color: colors.red,
-              }}
-            >
-              RED
-            </Text>{" "}
-            indicate that they are non-diatonic notes. {"\n"}
-            {"\n"}(Non-Diatonic refers to any notes or chords that are not
-            native to the key){"\n"}
-            {"\n"}This does not mean that the chord cannot be used in that
-            key/scale but that its sound is more complex and will not fit with
-            the other chords as easily.
-          </Text>
-          <Text style={styles.discSubTitle}>Disclaimer</Text>
-          <Text style={styles.discText}>
-            The negative chord names may not always be exactly right because of
-            the way the chord naming system works. {"\n"}
-            {"\n"}In practise the chord name comes from the tonic/root note
-            followed by the structure/pattern (major, minor, suspended...) this
-            rule is broken when looking at negative chords where the tonic/root
-            is actually the last note played going from left to right on the
-            piano. {"\n"}
-            {"\n"}Because of this, the app looks if the negative chord pattern
-            has a match when mirrored and compared to the regular one. If so it
-            determines the chord name by taking the "negative" tonic/root note
-            and displaying the chord name. {"\n"}
-            {"\n"}Though the chord name may vary depending on what you consider
-            to be the tonic/root note the notes displayed in the negative chords
-            are always correct.
-          </Text>
-          <Text style={styles.discContactTitle}>Contact</Text>
-          <Text style={styles.discText}>
-            If you find any bugs incorrect representations of the notes or
-            chords, please contact us at:{"\n"}
-            <Text style={{ color: colors.blue }}>
-              chimerastudiotm@gmail.com
-            </Text>
-          </Text>
-        </ScrollView>
-      </View>
-    </View>
-  );
-};
-
-export const RewardedScreen = ({ rewardedCallback }) => {
-  const [loadRewarded, setLoadRewarded] = useState(false);
-
-  const ref = useRef(null);
-
-  const rewardedTimeOut = () => {
-    setLoadRewarded(true);
-  };
-
-  AdMobRewarded.addEventListener("rewardedVideoDidFailToLoad", () => {
-    resetRewarded();
-  });
-
-  AdMobRewarded.addEventListener("rewardedVideoDidFailToPresent", () => {
-    resetRewarded();
-  });
-
-  AdMobRewarded.addEventListener("rewardedVideoDidDismiss", () => {
-    resetRewarded();
-  });
-
-  AdMobRewarded.addEventListener("rewardedVideoUserDidEarnReward", () => {
-    unlockChords();
-  });
-
-  function resetRewarded() {
-    if (chordsUnlocked == false) {
-      setTimeout(function () {
-        setLoadRewarded(false);
-      }, 10000);
-    }
-  }
-
-  async function requestReward() {
-    rewardedTimeOut();
-
-    await AdMobRewarded.setAdUnitID(
-      Platform.OS === "ios" ? admob_ios.rewarded : admob_android.rewarded
-    ); // 1. iOS, 2. Android
-    await AdMobRewarded.requestAdAsync();
-    await AdMobRewarded.showAdAsync();
-  }
-
-  function unlockChords() {
-    visibleScales = true;
-    chordsUnlocked = true;
-    showInitialScales();
-    showInitialChords();
-    rewardedCallback(false);
-  }
-
-  return (
-    <View style={styles.rewardedWrapper}>
-      <TouchableOpacity
-        style={styles.exit}
-        disabled={loadRewarded}
-        onPress={
-          (showScales(), showInitialChords(), () => rewardedCallback(false))
-        }
-      >
-        <Svg height="100%" width="100%" viewBox="0 0 352 352">
-          <Path
-            fill={!loadRewarded ? colors.blue : colors.disabled}
-            d="M242.7,176L342.8,75.9c12.3-12.3,12.3-32.2,0-44.5L320.6,9.2c-12.3-12.3-32.2-12.3-44.5,0L176,109.3L75.9,9.2 C63.7-3.1,43.7-3.1,31.5,9.2L9.2,31.4c-12.3,12.3-12.3,32.2,0,44.5L109.3,176L9.2,276.1c-12.3,12.3-12.3,32.2,0,44.5l22.2,22.2 c12.3,12.3,32.2,12.3,44.5,0L176,242.7l100.1,100.1c12.3,12.3,32.2,12.3,44.5,0l22.2-22.2c12.3-12.3,12.3-32.2,0-44.5L242.7,176z"
-          />
-        </Svg>
-      </TouchableOpacity>
-      <View style={styles.rewardedExp}>
-        <Text style={styles.rewardedExpText}>To unlock chords</Text>
-        <Text style={styles.rewardedExpText}>watch this Advert:</Text>
-      </View>
-      <TouchableOpacity
-        style={!loadRewarded ? styles.rewardedStart : styles.rewardedDisabled}
-        activeOpacity={1}
-        disabled={loadRewarded}
-        onPress={() => requestReward()}
-      >
-        {!loadRewarded ? (
-          <Text style={styles.rewardedStartText}>Watch the Ad</Text>
-        ) : (
-          <ActivityIndicator size="large" color={colors.white} />
-        )}
-      </TouchableOpacity>
-      <Text style={styles.rewardedDisc}>
-        If no Advert is shown come back a bit later
-      </Text>
-    </View>
-  );
-};
-
-var deviceHeight = Dimensions.get("screen").height;
-var scaleHeight =
-  Platform.OS === "ios" && !Platform.isPad
-    ? Math.round((34.9 / 100) * deviceHeight)
-    : Math.round((33 / 100) * deviceHeight);
-var visibleScalesHeight = deviceHeight;
-export const DisplayScales = forwardRef((props, ref) => {
-  const slideIn = useRef(new Animated.Value(visibleScalesHeight)).current;
-
-  const popScales = () => {
-    var bottomOfScreen = deviceHeight - scaleHeight;
-    visibleScalesHeight = bottomOfScreen;
-    Animated.timing(slideIn, {
-      toValue: bottomOfScreen,
-      duration: 300,
-      useNativeDriver: true,
-    }).start();
-  };
-
-  const slideUp = {
-    transform: [
-      {
-        translateY: slideIn,
-      },
-    ],
-  };
-
-  useImperativeHandle(ref, () => {
-    return {
-      popScales: popScales,
-    };
-  });
-  return (
-    <Animated.View style={[styles.scaleWrapper, slideUp]}>
-      <View style={styles.positiveScale}>
-        {positiveScale.map((note, index) => (
-          <Text style={styles.positiveScaleText} key={index}>
-            {note}
-          </Text>
-        ))}
-      </View>
-      <View style={styles.axisLegend} />
-      <View style={styles.negativeScale}>
-        {negativeScale.map((note, index) => (
-          <Text style={styles.negativeScaleText} key={index}>
-            {note}
-          </Text>
-        ))}
-      </View>
-    </Animated.View>
-  );
-});
-
-export const ScalesScreen = ({ switchCallback }) => {
+export const Scales = ({ switchCallback }) => {
   const keyColorBG = colors.white;
   const keyColorText = colors.negativeText;
   const keyColorSymbol = colors.positiveText;
@@ -940,51 +609,7 @@ export const ScalesScreen = ({ switchCallback }) => {
   const activeKeyColorText = colors.white;
   const activeKeyColorSymbol = colors.whiteGray;
 
-  const [legendStatus, setLegendStatus] = useState(false);
   const [openSelect, setOpenSelect] = useState(false);
-
-  const ref = useRef(null);
-  const opacity = useState(new Animated.Value(0))[0];
-
-  function initialFadeIn() {
-    Animated.timing(opacity, {
-      toValue: 1,
-      duration: 0,
-      useNativeDriver: true,
-    }).start();
-  }
-
-  function fadeIn() {
-    Animated.timing(opacity, {
-      toValue: 1,
-      duration: 300,
-      useNativeDriver: true,
-    }).start();
-  }
-
-  function fadeOut() {
-    Animated.timing(opacity, {
-      toValue: 0,
-      duration: 300,
-      useNativeDriver: true,
-    }).start();
-  }
-
-  const legendToggle = () => {
-    if (legendStatus == false) {
-      fadeOut();
-      setTimeout(function () {
-        setLegendStatus(true);
-        fadeIn();
-      }, 150);
-    } else {
-      fadeOut();
-      setTimeout(function () {
-        setLegendStatus(false);
-        fadeIn();
-      }, 150);
-    }
-  };
 
   const openSelectList = () => {
     switchCallback(true);
@@ -1034,7 +659,6 @@ export const ScalesScreen = ({ switchCallback }) => {
     setSelectedScaleName(selectedScaleNameSaved);
     setAxisStatus(axisStatusSaved);
     setAxisDeg(axisDegSaved);
-    initialFadeIn();
   }, []);
 
   const keyPress = (keyG, value, angle) => {
@@ -1160,42 +784,25 @@ export const ScalesScreen = ({ switchCallback }) => {
 
   return (
     <View style={styles.screenWrapper}>
-      <View style={styles.navigation}>
-        <TouchableOpacity disabled={openSelect} onPress={legendToggle}>
-          <Info style={styles.info} />
-        </TouchableOpacity>
-      </View>
-
       <View style={styles.selectWrapper}>
-        {legendStatus ? (
-          <Animated.View style={[styles.legendContainer, { opacity }]}>
-            <Legend style={styles.legend} />
-          </Animated.View>
-        ) : null}
-        {legendStatus ? null : (
-          <Animated.View style={{ opacity }}>
-            <Text style={styles.selectTextExp}>
-              Select a scale and tap on a field:
-            </Text>
+        <View>
+          <Text style={styles.selectTextExp}>
+            Select a scale and tap on a field:
+          </Text>
 
-            <TouchableOpacity
-              style={styles.selectInput}
-              disabled={legendStatus}
-              onPress={openSelectList}
-            >
-              <Text style={styles.selectInputText}>{selectedScaleName}</Text>
-              <ListArrow style={styles.selectListArrow} />
-            </TouchableOpacity>
-          </Animated.View>
-        )}
+          <TouchableOpacity style={styles.selectInput} onPress={openSelectList}>
+            <Text style={styles.selectInputText}>{selectedScaleName}</Text>
+            <ListArrow style={styles.selectListArrow} />
+          </TouchableOpacity>
+        </View>
       </View>
 
       <View style={styles.circleWrapper}>
         <Svg
+          viewBox="-30 -30 690 690"
           style={styles.circleKeys}
           height={!Platform.isPad ? "90%" : "100%"}
           width={!Platform.isPad ? "90%" : "100%"}
-          viewBox="-30 -30 690 690"
         >
           <G>
             <G>
@@ -2445,11 +2052,11 @@ export const ScalesScreen = ({ switchCallback }) => {
             />
           )}
 
-          <AnimatedIcon />
+          <Logo />
         </Svg>
       </View>
       <View style={styles.scaleSpace}></View>
-      <DisplayScales ref={ref} />
+      {/* <Bottom type="Scales" /> */}
 
       <Modal animationType="fade" transparent={true} visible={openSelect}>
         <View style={styles.selectListShadow}>
@@ -2479,510 +2086,4 @@ export const ScalesScreen = ({ switchCallback }) => {
   );
 };
 
-export const DisplayChords = () => {
-  return (
-    <View style={styles.chordWrapper}>
-      <View style={styles.positiveChord}>
-        <View style={styles.positiveChordNameWrapper}>
-          <Text style={styles.positiveChordTonic}>{selectedTonic}</Text>
-          <Text style={styles.positiveChordName}>{selectedChordVal}</Text>
-        </View>
-
-        <View style={styles.positiveChordNotes}>
-          {positiveChord.map((chordNote, index) => (
-            <Text
-              style={
-                chordNote.diatonic
-                  ? styles.diatonicChordText
-                  : styles.positiveChordText
-              }
-              key={index}
-            >
-              {chordNote.note}
-            </Text>
-          ))}
-        </View>
-      </View>
-
-      <View style={styles.axisLegend} />
-
-      <View style={styles.negativeChord}>
-        <View style={styles.negativeChordNameWrapper}>
-          <Text style={styles.negativeChordTonic}>{negativeTonic}</Text>
-          <Text style={styles.negativeChordName}>{negativeChordVal}</Text>
-        </View>
-
-        <View style={styles.negativeChordNotes}>
-          {negativeChord.map((chordNote, index) => (
-            <Text
-              style={
-                chordNote.diatonic
-                  ? styles.diatonicChordText
-                  : styles.negativeChordText
-              }
-              key={index}
-            >
-              {chordNote.note}
-            </Text>
-          ))}
-        </View>
-      </View>
-    </View>
-  );
-};
-
-export const ChordsScreen = ({
-  switchCallback,
-  rewardedCallback,
-  disclamerCallback,
-}) => {
-  const [legendStatus, setLegendStatus] = useState(false);
-  const [openSelect, setOpenSelect] = useState(false);
-  const [tonicSliderOpen, setTonicSliderOpen] = useState(chordsUnlocked);
-  const opacity = useState(new Animated.Value(0))[0];
-
-  function initialFadeIn() {
-    Animated.timing(opacity, {
-      toValue: 1,
-      duration: 0,
-      useNativeDriver: true,
-    }).start();
-  }
-
-  function fadeIn() {
-    Animated.timing(opacity, {
-      toValue: 1,
-      duration: 300,
-      useNativeDriver: true,
-    }).start();
-  }
-
-  function fadeOut() {
-    Animated.timing(opacity, {
-      toValue: 0,
-      duration: 300,
-      useNativeDriver: true,
-    }).start();
-  }
-
-  useEffect(() => {
-    setTonicSliderOpen(chordsUnlocked);
-    initialFadeIn();
-  }, []);
-
-  const legendToggle = () => {
-    if (legendStatus == false) {
-      fadeOut();
-      setTimeout(function () {
-        setLegendStatus(true);
-        fadeIn();
-      }, 150);
-    } else {
-      fadeOut();
-      setTimeout(function () {
-        setLegendStatus(false);
-        fadeIn();
-      }, 150);
-    }
-  };
-
-  const openSelectList = () => {
-    switchCallback(true);
-    setOpenSelect(true);
-  };
-
-  const selectedChord = (name, value) => {
-    setSelectedChordName(name);
-    selectedChordVal = value;
-
-    showChords();
-
-    switchCallback(false);
-    setOpenSelect(false);
-  };
-
-  const [selectedChordName, setSelectedChordName] = useState("Major");
-
-  const [tonicSpacer, setTonicSpacer] = useState(0);
-  const getDimentions = (event) => {
-    var { width } = event.nativeEvent.layout;
-    var spacerPadding = width / 2 - 55;
-    setTonicSpacer(spacerPadding);
-  };
-
-  const scrollChords = useRef(null);
-  let selectedIndexSaved = 0;
-  const [selectedIndex, setSelectedIndex] = useState(selectedIndexSaved);
-  var scrollRef = scrollRef;
-  const setTonic = (index) => {
-    setSelectedIndex(index);
-    var offsetInterval = 110 * index;
-    scrollChords.current.scrollTo({
-      x: offsetInterval,
-      animated: false,
-    });
-  };
-
-  const notePress = (name) => {
-    selectedTonic = name;
-
-    for (let i = 0; i < cloneScale.length; i++) {
-      if (selectedTonic == cloneScale[i]) {
-        selectedTonicIndex = i;
-      }
-    }
-
-    cloneChords = cloneScale.slice();
-
-    var rootNote = selectedTonicIndex;
-    for (var i = 0; i < rootNote; i++) cloneChords.push(cloneChords.shift());
-
-    cloneNegativeChords = cloneNegativeScale.slice();
-    for (var i = 0; i < rootNote; i++)
-      cloneNegativeChords.push(cloneNegativeChords.shift());
-
-    showChords();
-    askForReview();
-  };
-
-  return (
-    <View style={styles.screenWrapper}>
-      <View style={styles.navigation}>
-        <TouchableOpacity disabled={openSelect} onPress={legendToggle}>
-          <Info style={styles.info} />
-        </TouchableOpacity>
-      </View>
-
-      <View style={styles.selectChordsWrapper}>
-        {legendStatus ? (
-          <Animated.View style={[styles.legendContainer, { opacity }]}>
-            <Legend style={styles.legend} />
-
-            <View style={styles.legend2Wrapper}>
-              <Legend2 style={styles.legend2} />
-              <TouchableOpacity
-                style={styles.disclamerBtn}
-                onPress={() => disclamerCallback(true)}
-              >
-                <Disclamer style={styles.disclamer} />
-              </TouchableOpacity>
-            </View>
-          </Animated.View>
-        ) : null}
-
-        {legendStatus ? null : (
-          <Animated.View style={{ opacity }}>
-            <Text style={styles.selectTextExp}>
-              Select a chord from a key of:
-            </Text>
-
-            <View style={styles.selectedScaleNameWrapper}>
-              <Text style={styles.selectedScaleKey}>
-                {selectedScaleKeySaved}
-              </Text>
-              <Text style={styles.selectedScaleName}>
-                {selectedScaleNameSaved}
-              </Text>
-            </View>
-
-            <TouchableOpacity
-              style={styles.selectInput}
-              disabled={legendStatus}
-              onPress={openSelectList}
-            >
-              <Text style={styles.selectInputText}>{selectedChordName}</Text>
-              <ListArrow style={styles.selectListArrow} />
-            </TouchableOpacity>
-          </Animated.View>
-        )}
-      </View>
-
-      <View style={styles.chordsWrapper} onLayout={getDimentions}>
-        {tonicSliderOpen ? (
-          <View style={styles.scrollChords}>
-            <Text style={styles.scrollChordsExpText}>Choose a tonic:</Text>
-
-            <ScrollView
-              ref={scrollChords}
-              horizontal={true}
-              showsHorizontalScrollIndicator={false}
-              contentContainerStyle={styles.scrollChordsWrapper}
-            >
-              <View
-                style={(styles.scrollChordsSpace, { width: tonicSpacer })}
-              />
-              {positiveScaleTonics.map((note, index) => (
-                <TouchableHighlight
-                  activeOpacity={1}
-                  underlayColor={colors.lightBlue}
-                  style={
-                    index == selectedIndex
-                      ? styles.scrollChordsNoteSelected
-                      : styles.scrollChordsNote
-                  }
-                  key={index}
-                  onPress={() => {
-                    notePress(note), setTonic(index);
-                  }}
-                >
-                  <Text
-                    style={
-                      index == selectedIndex
-                        ? styles.scrollChordsNoteTextSelected
-                        : styles.scrollChordsNoteText
-                    }
-                  >
-                    {note}
-                  </Text>
-                </TouchableHighlight>
-              ))}
-              <View
-                style={(styles.scrollChordsSpace, { width: tonicSpacer })}
-              />
-            </ScrollView>
-          </View>
-        ) : (
-          <TouchableHighlight
-            style={styles.rewardedOpen}
-            onPress={() => rewardedCallback(true)}
-          >
-            <Text style={styles.rewardedOpenText}>Unlock negative chords</Text>
-          </TouchableHighlight>
-        )}
-      </View>
-      <View style={styles.chordSpace}></View>
-      <DisplayChords />
-
-      <Modal animationType="fade" transparent={true} visible={openSelect}>
-        <View style={styles.selectListShadow}>
-          <View style={styles.selectListWrapper}>
-            <ScrollView
-              showsVerticalScrollIndicator={false}
-              style={styles.selectList}
-              centerContent={true}
-            >
-              {chordList.map((chord, index) => (
-                <TouchableOpacity
-                  style={
-                    index === chordList.length - 1
-                      ? styles.selectItemNoBorder
-                      : styles.selectItem
-                  }
-                  key={chord.value}
-                  onPress={
-                    tonicSliderOpen
-                      ? () => selectedChord(chord.name, chord.value)
-                      : index == 0
-                      ? () => selectedChord(chord.name, chord.value)
-                      : null
-                  }
-                >
-                  <Text
-                    style={
-                      tonicSliderOpen
-                        ? styles.selectText
-                        : index == 0
-                        ? styles.selectText
-                        : styles.selectDisabledText
-                    }
-                  >
-                    {chord.name}
-                  </Text>
-                </TouchableOpacity>
-              ))}
-            </ScrollView>
-          </View>
-        </View>
-      </Modal>
-    </View>
-  );
-};
-
-function MainScreen() {
-  const [switchText, setSwitchText] = useState("Scales");
-  const [pressAlert, setPressAlert] = useState(false);
-  const [zIndex, setzIndex] = useState(false);
-  const [rewardedOpen, setRewardedOpen] = useState(false);
-  const [disclamerOpen, setDisclamerOpen] = useState(false);
-  const [ads, setAds] = useState(false);
-
-  const fadeAlert = useState(new Animated.Value(0))[0];
-
-  function alertFadeIn() {
-    setPressAlert(true);
-    Animated.timing(fadeAlert, {
-      toValue: 1,
-      duration: 300,
-      useNativeDriver: true,
-    }).start();
-  }
-
-  function alertFadeOut() {
-    Animated.timing(fadeAlert, {
-      toValue: 0,
-      duration: 300,
-      useNativeDriver: true,
-    }).start();
-    setTimeout(function () {
-      setPressAlert(false);
-    }, 300);
-  }
-
-  const showAlert = {
-    opacity: fadeAlert,
-  };
-
-  const opacity = useState(new Animated.Value(0))[0];
-
-  function initialFadeIn() {
-    Animated.timing(opacity, {
-      toValue: 1,
-      duration: 0,
-      useNativeDriver: true,
-    }).start();
-  }
-
-  function fadeIn() {
-    Animated.timing(opacity, {
-      toValue: 1,
-      duration: 300,
-      useNativeDriver: true,
-    }).start();
-  }
-
-  function fadeOut() {
-    Animated.timing(opacity, {
-      toValue: 0,
-      duration: 300,
-      useNativeDriver: true,
-    }).start();
-  }
-
-  useEffect(() => {
-    initialFadeIn();
-    setTimeout(askForPermission, 1000);
-  }, []);
-
-  async function askForPermission() {
-    const { granted } = await getPermissionsAsync();
-    if (granted) {
-      personalisedAds = true;
-      setAds(true);
-    } else {
-      const { status } = await requestPermissionsAsync();
-      if (status === "granted") {
-        personalisedAds = true;
-      }
-      setAds(true);
-    }
-  }
-
-  const switchZindex = (value) => {
-    setzIndex(value);
-  };
-
-  const openRewardedModul = (value) => {
-    fadeOut();
-    setTimeout(function () {
-      setRewardedOpen(value);
-      fadeIn();
-    }, 150);
-  };
-
-  const openDisclamer = (value) => {
-    fadeOut();
-    setTimeout(function () {
-      setDisclamerOpen(value);
-      fadeIn();
-    }, 150);
-  };
-
-  const alertTimer = () => {
-    alertFadeIn();
-    setTimeout(function () {
-      alertFadeOut();
-    }, 2500);
-  };
-
-  const switchScreen = () => {
-    if (visibleScales == false && switchText == "Scales") {
-      alertTimer();
-    } else {
-      if (switchText == "Scales") {
-        fadeOut();
-        setTimeout(function () {
-          showInitialChords();
-          setSwitchText("Chords");
-          fadeIn();
-        }, 150);
-      } else {
-        fadeOut();
-        setTimeout(function () {
-          setSwitchText("Scales");
-          fadeIn();
-        }, 150);
-      }
-    }
-  };
-  return (
-    <SafeAreaView style={styles.container}>
-      <StatusBar hidden />
-      {rewardedOpen || disclamerOpen ? <WhiteBG /> : <GradientBG />}
-
-      {!pressAlert ? null : (
-        <Animated.View style={[styles.alert, showAlert]}>
-          <Text style={styles.alertText}>You need to tap on a field!</Text>
-        </Animated.View>
-      )}
-
-      {!rewardedOpen && !disclamerOpen && switchText == "Scales" ? (
-        <Animated.View style={{ opacity, flex: 1 }}>
-          <ScalesScreen switchCallback={switchZindex} />
-        </Animated.View>
-      ) : null}
-
-      {!rewardedOpen && !disclamerOpen && switchText == "Chords" ? (
-        <Animated.View style={{ opacity, flex: 1 }}>
-          <ChordsScreen
-            switchCallback={switchZindex}
-            rewardedCallback={openRewardedModul}
-            disclamerCallback={openDisclamer}
-          />
-        </Animated.View>
-      ) : null}
-
-      {!rewardedOpen && disclamerOpen ? (
-        <DisclamerScreen disclamerCallback={openDisclamer} />
-      ) : null}
-
-      {rewardedOpen ? (
-        <RewardedScreen rewardedCallback={openRewardedModul} />
-      ) : null}
-
-      <View style={styles.ads}>
-        {ads && !rewardedOpen ? (
-          <AdMobBanner
-            bannerSize="smartBannerPortrait"
-            adUnitID={
-              Platform.OS === "ios" ? admob_ios.banner : admob_android.banner
-            }
-            servePersonalizedAds={personalisedAds}
-          />
-        ) : null}
-      </View>
-
-      {rewardedOpen || disclamerOpen ? null : (
-        <TouchableHighlight
-          style={zIndex ? styles.switchBelow : styles.switch}
-          underlayColor={colors.lightBlue}
-          disabled={zIndex}
-          onPress={switchScreen}
-        >
-          <Text style={styles.switchText}>{switchText}</Text>
-        </TouchableHighlight>
-      )}
-    </SafeAreaView>
-  );
-}
-
-export default MainScreen;
+export default Scales;

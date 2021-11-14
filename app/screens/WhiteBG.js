@@ -1,6 +1,6 @@
 import React from "react";
 import { StyleSheet, Platform, View } from "react-native";
-import colors from "../config/colors";
+import colors from "../styles/colors";
 
 function WhiteBG() {
   return <View style={styles.background} />;
@@ -8,15 +8,15 @@ function WhiteBG() {
 
 const styles = StyleSheet.create({
   background: {
-    position: "absolute",
-    top: "-5%",
-    left: "-10%",
-    right: 0,
-    bottom: 0,
-    width: "120%",
-    height: "120%",
     backgroundColor: colors.white,
+    bottom: 0,
     flex: Platform.OS === "ios" && !Platform.isPad ? null : 1,
+    height: "120%",
+    left: "-10%",
+    position: "absolute",
+    right: 0,
+    top: "-5%",
+    width: "120%",
   },
 });
 
