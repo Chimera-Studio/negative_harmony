@@ -637,33 +637,26 @@ function diatonicDetection() {
   }
 }
 
-var date;
-function getDate() {
-  var today = new Date();
-  date =
-    today.getFullYear() + "" + (today.getMonth() + 1) + "." + today.getDate();
-}
-getDate();
-
+const delayTime = new Date().valueOf() + 60000;
 async function askForReview() {
-  if (chordsUnlocked == true) {
-    var numberDATE = Number(date);
-
-    var timeStamp = await AsyncStorage.getItem("reviewTimeStampSAVE");
-    var reviewTimeStamp = Number(timeStamp);
+  if (chordsUnlocked == true && delayTime <= new Date().valueOf()) {
+    const numberDATE = new Date().valueOf();
+    const timeStamp = await AsyncStorage.getItem("reviewTimestamp");
 
     if (
-      (reviewTimeStamp <= numberDATE || reviewTimeStamp == 0) &&
+      (Number(timeStamp) <= numberDATE || Number(timeStamp) == 0) &&
       (await StoreReview.isAvailableAsync()) &&
       (await StoreReview.hasAction())
     ) {
       StoreReview.requestReview();
 
-      var newTimeStamp = numberDATE + 1;
-      /* 0.1 = 1day, 1 = 1month */
-
+      const newTimeStamp =
+        numberDATE +
+        new Date(numberDATE)
+          .setMonth(new Date(numberDATE).getMonth() + 1)
+          .valueOf();
       await AsyncStorage.setItem(
-        "reviewTimeStampSAVE",
+        "reviewTimestamp",
         JSON.stringify(newTimeStamp)
       );
     }
@@ -2972,7 +2965,7 @@ function MainScreen() {
             bannerSize="smartBannerPortrait"
             adUnitID={
               Platform.OS === "ios" ? admob_ios.banner : admob_android.banner
-            } // Test ID, Replace with your-admob-unit-id
+            }
             servePersonalizedAds={personalisedAds}
           />
         ) : null}
