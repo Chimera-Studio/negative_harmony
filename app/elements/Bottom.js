@@ -1,72 +1,103 @@
 import React from "react";
-import { Text, View, Animated } from "react-native";
+import { Animated, Text, View } from "react-native";
 
-import styles from "../styles/styles";
+import { useLocationInfo } from "../utils";
 
-const Bottom = (type) => {
+import colors from "../styles/colors";
+import bottom from "../styles/bottom_styles";
+
+const Bottom = (props) => {
+  const locationInfo = useLocationInfo();
+  const animateBottom = {
+    transform: [{ translateY: 0 }],
+  };
+
   return (
-    <View>
-      {props.type === "scales" ? (
-        <Animated.View style={[styles.scaleWrapper, slideUp]}>
-          <View style={styles.positiveScale}>
-            {positiveScale.map((note, index) => (
-              <Text style={styles.positiveScaleText} key={index}>
+    <View style={bottom.space}>
+      {locationInfo.isScales && props.scales && (
+        <Animated.View style={[bottom.wrapper, animateBottom]}>
+          <View style={[bottom.scale, { alignItems: "flex-end" }]}>
+            {props.scales.positive.map((note, index) => (
+              <Text
+                key={index}
+                style={[bottom.scaleText, { color: colors.positiveText }]}
+              >
                 {note}
               </Text>
             ))}
           </View>
-          <View style={styles.axisLegend} />
-          <View style={styles.negativeScale}>
-            {negativeScale.map((note, index) => (
-              <Text style={styles.negativeScaleText} key={index}>
+
+          <View style={bottom.axis} />
+
+          <View style={[bottom.scale, { alignItems: "flex-start" }]}>
+            {props.scales.negative.map((note, index) => (
+              <Text
+                key={index}
+                style={[bottom.scaleText, { color: colors.negativeText }]}
+              >
                 {note}
               </Text>
             ))}
           </View>
         </Animated.View>
-      ) : (
-        <View style={styles.chordWrapper}>
-          <View style={styles.positiveChord}>
-            <View style={styles.positiveChordNameWrapper}>
-              <Text style={styles.positiveChordTonic}>{selectedTonic}</Text>
-              <Text style={styles.positiveChordName}>{selectedChordVal}</Text>
+      )}
+      {locationInfo.isChords && props.chords && (
+        <View style={bottom.wrapper}>
+          <View style={[bottom.chord, { alignItems: "flex-end" }]}>
+            <View style={[bottom.chordName, { alignItems: "flex-end" }]}>
+              <Text style={[bottom.tonic, { color: colors.positiveText }]}>
+                {props.tonic.positive}
+              </Text>
+              <Text style={[bottom.name, { color: colors.positiveText }]}>
+                {props.chord.positive}
+              </Text>
             </View>
 
-            <View style={styles.positiveChordNotes}>
-              {positiveChord.map((chordNote, index) => (
+            <View style={[bottom.notes, { alignItems: "flex-end" }]}>
+              {props.chords.positive.map((chord, index) => (
                 <Text
-                  style={
-                    chordNote.diatonic
-                      ? styles.diatonicChordText
-                      : styles.positiveChordText
-                  }
                   key={index}
+                  style={
+                    (bottom.notesText,
+                    [
+                      chord.diatonic
+                        ? { color: colors.red }
+                        : { color: colors.negativeText },
+                    ])
+                  }
                 >
-                  {chordNote.note}
+                  {chord.note}
                 </Text>
               ))}
             </View>
           </View>
 
-          <View style={styles.axisLegend} />
+          <View style={bottom.axis} />
 
-          <View style={styles.negativeChord}>
-            <View style={styles.negativeChordNameWrapper}>
-              <Text style={styles.negativeChordTonic}>{negativeTonic}</Text>
-              <Text style={styles.negativeChordName}>{negativeChordVal}</Text>
+          <View style={[bottom.chord, { alignItems: "flex-start" }]}>
+            <View style={[bottom.chordName, { alignItems: "flex-start" }]}>
+              <Text style={[bottom.tonic, { color: colors.negativeText }]}>
+                {props.tonic.negative}
+              </Text>
+              <Text style={[bottom.name, { color: colors.negativeText }]}>
+                {props.chord.negative}
+              </Text>
             </View>
 
-            <View style={styles.negativeChordNotes}>
-              {negativeChord.map((chordNote, index) => (
+            <View style={[bottom.notes, { alignItems: "flex-start" }]}>
+              {props.chords.negative.map((chord, index) => (
                 <Text
-                  style={
-                    chordNote.diatonic
-                      ? styles.diatonicChordText
-                      : styles.negativeChordText
-                  }
                   key={index}
+                  style={
+                    (bottom.notesText,
+                    [
+                      chord.diatonic
+                        ? { color: colors.red }
+                        : { color: colors.negativeText },
+                    ])
+                  }
                 >
-                  {chordNote.note}
+                  {chord.note}
                 </Text>
               ))}
             </View>

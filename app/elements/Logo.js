@@ -1,16 +1,10 @@
 import React, { useEffect } from "react";
 import { Animated, Easing } from "react-native";
-
-import styles from "../styles/styles";
-
 import Icon from "../assets/img/icon.svg";
+import styles from "../styles/styles";
 
 const Logo = () => {
   const rotate = new Animated.Value(0);
-
-  useEffect(() => {
-    startAnimation();
-  }, []);
 
   const startAnimation = () => {
     rotate.setValue(0);
@@ -23,6 +17,10 @@ const Logo = () => {
       startAnimation();
     });
   };
+
+  useEffect(() => {
+    startAnimation();
+  }, []);
 
   return (
     <Animated.View

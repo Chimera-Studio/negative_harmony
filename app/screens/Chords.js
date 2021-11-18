@@ -1,178 +1,366 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState } from "react";
 import {
   Text,
   View,
   ScrollView,
   TouchableOpacity,
   TouchableHighlight,
-  Animated,
   Modal,
 } from "react-native";
+import isEqual from "lodash.isequal";
+import times from "lodash/times";
 
 import ListArrow from "../assets/img/arrow.svg";
+import Bottom from "../elements/Bottom";
+
+import { eng } from "../locales";
+import { chordList, chords } from "../utils/patterns";
 
 import colors from "../styles/colors";
 import styles from "../styles/styles";
 
-const Chords = () => {
+let selectedTonicIndex = 0;
+let cloneChords = [];
+let cloneNegativeChords = [];
+let positiveChord = [];
+let negativeChord = [];
+let negativeTonic = null;
+let negativeChordVal = null;
+
+function showInitialChords(name) {
+  name = props.scales.positive[0];
+  selectedChordVal = chordList[0].value;
+
+  for (let i = 0; i < props.scales.positive.length; i++) {
+    if (name == props.scales.positive[i]) {
+      selectedTonicIndex = i;
+    }
+  }
+
+  cloneChords = props.scales.positive.slice();
+
+  for (let i = 0; i < selectedTonicIndex; i++)
+    cloneChords.push(cloneChords.shift());
+
+  cloneNegativeChords = props.scales.negative.slice();
+  for (let i = 0; i < selectedTonicIndex; i++)
+    cloneNegativeChords.push(cloneNegativeChords.shift());
+
+  handleChords();
+}
+
+function diatonicDetection() {
+  for (let n = 0; n < positiveChord.length; n++) {
+    let checkDiatonic = positiveChord[n].note;
+    for (let i = 0; i < positiveScale.length; i++) {
+      let scaleNote = positiveScale[i];
+      if (checkDiatonic == scaleNote) {
+        positiveChord[n].diatonic = false;
+      }
+    }
+  }
+  for (let n = 0; n < negativeChord.length; n++) {
+    let checkDiatonic = negativeChord[n].note;
+    for (let i = 0; i < negativeScale.length; i++) {
+      let scaleNote = negativeScale[i];
+      if (checkDiatonic == scaleNote) {
+        negativeChord[n].diatonic = false;
+      }
+    }
+  }
+}
+
+const Chords = (props) => {
+  const [chord, setChord] = useState(chordList[0]);
+  const [tonicSpacer, setTonicSpacer] = useState(0);
   const [legendStatus, setLegendStatus] = useState(false);
   const [openSelect, setOpenSelect] = useState(false);
-  const [tonicSliderOpen, setTonicSliderOpen] = useState(chordsUnlocked);
-  const opacity = useState(new Animated.Value(0))[0];
+  const [selectedIndex, setSelectedIndex] = useState(0);
+  const scrollChords = useRef(null);
 
-  function initialFadeIn() {
-    Animated.timing(opacity, {
-      toValue: 1,
-      duration: 0,
-      useNativeDriver: true,
-    }).start();
-  }
-
-  function fadeIn() {
-    Animated.timing(opacity, {
-      toValue: 1,
-      duration: 300,
-      useNativeDriver: true,
-    }).start();
-  }
-
-  function fadeOut() {
-    Animated.timing(opacity, {
-      toValue: 0,
-      duration: 300,
-      useNativeDriver: true,
-    }).start();
-  }
-
-  useEffect(() => {
-    setTonicSliderOpen(chordsUnlocked);
-    initialFadeIn();
-  }, []);
-
-  const legendToggle = () => {
-    if (legendStatus == false) {
-      fadeOut();
-      setTimeout(function () {
-        setLegendStatus(true);
-        fadeIn();
-      }, 150);
-    } else {
-      fadeOut();
-      setTimeout(function () {
-        setLegendStatus(false);
-        fadeIn();
-      }, 150);
-    }
+  const getDimentions = (event) => {
+    const { width } = event.nativeEvent.layout;
+    setTonicSpacer(width / 2 - 55);
   };
 
-  const openSelectList = () => {
-    setOpenSelect(true);
-  };
-
-  const selectedChord = (name, value) => {
-    setSelectedChordName(name);
-    selectedChordVal = value;
-    showChords();
+  const handleSelect = (chord) => {
+    setChord(chord);
+    // handleChords();
     setOpenSelect(false);
   };
 
-  const [selectedChordName, setSelectedChordName] = useState("Major");
+  const handleChords = () => {
+    positiveChord = [];
+    negativeChord = [];
 
-  const [tonicSpacer, setTonicSpacer] = useState(0);
-  const getDimentions = (event) => {
-    let { width } = event.nativeEvent.layout;
-    let spacerPadding = width / 2 - 55;
-    setTonicSpacer(spacerPadding);
+    times(chord.value.length, (i) => {
+      const obj = {};
+      obj["diatonic"] = true;
+      obj["note"] = cloneChords[chord.value[i]];
+      positiveChord.push(obj);
+
+      const objNeg = {};
+      objNeg["diatonic"] = true;
+      objNeg["note"] = cloneNegativeChords[chord.value[i]];
+      negativeChord.push(objNeg);
+    });
+
+    /*
+    if (selectedChordVal == "major") {
+      for (let i = 0; i < majorChord.length; i++) {
+        let obj = {};
+        obj["diatonic"] = true;
+        obj["note"] = cloneChords[majorChord[i]];
+        positiveChord.push(obj);
+        let objNeg = {};
+        objNeg["diatonic"] = true;
+        objNeg["note"] = cloneNegativeChords[majorChord[i]];
+        negativeChord.push(objNeg);
+      }
+    } else if (selectedChordVal == "minor") {
+      for (let i = 0; i < minorChord.length; i++) {
+        let obj = {};
+        obj["diatonic"] = true;
+        obj["note"] = cloneChords[minorChord[i]];
+        positiveChord.push(obj);
+        let objNeg = {};
+        objNeg["diatonic"] = true;
+        objNeg["note"] = cloneNegativeChords[minorChord[i]];
+        negativeChord.push(objNeg);
+      }
+    } else if (selectedChordVal == "major7") {
+      for (let i = 0; i < major7Chord.length; i++) {
+        let obj = {};
+        obj["diatonic"] = true;
+        obj["note"] = cloneChords[major7Chord[i]];
+        positiveChord.push(obj);
+        let objNeg = {};
+        objNeg["diatonic"] = true;
+        objNeg["note"] = cloneNegativeChords[major7Chord[i]];
+        negativeChord.push(objNeg);
+      }
+    } else if (selectedChordVal == "minor7") {
+      for (let i = 0; i < minor7Chord.length; i++) {
+        let obj = {};
+        obj["diatonic"] = true;
+        obj["note"] = cloneChords[minor7Chord[i]];
+        positiveChord.push(obj);
+        let objNeg = {};
+        objNeg["diatonic"] = true;
+        objNeg["note"] = cloneNegativeChords[minor7Chord[i]];
+        negativeChord.push(objNeg);
+      }
+    } else if (selectedChordVal == "m7b5") {
+      for (let i = 0; i < m7b5Chord.length; i++) {
+        let obj = {};
+        obj["diatonic"] = true;
+        obj["note"] = cloneChords[m7b5Chord[i]];
+        positiveChord.push(obj);
+        let objNeg = {};
+        objNeg["diatonic"] = true;
+        objNeg["note"] = cloneNegativeChords[m7b5Chord[i]];
+        negativeChord.push(objNeg);
+      }
+    } else if (selectedChordVal == "maj9") {
+      for (let i = 0; i < maj9Chord.length; i++) {
+        let obj = {};
+        obj["diatonic"] = true;
+        obj["note"] = cloneChords[maj9Chord[i]];
+        positiveChord.push(obj);
+        let objNeg = {};
+        objNeg["diatonic"] = true;
+        objNeg["note"] = cloneNegativeChords[maj9Chord[i]];
+        negativeChord.push(objNeg);
+      }
+    } else if (selectedChordVal == "m6") {
+      for (let i = 0; i < m6Chord.length; i++) {
+        let obj = {};
+        obj["diatonic"] = true;
+        obj["note"] = cloneChords[m6Chord[i]];
+        positiveChord.push(obj);
+        let objNeg = {};
+        objNeg["diatonic"] = true;
+        objNeg["note"] = cloneNegativeChords[m6Chord[i]];
+        negativeChord.push(objNeg);
+      }
+    } else if (selectedChordVal == "sus2") {
+      for (let i = 0; i < sus2Chord.length; i++) {
+        let obj = {};
+        obj["diatonic"] = true;
+        obj["note"] = cloneChords[sus2Chord[i]];
+        positiveChord.push(obj);
+        let objNeg = {};
+        objNeg["diatonic"] = true;
+        objNeg["note"] = cloneNegativeChords[sus2Chord[i]];
+        negativeChord.push(objNeg);
+      }
+    } else if (selectedChordVal == "sus4") {
+      for (let i = 0; i < sus4Chord.length; i++) {
+        let obj = {};
+        obj["diatonic"] = true;
+        obj["note"] = cloneChords[sus4Chord[i]];
+        positiveChord.push(obj);
+        let objNeg = {};
+        objNeg["diatonic"] = true;
+        objNeg["note"] = cloneNegativeChords[sus4Chord[i]];
+        negativeChord.push(objNeg);
+      }
+    } else if (selectedChordVal == "dim") {
+      for (let i = 0; i < dimChord.length; i++) {
+        let obj = {};
+        obj["diatonic"] = true;
+        obj["note"] = cloneChords[dimChord[i]];
+        positiveChord.push(obj);
+        let objNeg = {};
+        objNeg["diatonic"] = true;
+        objNeg["note"] = cloneNegativeChords[dimChord[i]];
+        negativeChord.push(objNeg);
+      }
+    } else if (selectedChordVal == "aug") {
+      for (let i = 0; i < augChord.length; i++) {
+        let obj = {};
+        obj["diatonic"] = true;
+        obj["note"] = cloneChords[augChord[i]];
+        positiveChord.push(obj);
+        let objNeg = {};
+        objNeg["diatonic"] = true;
+        objNeg["note"] = cloneNegativeChords[augChord[i]];
+        negativeChord.push(objNeg);
+      }
+    }
+    */
+
+    if (chord.name == "Minor 6") {
+      negativeTonic = negativeChord[negativeChord.length - 2].note;
+    } else {
+      negativeTonic = negativeChord[negativeChord.length - 1].note;
+    }
+
+    let negativeChordPattern = [];
+    for (let n = 0; n < negativeChord.length; n++) {
+      let checkChordNote = negativeChord[n].note;
+      for (let i = 0; i < props.scales.positive.length; i++) {
+        let tonicVal = i;
+        let tonicNote = props.scales.positive[i];
+        if (checkChordNote == tonicNote) {
+          negativeChordPattern.push(parseInt(tonicVal));
+        }
+      }
+    }
+
+    for (let i = 0; i < negativeChordPattern.length; i++) {
+      let subtractor = negativeChordPattern[negativeChordPattern.length - 1];
+      let noteValReset = negativeChordPattern[i] - subtractor;
+      if (noteValReset <= -1) {
+        let newNoteValReset = 12 - Math.abs(noteValReset);
+        negativeChordPattern[i] = parseInt(newNoteValReset);
+      } else if (noteValReset == 0) {
+        negativeChordPattern[i] = parseInt("0");
+      } else {
+        let newVal = negativeChordPattern[i] - subtractor;
+        negativeChordPattern[i] = parseInt(newVal);
+      }
+    }
+
+    negativeChordPattern.reverse();
+    if (isEqual(chords.major, negativeChordPattern)) {
+      negativeChordVal = "major";
+    } else if (isEqual(chords.minor, negativeChordPattern)) {
+      negativeChordVal = "minor";
+    } else if (isEqual(chords.major7, negativeChordPattern)) {
+      negativeChordVal = "major7";
+    } else if (isEqual(chords.minor7, negativeChordPattern)) {
+      negativeChordVal = "minor7";
+    } else if (isEqual(chords.m7flat5, negativeChordPattern)) {
+      negativeChordVal = "m7♭5";
+    } else if (isEqual(chords.major9, negativeChordPattern)) {
+      negativeChordVal = "maj9";
+    } else if (isEqual(chords.minor9, negativeChordPattern)) {
+      negativeChordVal = "m9";
+    } else if (isEqual(chords.minor6, negativeChordPattern)) {
+      negativeChordVal = "m6";
+    } else if (isEqual(chords.sus2, negativeChordPattern)) {
+      negativeChordVal = "sus2";
+    } else if (isEqual(chords.sus4, negativeChordPattern)) {
+      negativeChordVal = "sus4";
+    } else if (isEqual(chords.dim, negativeChordPattern)) {
+      negativeChordVal = "dim";
+    } else if (isEqual(chords.aug, negativeChordPattern)) {
+      negativeChordVal = "aug";
+    } else if (isEqual(chords.dominant7, negativeChordPattern)) {
+      negativeChordVal = "7";
+    } else if (isEqual(chords.m6Neg, negativeChordPattern)) {
+      negativeChordVal = "7";
+    } else if (isEqual(chords.diminished7, negativeChordPattern)) {
+      negativeChordVal = "dim7";
+    } else if (isEqual(chords.dom7sus4, negativeChordPattern)) {
+      negativeChordVal = "7sus4";
+    } else if (isEqual(chords.chord5, negativeChordPattern)) {
+      negativeChordVal = "5Chord";
+    } else if (isEqual(chords.chord6, negativeChordPattern)) {
+      negativeChordVal = "6Chord";
+    } else {
+      negativeChordVal = "???";
+    }
+
+    // diatonicDetection();
   };
 
-  const scrollChords = useRef(null);
-  let selectedIndexSaved = 0;
-  const [selectedIndex, setSelectedIndex] = useState(selectedIndexSaved);
-  let scrollRef = scrollRef;
-  const setTonic = (index) => {
+  const handleTonic = (name, index) => {
     setSelectedIndex(index);
     let offsetInterval = 110 * index;
     scrollChords.current.scrollTo({
       x: offsetInterval,
       animated: false,
     });
-  };
 
-  const notePress = (name) => {
-    selectedTonic = name;
-
-    for (let i = 0; i < cloneScale.length; i++) {
-      if (selectedTonic == cloneScale[i]) {
+    for (let i = 0; i < props.scales.positive.length; i++) {
+      if (name == props.scales.positive[i]) {
         selectedTonicIndex = i;
       }
     }
 
-    cloneChords = cloneScale.slice();
+    cloneChords = props.scales.positive.slice();
 
-    let rootNote = selectedTonicIndex;
-    for (let i = 0; i < rootNote; i++) cloneChords.push(cloneChords.shift());
+    for (let i = 0; i < selectedTonicIndex; i++)
+      cloneChords.push(cloneChords.shift());
 
-    cloneNegativeChords = cloneNegativeScale.slice();
-    for (let i = 0; i < rootNote; i++)
+    cloneNegativeChords = props.scales.negative.slice();
+    for (let i = 0; i < selectedTonicIndex; i++)
       cloneNegativeChords.push(cloneNegativeChords.shift());
 
-    showChords();
-    askForReview();
+    handleChords();
+    // props.review();
   };
 
   return (
     <View style={styles.screenWrapper}>
-      <View style={styles.navigation}>
-        <TouchableOpacity disabled={openSelect} onPress={legendToggle}>
-          <Info style={styles.info} />
+      <View style={styles.selectChordsWrapper}>
+        <Text style={styles.selectTextExp}>{eng.select.chords}</Text>
+
+        <View style={styles.selectedScaleNameWrapper}>
+          <Text style={styles.selectedScaleKey}>
+            {props.scales.positive[0]}
+          </Text>
+          <Text style={styles.selectedScaleName}>
+            {props.selectedScale.name}
+          </Text>
+        </View>
+
+        <TouchableOpacity
+          style={styles.selectInput}
+          disabled={legendStatus}
+          onPress={() => setOpenSelect(true)}
+        >
+          <Text style={styles.selectInputText}>{chord.name}</Text>
+          <ListArrow style={styles.selectListArrow} />
         </TouchableOpacity>
       </View>
 
-      <View style={styles.selectChordsWrapper}>
-        {legendStatus ? (
-          <Animated.View style={[styles.legendContainer, { opacity }]}>
-            <Legend style={styles.legend} />
-
-            <View style={styles.legend2Wrapper}>
-              <Legend2 style={styles.legend2} />
-              <TouchableOpacity style={styles.disclamerBtn}>
-                <Disclamer style={styles.disclamer} />
-              </TouchableOpacity>
-            </View>
-          </Animated.View>
-        ) : null}
-
-        {legendStatus ? null : (
-          <Animated.View style={{ opacity }}>
-            <Text style={styles.selectTextExp}>
-              Select a chord from a key of:
-            </Text>
-
-            <View style={styles.selectedScaleNameWrapper}>
-              <Text style={styles.selectedScaleKey}>
-                {selectedScaleKeySaved}
-              </Text>
-              <Text style={styles.selectedScaleName}>
-                {selectedScaleNameSaved}
-              </Text>
-            </View>
-
-            <TouchableOpacity
-              style={styles.selectInput}
-              disabled={legendStatus}
-              onPress={openSelectList}
-            >
-              <Text style={styles.selectInputText}>{selectedChordName}</Text>
-              <ListArrow style={styles.selectListArrow} />
-            </TouchableOpacity>
-          </Animated.View>
-        )}
-      </View>
-
       <View style={styles.chordsWrapper} onLayout={getDimentions}>
-        {tonicSliderOpen ? (
+        {props.chordsUnlocked ? (
           <View style={styles.scrollChords}>
-            <Text style={styles.scrollChordsExpText}>Choose a tonic:</Text>
+            <Text style={styles.scrollChordsExpText}>{eng.select.tonics}</Text>
 
             <ScrollView
               ref={scrollChords}
@@ -183,7 +371,7 @@ const Chords = () => {
               <View
                 style={(styles.scrollChordsSpace, { width: tonicSpacer })}
               />
-              {positiveScaleTonics.map((note, index) => (
+              {props.scales.positive.map((note, index) => (
                 <TouchableHighlight
                   activeOpacity={1}
                   underlayColor={colors.lightBlue}
@@ -193,9 +381,7 @@ const Chords = () => {
                       : styles.scrollChordsNote
                   }
                   key={index}
-                  onPress={() => {
-                    notePress(note), setTonic(index);
-                  }}
+                  onPress={() => handleTonic(note, index)}
                 >
                   <Text
                     style={
@@ -215,12 +401,12 @@ const Chords = () => {
           </View>
         ) : (
           <TouchableHighlight style={styles.rewardedOpen}>
-            <Text style={styles.rewardedOpenText}>Unlock negative chords</Text>
+            <Text style={styles.rewardedOpenText}>{eng.cta.chords}</Text>
           </TouchableHighlight>
         )}
       </View>
-      <View style={styles.chordSpace}></View>
-      <DisplayChords />
+
+      {/* <Bottom /> */}
 
       <Modal animationType="fade" transparent={true} visible={openSelect}>
         <View style={styles.selectListShadow}>
@@ -232,23 +418,23 @@ const Chords = () => {
             >
               {chordList.map((chord, index) => (
                 <TouchableOpacity
+                  key={chord.name}
                   style={
                     index === chordList.length - 1
                       ? styles.selectItemNoBorder
                       : styles.selectItem
                   }
-                  key={chord.value}
                   onPress={
-                    tonicSliderOpen
-                      ? () => selectedChord(chord.name, chord.value)
+                    props.chordsUnlocked
+                      ? () => handleSelect(chord)
                       : index == 0
-                      ? () => selectedChord(chord.name, chord.value)
+                      ? () => handleSelect(chord)
                       : null
                   }
                 >
                   <Text
                     style={
-                      tonicSliderOpen
+                      props.chordsUnlocked
                         ? styles.selectText
                         : index == 0
                         ? styles.selectText

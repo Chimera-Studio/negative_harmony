@@ -17,10 +17,13 @@ import Rewarded from "./Rewarded";
 import Chords from "./Chords";
 import Scales from "./Scales";
 
+import { useReview } from "../utils";
+import { scaleList } from "../utils/patterns";
 import { admob } from "../tokens";
 
 import main_style from "../styles/main_style";
 
+const reviewDelay = new Date().valueOf() + 60000;
 const emulator = Device.isDevice;
 const admob_ios = {
   banner: emulator ? admob.banner.ios : admob.banner.ios_test,
@@ -31,12 +34,21 @@ const admob_android = {
   rewarded: emulator ? admob.rewarded.android : admob.rewarded.android_test,
 };
 
-const delayTime = new Date().valueOf() + 60000;
-
 function Body() {
-  const [personalised, setPersonalised] = useState(false);
   const [ads, setAds] = useState(false);
+  const [personalised, setPersonalised] = useState(false);
+  const [chordsUnlocked, setChordsUnlocked] = useState(true);
   const [alert, setAlert] = useState(false);
+
+  const [selectedScale, setSelectedScale] = useState(scaleList[0]);
+  const [scales, setScales] = useState(null);
+  const [axis, setAxis] = useState({ status: false, angle: "0deg" });
+  const [activeKey, setActiveKey] = useState({
+    x: 0,
+    y: 0,
+    group: null,
+    field: null,
+  });
 
   useEffect(() => {
     setTimeout(askForPermission, 1000);
@@ -56,6 +68,13 @@ function Body() {
     }
   };
 
+  const handleScaleCallbacks = (origin, val) => {
+    if (origin === "selectedScale") setSelectedScale(val);
+    else if (origin === "scales") setScales(val);
+    else if (origin === "axis") setAxis(val);
+    else if (origin === "activeKey") setActiveKey(val);
+  };
+
   return (
     <View style={main_style.container}>
       <StatusBar hidden />
@@ -73,10 +92,26 @@ function Body() {
 
         <SafeAreaView style={main_style.safe}>
           <Navigation />
-          <Route exact path="/disclamer" component={Disclamer} />
-          <Route exact path="/rewarded" component={Rewarded} />
-          <Route exact path="/chords" component={Chords} />
-          <Route exact path="/" component={Scales} />
+          <Route path="/disclamer" component={Disclamer} />
+          <Route path="/rewarded" component={Rewarded} />
+          <Route path="/chords">
+            <Chords
+              selectedScale={selectedScale}
+              scales={scales}
+              chordsUnlocked={chordsUnlocked}
+              review={() => useReview(chordsUnlocked, reviewDelay)}
+            />
+          </Route>
+          <Route exact path="/">
+            <Scales
+              selectedScale={selectedScale}
+              scales={scales}
+              axis={axis}
+              activeKey={activeKey}
+              callbacks={handleScaleCallbacks}
+              review={() => useReview(chordsUnlocked, reviewDelay)}
+            />
+          </Route>
         </SafeAreaView>
 
         <Redirect exact to="/" />
