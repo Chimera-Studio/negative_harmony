@@ -14,10 +14,10 @@ const Bottom = (props) => {
 
   return (
     <View style={bottom.space}>
-      {locationInfo.isScales && props.scales && (
+      {locationInfo.isScales && props.data && (
         <Animated.View style={[bottom.wrapper, animateBottom]}>
           <View style={[bottom.scale, { alignItems: "flex-end" }]}>
-            {props.scales.positive.map((note, index) => (
+            {props.data.positive.map((note, index) => (
               <Text
                 key={index}
                 style={[bottom.scaleText, { color: colors.positiveText }]}
@@ -30,7 +30,7 @@ const Bottom = (props) => {
           <View style={bottom.axis} />
 
           <View style={[bottom.scale, { alignItems: "flex-start" }]}>
-            {props.scales.negative.map((note, index) => (
+            {props.data.negative.map((note, index) => (
               <Text
                 key={index}
                 style={[bottom.scaleText, { color: colors.negativeText }]}
@@ -41,30 +41,30 @@ const Bottom = (props) => {
           </View>
         </Animated.View>
       )}
-      {locationInfo.isChords && props.chords && (
+      {locationInfo.isChords && props.data && (
         <View style={bottom.wrapper}>
           <View style={[bottom.chord, { alignItems: "flex-end" }]}>
             <View style={[bottom.chordName, { alignItems: "flex-end" }]}>
               <Text style={[bottom.tonic, { color: colors.positiveText }]}>
-                {props.tonic.positive}
+                {props.data.positive[0].note}
               </Text>
               <Text style={[bottom.name, { color: colors.positiveText }]}>
-                {props.chord.positive}
+                {props.data.positiveName}
               </Text>
             </View>
 
             <View style={[bottom.notes, { alignItems: "flex-end" }]}>
-              {props.chords.positive.map((chord, index) => (
+              {props.data.positive.map((chord, index) => (
                 <Text
                   key={index}
-                  style={
-                    (bottom.notesText,
+                  style={[
+                    bottom.notesText,
                     [
                       chord.diatonic
                         ? { color: colors.red }
                         : { color: colors.negativeText },
-                    ])
-                  }
+                    ],
+                  ]}
                 >
                   {chord.note}
                 </Text>
@@ -77,25 +77,25 @@ const Bottom = (props) => {
           <View style={[bottom.chord, { alignItems: "flex-start" }]}>
             <View style={[bottom.chordName, { alignItems: "flex-start" }]}>
               <Text style={[bottom.tonic, { color: colors.negativeText }]}>
-                {props.tonic.negative}
+                {props.data.negative[props.data.negative.length - 1].note}
               </Text>
               <Text style={[bottom.name, { color: colors.negativeText }]}>
-                {props.chord.negative}
+                {props.data.negativeName}
               </Text>
             </View>
 
             <View style={[bottom.notes, { alignItems: "flex-start" }]}>
-              {props.chords.negative.map((chord, index) => (
+              {props.data.negative.map((chord, index) => (
                 <Text
                   key={index}
-                  style={
-                    (bottom.notesText,
+                  style={[
+                    bottom.notesText,
                     [
                       chord.diatonic
                         ? { color: colors.red }
                         : { color: colors.negativeText },
-                    ])
-                  }
+                    ],
+                  ]}
                 >
                   {chord.note}
                 </Text>
@@ -108,4 +108,4 @@ const Bottom = (props) => {
   );
 };
 
-export default Bottom;
+export default React.memo(Bottom);

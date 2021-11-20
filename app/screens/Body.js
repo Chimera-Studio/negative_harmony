@@ -1,6 +1,6 @@
 import { StatusBar } from "expo-status-bar";
 import React, { useState, useEffect } from "react";
-import { SafeAreaView, View } from "react-native";
+import { SafeAreaView, Text, View } from "react-native";
 import { NativeRouter, Redirect, Route, BackButton } from "react-router-native";
 import {
   requestPermissionsAsync,
@@ -17,6 +17,7 @@ import Rewarded from "./Rewarded";
 import Chords from "./Chords";
 import Scales from "./Scales";
 
+import { eng } from "../locales";
 import { useReview } from "../utils";
 import { scaleList } from "../utils/patterns";
 import { admob } from "../tokens";
@@ -75,13 +76,18 @@ function Body() {
     else if (origin === "activeKey") setActiveKey(val);
   };
 
+  const handleAlert = () => {
+    setAlert(true);
+    setTimeout(() => setAlert(false), 3000);
+  };
+
   return (
     <View style={main_style.container}>
       <StatusBar hidden />
 
-      {alert && (
+      {alert && !scales && (
         <View style={main_style.alert}>
-          <Text style={main_style.alertText}>You need to tap on a field!</Text>
+          <Text style={main_style.alertText}>{eng.alert.noKey}</Text>
         </View>
       )}
 
@@ -91,7 +97,7 @@ function Body() {
         <GradientBG />
 
         <SafeAreaView style={main_style.safe}>
-          <Navigation />
+          <Navigation scales={scales} alert={handleAlert} />
           <Route path="/disclamer" component={Disclamer} />
           <Route path="/rewarded" component={Rewarded} />
           <Route path="/chords">

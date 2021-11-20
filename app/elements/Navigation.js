@@ -10,15 +10,23 @@ import { useLocationInfo } from "../utils";
 import colors from "../styles/colors";
 import navigation_style from "../styles/navigation_style";
 
-const Navigation = () => {
+const Navigation = (props) => {
   const locationInfo = useLocationInfo();
-  const path = locationInfo.isScales ? "/chords" : "/";
   const [legendStatus, setLegendStatus] = useState(false);
+  const path = locationInfo.isScales ? "/chords" : "/";
+
+  const handleAlert = (e) => {
+    if (!props.scales) {
+      e.preventDefault();
+      props.alert();
+    }
+  };
 
   return (
     <View style={navigation_style.navigation}>
       <Link
         to={path}
+        onPress={(e) => handleAlert(e)}
         underlayColor={colors.lightBlue}
         style={navigation_style.switch}
       >

@@ -3,6 +3,9 @@ export const eng = {
     scales: "Scales",
     chords: "Chords",
   },
+  alert: {
+    noKey: "You need to tap on a field!",
+  },
   select: {
     scales: "Select a scale and tap on a field:",
     chords: "Select a chord from a key of:",

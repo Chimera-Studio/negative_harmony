@@ -50,13 +50,13 @@ export const Scales = (props) => {
   };
 
   const handleScales = (shift, scale) => {
-    let positive = [];
-    let negative = [];
+    const positive = [];
+    const negative = [];
 
-    let clone = musicScale.slice();
+    const clone = musicScale.slice();
     times(shift, () => clone.push(clone.shift()));
 
-    let negativeClone = clone.slice();
+    const negativeClone = clone.slice();
     times(8, () => negativeClone.push(negativeClone.shift()));
     negativeClone.reverse();
 
@@ -66,6 +66,8 @@ export const Scales = (props) => {
     });
 
     props.callbacks("scales", {
+      positiveRange: clone,
+      negativeRange: negativeClone,
       positive: positive,
       negative: negative,
     });
@@ -1437,30 +1439,28 @@ export const Scales = (props) => {
         </Svg>
       </View>
 
-      <Bottom scales={props.scales} />
+      <Bottom data={props.scales} />
 
       <Modal animationType="fade" transparent={true} visible={openSelect}>
-        <View style={styles.selectListShadow}>
-          <View style={styles.selectListWrapper}>
-            <ScrollView
-              showsVerticalScrollIndicator={false}
-              style={styles.selectList}
-            >
-              {scaleList.map((scale, index) => (
-                <TouchableOpacity
-                  key={scale.name}
-                  style={
-                    index === scaleList.length - 1
-                      ? styles.selectItemNoBorder
-                      : styles.selectItem
-                  }
-                  onPress={() => handleSelect(scale)}
-                >
-                  <Text style={styles.selectText}>{scale.name}</Text>
-                </TouchableOpacity>
-              ))}
-            </ScrollView>
-          </View>
+        <View style={styles.selectListWrapper}>
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            style={styles.selectList}
+          >
+            {scaleList.map((scale, index) => (
+              <TouchableOpacity
+                key={scale.name}
+                style={
+                  index === scaleList.length - 1
+                    ? styles.selectItemNoBorder
+                    : styles.selectItem
+                }
+                onPress={() => handleSelect(scale)}
+              >
+                <Text style={styles.selectText}>{scale.name}</Text>
+              </TouchableOpacity>
+            ))}
+          </ScrollView>
         </View>
       </Modal>
     </View>
