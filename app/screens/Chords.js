@@ -7,14 +7,18 @@ import {
   TouchableHighlight,
   Modal,
 } from "react-native";
+import { Link } from "react-router-native";
 import indexOf from "lodash/indexOf";
 import times from "lodash/times";
 import includes from "lodash/includes";
 import forEach from "lodash/forEach";
 import isEqual from "lodash.isequal";
 
-import ListArrow from "../assets/img/arrow.svg";
 import Bottom from "../elements/Bottom";
+import Legend from "../assets/img/legend.svg";
+import LegendExtra from "../assets/img/legendExtra.svg";
+import Disclamer from "../assets/img/disclamer.svg";
+import ListArrow from "../assets/img/arrow.svg";
 
 import { eng } from "../locales";
 import { chordList } from "../utils/patterns";
@@ -109,7 +113,7 @@ const Chords = (props) => {
     });
 
     handleChords(selectedChord, index);
-    // props.review();
+    props.review();
   };
 
   useEffect(() => handleChords(selectedChord, tonic), []);
@@ -117,24 +121,43 @@ const Chords = (props) => {
   return (
     <View style={styles.screenWrapper}>
       <View style={styles.selectChordsWrapper}>
-        <Text style={styles.selectTextExp}>{eng.select.chords}</Text>
+        {props.legend ? (
+          <View style={styles.legendContainer}>
+            <Legend style={styles.legend} />
 
-        <View style={styles.selectedScaleNameWrapper}>
-          <Text style={styles.selectedScaleKey}>
-            {props.scales.positive[0]}
-          </Text>
-          <Text style={styles.selectedScaleName}>
-            {props.selectedScale.name}
-          </Text>
-        </View>
+            <View style={styles.legendExtra}>
+              <LegendExtra style={{ flexShrink: 1 }} />
+              <Link
+                to="/info"
+                underlayColor={colors.transparent}
+                style={styles.disclamerBtn}
+              >
+                <Disclamer style={styles.disclamer} />
+              </Link>
+            </View>
+          </View>
+        ) : (
+          <>
+            <Text style={styles.selectTextExp}>{eng.select.chords}</Text>
 
-        <TouchableOpacity
-          style={styles.selectInput}
-          onPress={() => setOpenSelect(true)}
-        >
-          <Text style={styles.selectInputText}>{selectedChord.name}</Text>
-          <ListArrow style={styles.selectListArrow} />
-        </TouchableOpacity>
+            <View style={styles.selectedScaleNameWrapper}>
+              <Text style={styles.selectedScaleKey}>
+                {props.scales.positive[0]}
+              </Text>
+              <Text style={styles.selectedScaleName}>
+                {props.selectedScale.name}
+              </Text>
+            </View>
+
+            <TouchableOpacity
+              style={styles.selectInput}
+              onPress={() => setOpenSelect(true)}
+            >
+              <Text style={styles.selectInputText}>{selectedChord.name}</Text>
+              <ListArrow style={styles.selectListArrow} />
+            </TouchableOpacity>
+          </>
+        )}
       </View>
 
       <View style={styles.chordsWrapper} onLayout={getDimentions}>
@@ -184,9 +207,13 @@ const Chords = (props) => {
             </ScrollView>
           </View>
         ) : (
-          <TouchableHighlight style={styles.rewardedOpen}>
+          <Link
+            to="/rewarded"
+            underlayColor={colors.blueTransparent}
+            style={styles.rewardedOpen}
+          >
             <Text style={styles.rewardedOpenText}>{eng.cta.chords}</Text>
-          </TouchableHighlight>
+          </Link>
         )}
       </View>
 
@@ -216,13 +243,21 @@ const Chords = (props) => {
                 }
               >
                 <Text
-                  style={
+                  style={[
                     props.chordsUnlocked
                       ? styles.selectText
                       : index === 0
                       ? styles.selectText
-                      : styles.selectDisabledText
-                  }
+                      : styles.selectDisabledText,
+                    {
+                      color:
+                        selectedChord.name === item.name
+                          ? colors.blue
+                          : props.chordsUnlocked
+                          ? colors.black
+                          : colors.whiteGray,
+                    },
+                  ]}
                 >
                   {item.name}
                 </Text>

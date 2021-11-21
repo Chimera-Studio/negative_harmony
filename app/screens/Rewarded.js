@@ -7,83 +7,77 @@ import {
   Platform,
 } from "react-native";
 import { AdMobRewarded } from "expo-ads-admob";
+import { Link } from "react-router-native";
+import { useHistory } from "react-router-dom";
+
+import Exit from "../assets/icons/Exit";
 
 import colors from "../styles/colors";
 import styles from "../styles/styles";
 
-const Rewarded = () => {
-  const [loadRewarded, setLoadRewarded] = useState(false);
+const Rewarded = (props) => {
+  const history = useHistory();
+  const [loading, setLoading] = useState(false);
 
-  const rewardedTimeOut = () => {
-    setLoadRewarded(true);
+  const handleBack = (e) => {
+    if (loading) e.preventDefault();
   };
 
-  AdMobRewarded.addEventListener("rewardedVideoDidFailToLoad", () => {
-    resetRewarded();
-  });
+  const handleReset = () => {
+    setTimeout(() => {
+      setLoading(false);
+    }, 10000);
+  };
 
-  AdMobRewarded.addEventListener("rewardedVideoDidFailToPresent", () => {
-    resetRewarded();
-  });
-
-  AdMobRewarded.addEventListener("rewardedVideoDidDismiss", () => {
-    resetRewarded();
-  });
-
-  AdMobRewarded.addEventListener("rewardedVideoUserDidEarnReward", () => {
-    unlockChords();
-  });
-
-  function resetRewarded() {
-    if (chordsUnlocked == false) {
-      setTimeout(function () {
-        setLoadRewarded(false);
-      }, 10000);
-    }
-  }
-
-  async function requestReward() {
-    rewardedTimeOut();
-
+  const handleRequest = async () => {
+    setLoading(true);
     await AdMobRewarded.setAdUnitID(
-      Platform.OS === "ios" ? admob_ios.rewarded : admob_android.rewarded
+      Platform.OS === "ios" ? props.ads.ios : props.ads.android
     ); // 1. iOS, 2. Android
     await AdMobRewarded.requestAdAsync();
     await AdMobRewarded.showAdAsync();
-  }
+  };
 
-  function unlockChords() {
-    visibleScales = true;
-    chordsUnlocked = true;
-    showInitialScales();
-    showInitialChords();
-  }
+  AdMobRewarded.addEventListener("rewardedVideoDidFailToLoad", () => {
+    handleReset();
+  });
+
+  AdMobRewarded.addEventListener("rewardedVideoDidFailToPresent", () => {
+    handleReset();
+  });
+
+  AdMobRewarded.addEventListener("rewardedVideoDidPresent", () => {
+    setTimeout(() => {
+      setLoading(false);
+    }, 1000);
+  });
+
+  AdMobRewarded.addEventListener("rewardedVideoUserDidEarnReward", () => {
+    props.reward("chords");
+    history.push("/chords");
+  });
 
   return (
     <View style={styles.rewardedWrapper}>
-      <TouchableOpacity
+      <Link
+        to="/chords"
+        onPress={(e) => handleBack(e)}
+        underlayColor={colors.transparent}
         style={styles.exit}
-        disabled={loadRewarded}
-        onPress={(showScales(), showInitialChords())}
       >
-        <Svg height="100%" width="100%" viewBox="0 0 352 352">
-          <Path
-            fill={!loadRewarded ? colors.blue : colors.disabled}
-            d="M242.7,176L342.8,75.9c12.3-12.3,12.3-32.2,0-44.5L320.6,9.2c-12.3-12.3-32.2-12.3-44.5,0L176,109.3L75.9,9.2 C63.7-3.1,43.7-3.1,31.5,9.2L9.2,31.4c-12.3,12.3-12.3,32.2,0,44.5L109.3,176L9.2,276.1c-12.3,12.3-12.3,32.2,0,44.5l22.2,22.2 c12.3,12.3,32.2,12.3,44.5,0L176,242.7l100.1,100.1c12.3,12.3,32.2,12.3,44.5,0l22.2-22.2c12.3-12.3,12.3-32.2,0-44.5L242.7,176z"
-          />
-        </Svg>
-      </TouchableOpacity>
+        <Exit color={!loading ? colors.blue : colors.disabled} />
+      </Link>
       <View style={styles.rewardedExp}>
         <Text style={styles.rewardedExpText}>To unlock chords</Text>
         <Text style={styles.rewardedExpText}>watch this Advert:</Text>
       </View>
       <TouchableOpacity
-        style={!loadRewarded ? styles.rewardedStart : styles.rewardedDisabled}
+        style={!loading ? styles.rewardedStart : styles.rewardedDisabled}
         activeOpacity={1}
-        disabled={loadRewarded}
-        onPress={() => requestReward()}
+        disabled={loading}
+        onPress={handleRequest}
       >
-        {!loadRewarded ? (
+        {!loading ? (
           <Text style={styles.rewardedStartText}>Watch the Ad</Text>
         ) : (
           <ActivityIndicator size="large" color={colors.white} />

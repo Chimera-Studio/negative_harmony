@@ -13,7 +13,7 @@ const styles = StyleSheet.create({
     aspectRatio: 5 / 1,
     marginBottom: 5,
   },
-  legend2Wrapper: {
+  legendExtra: {
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-between",
@@ -21,9 +21,6 @@ const styles = StyleSheet.create({
     height: "32%",
     backgroundColor: colors.whiteTransparent,
     borderRadius: 15,
-  },
-  legend2: {
-    flexShrink: 1,
   },
   disclamerBtn: {
     width: "42%",
@@ -83,6 +80,7 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
     height: "12%",
     marginVertical: "5%",
+    alignItems: "center",
   },
   selectChordsWrapper: {
     display: "flex",
@@ -141,14 +139,12 @@ const styles = StyleSheet.create({
   },
   selectDisabledText: {
     fontFamily: "NegativeHarmonyRegular",
-    color: colors.whiteGray,
     textAlign: "center",
     fontSize: 18,
     marginVertical: 10,
   },
   selectText: {
     fontFamily: "NegativeHarmonyRegular",
-    color: colors.black,
     textAlign: "center",
     fontSize: 18,
     marginVertical: 10,

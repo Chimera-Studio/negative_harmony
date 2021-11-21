@@ -1,7 +1,7 @@
 import React from "react";
 import { Svg, Path } from "react-native-svg";
 
-const Exit = (color) => {
+const Exit = (props) => {
   return (
     <Svg height="100%" width="100%" viewBox="0 0 352 352">
       <Path

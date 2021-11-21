@@ -19,6 +19,7 @@
     "expo-ads-admob": "~10.1.2",
     "expo-app-loading": "^1.0.3",
     "expo-blur": "~9.0.3",
+    "expo-constants": "~11.0.1",
     "expo-device": "~3.3.0",
     "expo-font": "~9.2.1",
     "expo-linear-gradient": "~9.2.0",

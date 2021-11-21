@@ -20,7 +20,7 @@ export const cmsFetch = async (query, callback) => {
       }
     )
     .then((res) => {
-      callback(Promise.resolve(res.data.data));
+      callback(res.data.data);
     })
     .catch((err) => {
       console.log("Error happened during fetching!", err);

@@ -12,6 +12,7 @@ import times from "lodash/times";
 
 import Logo from "../elements/Logo";
 import Bottom from "../elements/Bottom";
+import Legend from "../assets/img/legend.svg";
 import ListArrow from "../assets/img/arrow.svg";
 
 import { eng } from "../locales";
@@ -45,7 +46,7 @@ export const Scales = (props) => {
 
   const handleSelect = (scale) => {
     props.callbacks("selectedScale", scale);
-    handleScales(props.activeKey.field, scale);
+    if (props.scales) handleScales(props.activeKey.field, scale);
     setOpenSelect(false);
   };
 
@@ -118,21 +119,29 @@ export const Scales = (props) => {
     props.callbacks("activeKey", { x, y, group: keyG, field: value });
 
     handleScales(value, props.selectedScale);
-    // props.review();
+    props.review();
   };
 
   return (
     <View style={styles.screenWrapper}>
       <View style={styles.selectWrapper}>
-        <Text style={styles.selectTextExp}>{eng.select.scales}</Text>
+        {props.legend ? (
+          <Legend style={styles.legend} />
+        ) : (
+          <>
+            <Text style={styles.selectTextExp}>{eng.select.scales}</Text>
 
-        <TouchableOpacity
-          style={styles.selectInput}
-          onPress={() => setOpenSelect(true)}
-        >
-          <Text style={styles.selectInputText}>{props.selectedScale.name}</Text>
-          <ListArrow style={styles.selectListArrow} />
-        </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.selectInput}
+              onPress={() => setOpenSelect(true)}
+            >
+              <Text style={styles.selectInputText}>
+                {props.selectedScale.name}
+              </Text>
+              <ListArrow style={styles.selectListArrow} />
+            </TouchableOpacity>
+          </>
+        )}
       </View>
 
       <View style={styles.circleWrapper}>
@@ -1457,7 +1466,19 @@ export const Scales = (props) => {
                 }
                 onPress={() => handleSelect(scale)}
               >
-                <Text style={styles.selectText}>{scale.name}</Text>
+                <Text
+                  style={[
+                    styles.selectText,
+                    {
+                      color:
+                        props.selectedScale.name === scale.name
+                          ? colors.blue
+                          : colors.black,
+                    },
+                  ]}
+                >
+                  {scale.name}
+                </Text>
               </TouchableOpacity>
             ))}
           </ScrollView>

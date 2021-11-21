@@ -161,7 +161,7 @@ export const chordList = [
   { name: "Augmented", display: "aug", value: chords.aug },
   { name: "5 chord", display: "5 chord", value: chords.chord5 },
   { name: "6 chord", display: "6 chord", value: chords.chord6 },
-  { name: "Dominant 7", display: "dim7", value: chords.dominant7 },
-  { name: "Diminished 7", display: "dom7", value: chords.diminished7 },
-  { name: "Dominant 7 suspended 4", display: "7sus4", value: chords.dom7sus4 },
+  { name: "Dominant 7", display: "dom7", value: chords.dominant7 },
+  { name: "Diminished 7", display: "dim7", value: chords.diminished7 },
+  { name: "Dominant 7 sus4", display: "7sus4", value: chords.dom7sus4 },
 ];

@@ -14,4 +14,7 @@ export const eng = {
   cta: {
     chords: "Unlock negative chords",
   },
+  info: {
+    email: "chimerastudiotm@gmail.com",
+  },
 };

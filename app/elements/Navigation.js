@@ -12,7 +12,6 @@ import navigation_style from "../styles/navigation_style";
 
 const Navigation = (props) => {
   const locationInfo = useLocationInfo();
-  const [legendStatus, setLegendStatus] = useState(false);
   const path = locationInfo.isScales ? "/chords" : "/";
 
   const handleAlert = (e) => {
@@ -21,6 +20,8 @@ const Navigation = (props) => {
       props.alert();
     }
   };
+
+  if (locationInfo.isInfo || locationInfo.isRewarded) return null;
 
   return (
     <View style={navigation_style.navigation}>
@@ -34,23 +35,9 @@ const Navigation = (props) => {
           {locationInfo.isScales ? eng.links.scales : eng.links.chords}
         </Text>
       </Link>
-      <TouchableOpacity onPress={() => setLegendStatus(!legendStatus)}>
+      <TouchableOpacity onPress={() => props.legendCallback(!props.legend)}>
         <Info style={navigation_style.info} />
       </TouchableOpacity>
-
-      {/*
-        <Legend style={styles.legend} />
-        <View style={styles.legendContainer}>
-          <Legend style={styles.legend} />
-
-          <View style={styles.legend2Wrapper}>
-            <Legend2 style={styles.legend2} />
-            <TouchableOpacity style={styles.disclamerBtn}>
-              <Disclamer style={styles.disclamer} />
-            </TouchableOpacity>
-          </View>
-        </View>
-      */}
     </View>
   );
 };

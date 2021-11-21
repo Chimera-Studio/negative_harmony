@@ -3,24 +3,23 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useLocation } from "react-router-dom";
 
 export const useReview = async (chordsUnlocked, time) => {
-  if (chordsUnlocked && time <= new Date().valueOf()) {
-    const numberDATE = new Date().valueOf();
-    const timeStamp = await AsyncStorage.getItem("reviewTimestamp");
+  const date = Date.now();
+  if (chordsUnlocked && time <= date) {
+    const timestamp = await AsyncStorage.getItem("reviewTimestamp");
 
     if (
-      (Number(timeStamp) <= numberDATE || Number(timeStamp) === 0) &&
+      (Number(timestamp) <= date || Number(timestamp) === 0) &&
       (await StoreReview.isAvailableAsync()) &&
       (await StoreReview.hasAction())
     ) {
       StoreReview.requestReview();
 
-      const newTimeStamp = numberDATE;
-      new Date(numberDATE)
-        .setMonth(new Date(numberDATE).getMonth() + 1)
+      const newTimestamp = new Date(date)
+        .setMonth(new Date(date).getMonth() + 1)
         .valueOf();
       await AsyncStorage.setItem(
         "reviewTimestamp",
-        JSON.stringify(newTimeStamp)
+        JSON.stringify(newTimestamp)
       );
     }
   }
@@ -30,10 +29,14 @@ export const useLocationInfo = () => {
   const location = useLocation();
   const pathScales = location.pathname === "/";
   const pathChords = location.pathname === "/chords";
+  const pathRewarded = location.pathname === "/rewarded";
+  const pathInfo = location.pathname === "/info";
 
   return {
     current: location.pathname,
     isScales: pathScales,
     isChords: pathChords,
+    isRewarded: pathRewarded,
+    isInfo: pathInfo,
   };
 };

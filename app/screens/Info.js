@@ -1,27 +1,19 @@
 import React from "react";
-import { Text, View, ScrollView, TouchableOpacity } from "react-native";
+import { Text, View, ScrollView } from "react-native";
+import { Link } from "react-router-native";
+
+import Exit from "../assets/icons/Exit";
+import { eng } from "../locales";
 
 import colors from "../styles/colors";
 import styles from "../styles/styles";
 
-const Disclamer = () => {
-  const disclamerClose = () => {
-    if (chordsUnlocked == false) {
-      showInitialScales();
-      showInitialChords();
-    } else {
-      visibleScales = true;
-      chordsUnlocked = true;
-      showInitialScales();
-      showInitialChords();
-    }
-  };
-
+const Info = () => {
   return (
     <View style={styles.disclamerWrapper}>
-      <TouchableOpacity style={styles.exit} onPress={disclamerClose}>
-        <Exit />
-      </TouchableOpacity>
+      <Link to="/chords" underlayColor={colors.transparent} style={styles.exit}>
+        <Exit color={colors.blue} />
+      </Link>
       <Text style={styles.discTitle}>Information</Text>
       <View style={styles.discTextWrapper}>
         <ScrollView showsVerticalScrollIndicator={false}>
@@ -63,8 +55,8 @@ const Disclamer = () => {
           <Text style={styles.discText}>
             If you find any bugs incorrect representations of the notes or
             chords, please contact us at:{"\n"}
-            <Text style={{ color: colors.blue }}>
-              chimerastudiotm@gmail.com
+            <Text selectable style={{ color: colors.blue }}>
+              {eng.info.email}
             </Text>
           </Text>
         </ScrollView>
@@ -73,4 +65,4 @@ const Disclamer = () => {
   );
 };
 
-export default Disclamer;
+export default Info;
