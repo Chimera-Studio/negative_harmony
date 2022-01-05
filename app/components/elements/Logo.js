@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { Animated, Easing } from "react-native";
-import Icon from "../assets/img/icon.svg";
-import styles from "../styles/styles";
+import Icon from "../../assets/img/icon.svg";
+import styles from "../../styles/styles";
 
 const Logo = () => {
   const rotate = new Animated.Value(0);

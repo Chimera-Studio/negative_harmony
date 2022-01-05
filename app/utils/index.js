@@ -1,11 +1,21 @@
+import { Platform } from "react-native";
 import * as StoreReview from "expo-store-review";
+import * as Device from "expo-device";
+import Constants from "expo-constants";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useLocation } from "react-router-dom";
+import { localStorageKeys, admob } from "../tokens";
+
+export const isRealDevice = Device.isDevice;
+export const isApple = Platform.OS === "ios";
+export const isProduction = Constants.appOwnership === "standalone";
 
 export const useReview = async (chordsUnlocked, time) => {
   const date = Date.now();
   if (chordsUnlocked && time <= date) {
-    const timestamp = await AsyncStorage.getItem("reviewTimestamp");
+    const timestamp = await AsyncStorage.getItem(
+      localStorageKeys.reviewTimestamp
+    );
 
     if (
       (Number(timestamp) <= date || Number(timestamp) === 0) &&
@@ -18,11 +28,54 @@ export const useReview = async (chordsUnlocked, time) => {
         .setMonth(new Date(date).getMonth() + 1)
         .valueOf();
       await AsyncStorage.setItem(
-        "reviewTimestamp",
+        localStorageKeys.reviewTimestamp,
         JSON.stringify(newTimestamp)
       );
     }
   }
+};
+
+export const useLocalStorage = async (key) => {
+  const data = await AsyncStorage.getItem(key);
+  return data;
+};
+
+export const storeDataToLocal = async (key, dataString) => {
+  await AsyncStorage.setItem(key, dataString);
+};
+
+export const useAdmobIds = (adIds) => {
+  const realAd = isRealDevice && isProduction;
+  let adId = null;
+
+  const getBannerID = () => {
+    if (!adIds) return null;
+
+    if (isApple) {
+      adId = realAd ? adIds.banner.ios : admob.banner.ios_test;
+    } else {
+      adId = realAd ? adIds.banner.android : admob.banner.android_test;
+    }
+
+    return adId;
+  };
+
+  const getRewardedID = () => {
+    if (!adIds) return null;
+
+    if (isApple) {
+      adId = realAd ? adIds.rewarded.ios : admob.rewarded.ios_test;
+    } else {
+      adId = realAd ? adIds.rewarded.android : admob.rewarded.android_test;
+    }
+
+    return adId;
+  };
+
+  return {
+    banner: getBannerID(),
+    rewarded: getRewardedID(),
+  };
 };
 
 export const useLocationInfo = () => {

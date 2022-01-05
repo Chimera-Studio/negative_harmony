@@ -1,5 +1,5 @@
 import React from "react";
-import { useLocationInfo } from "../utils";
+import { useLocationInfo } from "../../utils";
 
 import WhiteBG from "../elements/WhiteBG";
 import GradientBG from "../elements/GradientBG";

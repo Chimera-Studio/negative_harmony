@@ -1,7 +1,7 @@
 import React from "react";
 import { StyleSheet, Platform, View } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
-import colors from "../styles/colors";
+import colors from "../../styles/colors";
 
 function GradientBG() {
   return (

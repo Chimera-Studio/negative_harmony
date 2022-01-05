@@ -1,22 +1,27 @@
-import React, { useState } from "react";
-import {
-  Text,
-  View,
-  TouchableOpacity,
-  ActivityIndicator,
-  Platform,
-} from "react-native";
+import React, { useEffect, useState } from "react";
+import { Text, View, TouchableOpacity, ActivityIndicator } from "react-native";
 import { AdMobRewarded } from "expo-ads-admob";
+import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-native";
 import { useHistory } from "react-router-dom";
+import { get } from "lodash";
 
-import Exit from "../assets/icons/Exit";
+import Exit from "../../assets/icons/Exit";
 
-import colors from "../styles/colors";
-import styles from "../styles/styles";
+import useLocale from "../../locales";
+import { useAdmobIds } from "../../utils";
+import { actions } from "../../store/globalStore";
+
+import colors from "../../styles/colors";
+import styles from "../../styles/styles";
 
 const Rewarded = (props) => {
+  const t = useLocale;
+  const dispatch = useDispatch();
   const history = useHistory();
+  const cmsData = useSelector((state) => state.cms.master);
+  const admobId = useAdmobIds(get(cmsData, "adIds", null)).rewarded;
+  const [timeout, setTimeout] = useState(null);
   const [loading, setLoading] = useState(false);
 
   const handleBack = (e) => {
@@ -24,16 +29,16 @@ const Rewarded = (props) => {
   };
 
   const handleReset = () => {
-    setTimeout(() => {
-      setLoading(false);
-    }, 10000);
+    setTimeout(
+      setTimeout(() => {
+        setLoading(false);
+      }, 10000)
+    );
   };
 
   const handleRequest = async () => {
     setLoading(true);
-    await AdMobRewarded.setAdUnitID(
-      Platform.OS === "ios" ? props.ads.ios : props.ads.android
-    ); // 1. iOS, 2. Android
+    await AdMobRewarded.setAdUnitID(admobId);
     await AdMobRewarded.requestAdAsync();
     await AdMobRewarded.showAdAsync();
   };
@@ -47,15 +52,21 @@ const Rewarded = (props) => {
   });
 
   AdMobRewarded.addEventListener("rewardedVideoDidPresent", () => {
-    setTimeout(() => {
-      setLoading(false);
-    }, 1000);
+    setTimeout(
+      setTimeout(() => {
+        setLoading(false);
+      }, 10000)
+    );
   });
 
   AdMobRewarded.addEventListener("rewardedVideoUserDidEarnReward", () => {
-    props.reward("chords");
     history.push("/chords");
+    dispatch(actions.unlockChords());
   });
+
+  useEffect(() => {
+    return () => clearTimeout(timeout);
+  }, []);
 
   return (
     <View style={styles.rewardedWrapper}>
@@ -68,8 +79,8 @@ const Rewarded = (props) => {
         <Exit color={!loading ? colors.blue : colors.disabled} />
       </Link>
       <View style={styles.rewardedExp}>
-        <Text style={styles.rewardedExpText}>To unlock chords</Text>
-        <Text style={styles.rewardedExpText}>watch this Advert:</Text>
+        <Text style={styles.rewardedExpText}>{t("rewarded.paragraph_1")}</Text>
+        <Text style={styles.rewardedExpText}>{t("rewarded.paragraph_2")}</Text>
       </View>
       <TouchableOpacity
         style={!loading ? styles.rewardedStart : styles.rewardedDisabled}
@@ -78,14 +89,12 @@ const Rewarded = (props) => {
         onPress={handleRequest}
       >
         {!loading ? (
-          <Text style={styles.rewardedStartText}>Watch the Ad</Text>
+          <Text style={styles.rewardedStartText}>{t("rewarded.cta")}</Text>
         ) : (
           <ActivityIndicator size="large" color={colors.white} />
         )}
       </TouchableOpacity>
-      <Text style={styles.rewardedDisc}>
-        If no Advert is shown come back a bit later
-      </Text>
+      <Text style={styles.rewardedDisc}>{t("rewarded.disclamer")}</Text>
     </View>
   );
 };

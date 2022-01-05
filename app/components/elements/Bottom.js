@@ -1,10 +1,10 @@
 import React from "react";
 import { Animated, Text, View } from "react-native";
 
-import { useLocationInfo } from "../utils";
+import { useLocationInfo } from "../../utils";
 
-import colors from "../styles/colors";
-import bottom from "../styles/bottom_styles";
+import colors from "../../styles/colors";
+import bottom from "../../styles/bottom_styles";
 
 const Bottom = (props) => {
   const locationInfo = useLocationInfo();

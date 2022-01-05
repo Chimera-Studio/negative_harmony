@@ -1,16 +1,17 @@
-import React, { useState } from "react";
+import React from "react";
 import { Text, TouchableOpacity, View } from "react-native";
 import { Link } from "react-router-native";
 
-import Info from "../assets/img/info.svg";
+import Info from "../../assets/img/info.svg";
 
-import { eng } from "../locales";
-import { useLocationInfo } from "../utils";
+import useLocale from "../../locales";
+import { useLocationInfo } from "../../utils";
 
-import colors from "../styles/colors";
-import navigation_style from "../styles/navigation_style";
+import colors from "../../styles/colors";
+import navigation_style from "../../styles/navigation_style";
 
 const Navigation = (props) => {
+  const t = useLocale;
   const locationInfo = useLocationInfo();
   const path = locationInfo.isScales ? "/chords" : "/";
 
@@ -32,7 +33,7 @@ const Navigation = (props) => {
         style={navigation_style.switch}
       >
         <Text style={navigation_style.switchText}>
-          {locationInfo.isScales ? eng.links.scales : eng.links.chords}
+          {t(locationInfo.isScales ? "links.scales" : "links.chords")}
         </Text>
       </Link>
       <TouchableOpacity onPress={() => props.legendCallback(!props.legend)}>

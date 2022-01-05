@@ -1,7 +1,27 @@
+export const VALID_QUERY = `
+  {
+    appCollection(where: {id: "Negative Harmony"}) {
+      items {
+        sys {
+          publishedAt
+        }
+      }
+    }
+    negativeHarmonyCollection(limit: 1, order: sys_publishedAt_DESC) {
+      items {
+        sys {
+          publishedAt
+        }
+      }
+    }
+  }
+`;
+
 export const MASTER_QUERY = `
   {
     appCollection(where: {id: "Negative Harmony"}) {
       items {
+        adIds
         ads
         adsStaging
         resetRewards
@@ -10,28 +30,11 @@ export const MASTER_QUERY = `
         keepRewardsStaging
       }
     }
-  }
-`;
-
-export const SCALES_QUERY = `
-  {
-    negativeHarmonyCollection(where: {type: "Scale"}) {
+    negativeHarmonyCollection {
       items {
         destination
-        id
-        pattern
-      }
-    }
-  }
-`;
-
-export const CHORDS_QUERY = `
-  {
-    negativeHarmonyCollection(where: {type: "Chord"}) {
-      items {
-        destination
-        id
-        pattern
+        type
+        list
       }
     }
   }

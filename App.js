@@ -1,8 +1,22 @@
 import React from "react";
 import AppLoading from "expo-app-loading";
 import { useFonts } from "expo-font";
+import { Provider } from "react-redux";
 
-import Body from "./app/screens/Body";
+import Body from "./app/components/screens/Body";
+import { configureStore } from "./app/store";
+
+const initialState = {
+  global: {
+    reviewDelay: Date.now() + 60000,
+    scale: null,
+    chord: null,
+    unlocked: false,
+    axis: { status: false, angle: "0deg" },
+    activeKey: { x: 0, y: 0, group: null, field: null },
+  },
+};
+const store = configureStore(initialState);
 
 function App() {
   const [fontsLoaded] = useFonts({
@@ -13,7 +27,11 @@ function App() {
   if (!fontsLoaded) {
     return <AppLoading />;
   } else {
-    return <Body />;
+    return (
+      <Provider store={store}>
+        <Body />
+      </Provider>
+    );
   }
 }
 

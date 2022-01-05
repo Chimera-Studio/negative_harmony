@@ -1,6 +1,6 @@
 import React from "react";
 import { StyleSheet, Platform, View } from "react-native";
-import colors from "../styles/colors";
+import colors from "../../styles/colors";
 
 function WhiteBG() {
   return <View style={styles.background} />;
