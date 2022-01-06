@@ -35,11 +35,6 @@ export const useReview = async (chordsUnlocked, time) => {
   }
 };
 
-export const useLocalStorage = async (key) => {
-  const data = await AsyncStorage.getItem(key);
-  return data;
-};
-
 export const storeDataToLocal = async (key, dataString) => {
   await AsyncStorage.setItem(key, dataString);
 };

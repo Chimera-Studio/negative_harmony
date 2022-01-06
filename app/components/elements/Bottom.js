@@ -1,110 +1,234 @@
-import React from "react";
-import { Animated, Text, View } from "react-native";
+import React, { useEffect, useState } from "react";
+import { Animated, Text, TouchableHighlight, View } from "react-native";
+import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import { faPause, faPlay } from "@fortawesome/free-solid-svg-icons";
+import { includes } from "lodash";
 
 import { useLocationInfo } from "../../utils";
 
 import colors from "../../styles/colors";
-import bottom from "../../styles/bottom_styles";
+import bottom from "../../styles/bottom_style";
+import chords_style from "../../styles/chords_style";
 
 const Bottom = (props) => {
   const locationInfo = useLocationInfo();
+  const [positivePlaying, setPositivePlaying] = useState(false);
+  const [negativePlaying, setNegativePlaying] = useState(false);
+  const { data } = props;
   const animateBottom = {
     transform: [{ translateY: 0 }],
   };
 
+  const handleNegativeChordName = (positiveChord, negativeChord) => {
+    if (positiveChord === "5 chord") return "-" + positiveChord;
+    if (positiveChord === "dim7") return "13♭5sus";
+    if (positiveChord === "7sus4") return "maj7♭5";
+
+    return negativeChord;
+  };
+
+  const handleNegativeChordNote = (positiveChord, notesArray) => {
+    if (includes(["m6", "6 chord", "dim7"], positiveChord)) {
+      return notesArray[notesArray.length - 2].note;
+    }
+
+    return notesArray[notesArray.length - 1].note;
+  };
+
+  const handlePlay = (type, notesArray) => {
+    if (type === "positive") setPositivePlaying(!positivePlaying);
+    if (type === "negative") setNegativePlaying(!negativePlaying);
+  };
+
+  useEffect(() => {
+    setPositivePlaying(false);
+    setNegativePlaying(false);
+
+    return () => {
+      setPositivePlaying(false);
+      setNegativePlaying(false);
+    };
+  }, [data]);
+
   return (
-    <View style={bottom.space}>
-      {locationInfo.isScales && props.data && (
-        <Animated.View style={[bottom.wrapper, animateBottom]}>
-          <View style={[bottom.scale, { alignItems: "flex-end" }]}>
-            {props.data.positive.map((note, index) => (
+    <>
+      {locationInfo.isChords && data && (
+        <View style={chords_style.soundButtonWrapper}>
+          <TouchableHighlight
+            onPress={() => handlePlay("positive", data.positive)}
+            underlayColor={colors.blueTransparent}
+            style={chords_style.soundButton}
+          >
+            <>
+              <FontAwesomeIcon
+                icon={positivePlaying ? faPause : faPlay}
+                color={colors.white}
+                style={{ alignSelf: "center", marginRight: 5 }}
+              />
               <Text
-                key={index}
-                style={[bottom.scaleText, { color: colors.positiveText }]}
+                style={[
+                  chords_style.soundButtonText,
+                  {
+                    fontSize: 18,
+                  },
+                ]}
               >
-                {note}
+                {data.positive[0].note}
               </Text>
-            ))}
-          </View>
-
-          <View style={bottom.axis} />
-
-          <View style={[bottom.scale, { alignItems: "flex-start" }]}>
-            {props.data.negative.map((note, index) => (
               <Text
-                key={index}
-                style={[bottom.scaleText, { color: colors.negativeText }]}
+                style={[
+                  chords_style.soundButtonText,
+                  {
+                    fontSize: 12,
+                  },
+                ]}
               >
-                {note}
+                {data.positiveName}
               </Text>
-            ))}
-          </View>
-        </Animated.View>
-      )}
-      {locationInfo.isChords && props.data && (
-        <View style={bottom.wrapper}>
-          <View style={[bottom.chord, { alignItems: "flex-end" }]}>
-            <View style={[bottom.chordName, { alignItems: "flex-end" }]}>
-              <Text style={[bottom.tonic, { color: colors.positiveText }]}>
-                {props.data.positive[0].note}
+            </>
+          </TouchableHighlight>
+          <TouchableHighlight
+            onPress={() => handlePlay("negative", data.negative)}
+            underlayColor={colors.blueTransparent}
+            style={chords_style.soundButton}
+          >
+            <>
+              <FontAwesomeIcon
+                icon={negativePlaying ? faPause : faPlay}
+                color={colors.white}
+                style={{ alignSelf: "center", marginRight: 5 }}
+              />
+              <Text
+                style={[
+                  chords_style.soundButtonText,
+                  {
+                    fontSize: 18,
+                  },
+                ]}
+              >
+                {handleNegativeChordNote(data.positiveName, data.negative)}
               </Text>
-              <Text style={[bottom.name, { color: colors.positiveText }]}>
-                {props.data.positiveName}
+              <Text
+                style={[
+                  chords_style.soundButtonText,
+                  {
+                    fontSize: 12,
+                  },
+                ]}
+              >
+                {handleNegativeChordName(data.positiveName, data.negativeName)}
               </Text>
-            </View>
-
-            <View style={[bottom.notes, { alignItems: "flex-end" }]}>
-              {props.data.positive.map((chord, index) => (
-                <Text
-                  key={index}
-                  style={[
-                    bottom.notesText,
-                    [
-                      chord.diatonic
-                        ? { color: colors.red }
-                        : { color: colors.negativeText },
-                    ],
-                  ]}
-                >
-                  {chord.note}
-                </Text>
-              ))}
-            </View>
-          </View>
-
-          <View style={bottom.axis} />
-
-          <View style={[bottom.chord, { alignItems: "flex-start" }]}>
-            <View style={[bottom.chordName, { alignItems: "flex-start" }]}>
-              <Text style={[bottom.tonic, { color: colors.negativeText }]}>
-                {props.data.negative[props.data.negative.length - 1].note}
-              </Text>
-              <Text style={[bottom.name, { color: colors.negativeText }]}>
-                {props.data.negativeName}
-              </Text>
-            </View>
-
-            <View style={[bottom.notes, { alignItems: "flex-start" }]}>
-              {props.data.negative.map((chord, index) => (
-                <Text
-                  key={index}
-                  style={[
-                    bottom.notesText,
-                    [
-                      chord.diatonic
-                        ? { color: colors.red }
-                        : { color: colors.negativeText },
-                    ],
-                  ]}
-                >
-                  {chord.note}
-                </Text>
-              ))}
-            </View>
-          </View>
+            </>
+          </TouchableHighlight>
         </View>
       )}
-    </View>
+
+      <View style={bottom.space}>
+        {locationInfo.isScales && data && (
+          <Animated.View style={[bottom.wrapper, animateBottom]}>
+            <View style={[bottom.scale, { alignItems: "flex-end" }]}>
+              {data.positive.map((note, index) => (
+                <Text
+                  key={index}
+                  style={[bottom.scaleText, { color: colors.positiveText }]}
+                >
+                  {note}
+                </Text>
+              ))}
+            </View>
+
+            <View style={bottom.axis} />
+
+            <View style={[bottom.scale, { alignItems: "flex-start" }]}>
+              {data.negative.map((note, index) => (
+                <Text
+                  key={index}
+                  style={[bottom.scaleText, { color: colors.negativeText }]}
+                >
+                  {note}
+                </Text>
+              ))}
+            </View>
+          </Animated.View>
+        )}
+        {locationInfo.isChords && data && (
+          <View style={bottom.wrapper}>
+            <View style={[bottom.chord, { alignItems: "flex-end" }]}>
+              <View style={[bottom.chordName, { alignItems: "flex-end" }]}>
+                <Text style={[bottom.tonic, { color: colors.positiveText }]}>
+                  {data.positive[0].note}
+                </Text>
+                <Text style={[bottom.name, { color: colors.positiveText }]}>
+                  {data.positiveName}
+                </Text>
+              </View>
+
+              <View style={[bottom.notes, { alignItems: "flex-end" }]}>
+                {data.positive.map((chord, index) => (
+                  <Text
+                    key={index}
+                    style={[
+                      bottom.notesText,
+                      [
+                        chord.diatonic
+                          ? { color: colors.red }
+                          : { color: colors.negativeText },
+                      ],
+                    ]}
+                  >
+                    {chord.note}
+                  </Text>
+                ))}
+              </View>
+            </View>
+
+            <View style={bottom.axis} />
+
+            <View style={[bottom.chord, { alignItems: "flex-start" }]}>
+              <View style={[bottom.chordName, { alignItems: "flex-start" }]}>
+                <Text style={[bottom.tonic, { color: colors.negativeText }]}>
+                  {handleNegativeChordNote(data.positiveName, data.negative)}
+                </Text>
+                <Text
+                  style={[
+                    bottom.name,
+                    {
+                      color:
+                        data.positiveName === "5 chord"
+                          ? colors.red
+                          : colors.negativeText,
+                    },
+                  ]}
+                >
+                  {handleNegativeChordName(
+                    data.positiveName,
+                    data.negativeName
+                  )}
+                </Text>
+              </View>
+
+              <View style={[bottom.notes, { alignItems: "flex-start" }]}>
+                {data.negative.map((chord, index) => (
+                  <Text
+                    key={index}
+                    style={[
+                      bottom.notesText,
+                      [
+                        chord.diatonic
+                          ? { color: colors.red }
+                          : { color: colors.negativeText },
+                      ],
+                    ]}
+                  >
+                    {chord.note}
+                  </Text>
+                ))}
+              </View>
+            </View>
+          </View>
+        )}
+      </View>
+    </>
   );
 };
 

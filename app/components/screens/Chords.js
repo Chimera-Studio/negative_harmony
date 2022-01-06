@@ -7,9 +7,9 @@ import {
   TouchableHighlight,
   Modal,
 } from "react-native";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-native";
-import { indexOf, times, includes, forEach, isEqual } from "lodash";
+import { indexOf, times, includes, forEach, isEqual, sortBy } from "lodash";
 
 import Bottom from "../elements/Bottom";
 import Legend from "../../assets/img/legend.svg";
@@ -18,12 +18,14 @@ import Disclamer from "../../assets/img/disclamer.svg";
 import ListArrow from "../../assets/img/arrow.svg";
 
 import useLocale from "../../locales";
+import { actions } from "../../store/globalStore";
 
 import colors from "../../styles/colors";
 import styles from "../../styles/styles";
 
 const Chords = (props) => {
   const t = useLocale;
+  const dispatch = useDispatch();
   const scrollChords = useRef(null);
   const global = useSelector((state) => state.global);
   const lists = useSelector((state) => {
@@ -91,10 +93,42 @@ const Chords = (props) => {
     });
     pattern.reverse();
 
-    let negativeName = "???";
-    forEach(lists.chords, (c) => {
-      if (isEqual(c.value, pattern)) negativeName = c.display;
-    });
+    const handleFindChordMatch = () => {
+      let chordName = t("chords.noMatch");
+      forEach(lists.chords, (c) => {
+        if (isEqual(c.value, pattern)) {
+          chordName = c.display;
+          return;
+        }
+      });
+
+      if (chordName === t("chords.noMatch")) {
+        times(11, (i) => {
+          forEach(lists.chords, (c) => {
+            const checkPattern = c.value.map((value) => {
+              const calc = value - i;
+              if (calc <= -1) return Number(12 - Math.abs(calc));
+              if (calc === 0) return 0;
+              return calc;
+            });
+
+            if (isEqual(checkPattern, pattern)) {
+              chordName = c.display;
+              return;
+            }
+
+            if (isEqual(sortBy(checkPattern), sortBy(pattern))) {
+              chordName = c.display;
+              return;
+            }
+          });
+        });
+      }
+
+      return chordName;
+    };
+
+    const negativeName = handleFindChordMatch();
 
     setChords({
       positive: positiveChord,
@@ -119,6 +153,10 @@ const Chords = (props) => {
 
     handleChords(selectedChord, index);
     // props.review();
+  };
+
+  const handleHideBanner = () => {
+    dispatch(actions.showBanner(false));
   };
 
   useEffect(() => handleChords(selectedChord, tonic), []);
@@ -164,7 +202,7 @@ const Chords = (props) => {
       </View>
 
       <View style={styles.chordsWrapper} onLayout={getDimentions}>
-        {global.unlocked ? (
+        {!props.displayAds || global.unlocked ? (
           <View style={styles.scrollChords}>
             <Text style={styles.scrollChordsExpText}>{t("select.tonics")}</Text>
 
@@ -212,6 +250,7 @@ const Chords = (props) => {
         ) : (
           <Link
             to="/rewarded"
+            onPress={handleHideBanner}
             underlayColor={colors.blueTransparent}
             style={styles.rewardedOpen}
           >

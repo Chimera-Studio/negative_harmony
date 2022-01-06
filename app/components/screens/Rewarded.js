@@ -15,21 +15,28 @@ import { actions } from "../../store/globalStore";
 import colors from "../../styles/colors";
 import styles from "../../styles/styles";
 
-const Rewarded = (props) => {
+const Rewarded = () => {
   const t = useLocale;
   const dispatch = useDispatch();
   const history = useHistory();
   const cmsData = useSelector((state) => state.cms.master);
+  const unlocked = useSelector((state) => state.global.unlocked);
   const admobId = useAdmobIds(get(cmsData, "adIds", null)).rewarded;
-  const [timeout, setTimeout] = useState(null);
+  const [timeoutState, setTimeoutState] = useState(null);
   const [loading, setLoading] = useState(false);
 
   const handleBack = (e) => {
-    if (loading) e.preventDefault();
+    if (loading) {
+      e.preventDefault();
+
+      return;
+    }
+
+    dispatch(actions.showBanner(true));
   };
 
   const handleReset = () => {
-    setTimeout(
+    setTimeoutState(
       setTimeout(() => {
         setLoading(false);
       }, 10000)
@@ -52,20 +59,23 @@ const Rewarded = (props) => {
   });
 
   AdMobRewarded.addEventListener("rewardedVideoDidPresent", () => {
-    setTimeout(
-      setTimeout(() => {
-        setLoading(false);
-      }, 10000)
-    );
+    handleReset();
   });
 
   AdMobRewarded.addEventListener("rewardedVideoUserDidEarnReward", () => {
-    history.push("/chords");
     dispatch(actions.unlockChords());
+    clearTimeout(timeoutState);
   });
 
   useEffect(() => {
-    return () => clearTimeout(timeout);
+    if (unlocked) {
+      clearTimeout(timeoutState);
+      history.push("/chords");
+    }
+  }, [unlocked]);
+
+  useEffect(() => {
+    return () => clearTimeout(timeoutState);
   }, []);
 
   return (

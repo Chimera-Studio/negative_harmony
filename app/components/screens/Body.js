@@ -1,13 +1,14 @@
-import { StatusBar } from "expo-status-bar";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { SafeAreaView, Text, View } from "react-native";
+import { useDispatch, useSelector } from "react-redux";
 import { NativeRouter, Redirect, Route } from "react-router-native";
+import { StatusBar } from "expo-status-bar";
 import {
   requestPermissionsAsync,
   getPermissionsAsync,
   AdMobBanner,
 } from "expo-ads-admob";
-import { useDispatch, useSelector } from "react-redux";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { get, isEqual } from "lodash";
 
 import BG from "./BG";
@@ -19,37 +20,34 @@ import Chords from "./Chords";
 import Scales from "./Scales";
 
 import useLocale from "../../locales";
-import {
-  isRealDevice,
-  storeDataToLocal,
-  useAdmobIds,
-  useLocalStorage,
-} from "../../utils";
+import { isRealDevice, useAdmobIds } from "../../utils";
 import { actions, selectors } from "../../store/cmsStore";
 import { localStorageKeys } from "../../tokens";
 
 import main_style from "../../styles/main_style";
 
 function Body() {
-  const initLoad = useRef(false);
   const t = useLocale;
-  const localStorage = useLocalStorage;
   const dispatch = useDispatch();
-  const cmsTimestamps = useSelector((state) => selectors.getTimestamps(state));
-  const cmsData = useSelector((state) => state.cms);
-  const scales = useSelector((state) => state.global.scales);
-  const admobId = useAdmobIds(get(cmsData, "master.adIds", null)).banner;
+  const [initLoad, setInitLoad] = useState(true);
+  const varifyTimestamps = useSelector((state) =>
+    selectors.getTimestamps(state)
+  );
+  const cms = useSelector((state) => state.cms);
+  const global = useSelector((state) => state.global);
+  const admobId = useAdmobIds(get(cms, "master.adIds", null)).banner;
   const [ads, setAds] = useState(false);
   const [personalised, setPersonalised] = useState(false);
   const [alert, setAlert] = useState(false);
   const [legend, setLegend] = useState(false);
-  const [savedTimestamps, setSavedTimestamps] = useState(null);
+
+  const localTimestamps = get(varifyTimestamps, "local", 0);
+  const cmsTimestamps = get(varifyTimestamps, "cms", null);
+  const checkStamps = isEqual(localTimestamps, cmsTimestamps);
   const displayAds = isRealDevice
-    ? get(cmsData, "master.ads", null)
-    : get(cmsData, "master.adsStaging", null);
-  const loading = !["master", "scales", "chords"].every(
-    (key) => key in cmsData
-  );
+    ? get(cms, "master.ads", false)
+    : get(cms, "master.adsStaging", false);
+  const loading = !["master", "scales", "chords"].every((key) => key in cms);
 
   const askForPermission = async () => {
     const { granted } = await getPermissionsAsync();
@@ -71,32 +69,27 @@ function Body() {
   };
 
   useEffect(() => {
-    const checkStamps = isEqual(cmsTimestamps, savedTimestamps);
-    if (cmsTimestamps && savedTimestamps && checkStamps) {
-      localStorage(localStorageKeys.appContent).then((res) =>
-        dispatch(actions.storeLocalCMS(JSON.parse(res)))
-      );
+    const handleLocalStorage = async () => {
+      const res = await AsyncStorage.getItem(localStorageKeys.appContent);
+      dispatch(actions.storeLocalCMS(JSON.parse(res)));
+    };
+
+    if (localTimestamps && cmsTimestamps && !checkStamps) {
+      dispatch(actions.fetchCMS(cmsTimestamps));
     }
 
-    if (cmsTimestamps && savedTimestamps && !checkStamps) {
-      dispatch(actions.fetchCMS());
-      storeDataToLocal(
-        localStorageKeys.contentTimestamps,
-        JSON.stringify(cmsTimestamps)
-      );
+    if (localTimestamps && cmsTimestamps && checkStamps) {
+      handleLocalStorage();
     }
-  }, [cmsTimestamps, savedTimestamps]);
+  }, [checkStamps]);
 
   useEffect(() => {
-    if (!initLoad.current) {
-      localStorage(localStorageKeys.contentTimestamps).then((res) =>
-        setSavedTimestamps(JSON.parse(res))
-      );
+    if (initLoad) {
       dispatch(actions.checkTimestamps());
       setTimeout(askForPermission, 1000);
-      initLoad.current = true;
+      setInitLoad(false);
     }
-  }, []);
+  }, [initLoad]);
 
   if (loading) return <Loading />;
 
@@ -104,7 +97,7 @@ function Body() {
     <View style={main_style.container}>
       <StatusBar hidden />
 
-      {alert && !scales && (
+      {alert && !global.scales && (
         <View style={main_style.alert}>
           <Text style={main_style.alertText}>{t("alert.noKey")}</Text>
         </View>
@@ -115,7 +108,7 @@ function Body() {
 
         <SafeAreaView style={main_style.safe}>
           <Navigation
-            scales={scales}
+            scales={global.scales}
             legend={legend}
             alert={handleAlert}
             legendCallback={(bool) => setLegend(bool)}
@@ -125,7 +118,7 @@ function Body() {
             <Rewarded />
           </Route>
           <Route path="/chords">
-            <Chords legend={legend} />
+            <Chords legend={legend} displayAds={displayAds} />
           </Route>
           <Route exact path="/">
             <Scales legend={legend} />
@@ -136,7 +129,7 @@ function Body() {
       </NativeRouter>
 
       <View style={main_style.ads}>
-        {ads && displayAds && admobId && (
+        {ads && displayAds && admobId && global.showBanner && (
           <AdMobBanner
             bannerSize="smartBannerPortrait"
             adUnitID={admobId}

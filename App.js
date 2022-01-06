@@ -11,9 +11,10 @@ const initialState = {
     reviewDelay: Date.now() + 60000,
     scale: null,
     chord: null,
-    unlocked: false,
     axis: { status: false, angle: "0deg" },
     activeKey: { x: 0, y: 0, group: null, field: null },
+    showBanner: true,
+    unlocked: false,
   },
 };
 const store = configureStore(initialState);

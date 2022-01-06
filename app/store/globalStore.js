@@ -7,6 +7,7 @@ export const types = {
   GP_STORE_CHORDS: "GP/STORE_CHORDS",
   GP_STORE_AXIS: "GP/STORE_AXIS",
   GP_STORE_ACTIVE_KEY: "GP/STORE_ACTIVE_KEY",
+  GP_SHOW_BANNER: "GP/SHOW_BANNER",
   GP_UNLOCK_CHORDS: "GP/UNLOCK_CHORDS",
 };
 
@@ -40,6 +41,10 @@ export const actions = {
     type: types.GP_STORE_ACTIVE_KEY,
     payload: activeKey,
   }),
+  showBanner: (bool) => ({
+    type: types.GP_SHOW_BANNER,
+    payload: bool,
+  }),
   unlockChords: () => ({
     type: types.GP_UNLOCK_CHORDS,
   }),
@@ -59,8 +64,10 @@ export const reducer = (state, action) => {
       return merge({}, state, { axis: action.payload });
     case types.GP_STORE_ACTIVE_KEY:
       return merge({}, state, { activeKey: action.payload });
+    case types.GP_SHOW_BANNER:
+      return merge({}, state, { showBanner: action.payload });
     case types.GP_UNLOCK_CHORDS:
-      return merge({}, state, { unlocked: true });
+      return merge({}, state, { unlocked: true, showBanner: true });
 
     default:
       return state || {};

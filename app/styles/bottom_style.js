@@ -1,7 +1,7 @@
 import { StyleSheet, Platform } from "react-native";
 import colors from "./colors";
 
-const styles = StyleSheet.create({
+const bottom = StyleSheet.create({
   space: {
     height: "32%",
     position: "relative",
@@ -93,4 +93,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default styles;
+export default bottom;

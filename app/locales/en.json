@@ -14,6 +14,10 @@
   "cta": {
     "chords": "Unlock negative chords"
   },
+  "chords": {
+    "noMatch": "???",
+    "playChord": "Play Chord"
+  },
   "rewarded": {
     "paragraph_1": "To unlock chords",
     "paragraph_2": "watch this Advert:",
