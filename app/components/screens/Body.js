@@ -12,17 +12,19 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { get, isEqual } from "lodash";
 
 import BG from "./BG";
-import Navigation from "../elements/Navigation";
+import Navigation from "../block/Navigation";
 import Loading from "./Loading";
+import Announcement from "./Announcement";
 import Info from "./Info";
 import Rewarded from "./Rewarded";
 import Chords from "./Chords";
 import Scales from "./Scales";
+import Alert from "../elements/Alert";
 
 import useLocale from "../../locales";
 import { isRealDevice, useAdmobIds } from "../../utils";
 import { actions, selectors } from "../../store/cmsStore";
-import { localStorageKeys } from "../../tokens";
+import { appKeys, localStorageKeys } from "../../tokens";
 
 import main_style from "../../styles/main_style";
 
@@ -40,10 +42,9 @@ function Body() {
   const [personalised, setPersonalised] = useState(false);
   const [alert, setAlert] = useState(false);
   const [legend, setLegend] = useState(false);
-
   const localTimestamps = get(varifyTimestamps, "local", 0);
-  const cmsTimestamps = get(varifyTimestamps, "cms", null);
-  const checkStamps = isEqual(localTimestamps, cmsTimestamps);
+  const onlineTimestamps = get(varifyTimestamps, "online", null);
+  const checkStamps = isEqual(localTimestamps, onlineTimestamps);
   const displayAds = isRealDevice
     ? get(cms, "master.ads", false)
     : get(cms, "master.adsStaging", false);
@@ -69,19 +70,32 @@ function Body() {
   };
 
   useEffect(() => {
-    const handleLocalStorage = async () => {
-      const res = await AsyncStorage.getItem(localStorageKeys.appContent);
-      dispatch(actions.storeLocalCMS(JSON.parse(res)));
-    };
+    if (loading) {
+      const handleLocalStorage = async () => {
+        const res = await AsyncStorage.getItem(localStorageKeys.appContent);
+        dispatch(actions.storeLocalCMS(JSON.parse(res)));
+      };
 
-    if (localTimestamps && cmsTimestamps && !checkStamps) {
-      dispatch(actions.fetchCMS(cmsTimestamps));
-    }
+      const localCheck =
+        localTimestamps && localTimestamps !== appKeys.noLocalData;
+      const onlineCheck =
+        onlineTimestamps && onlineTimestamps !== appKeys.noConnection;
 
-    if (localTimestamps && cmsTimestamps && checkStamps) {
-      handleLocalStorage();
+      if (
+        (localCheck && onlineCheck && !checkStamps) ||
+        (localTimestamps === appKeys.noLocalData && onlineCheck)
+      ) {
+        dispatch(actions.fetchCMS(onlineTimestamps));
+      }
+
+      if (
+        (localCheck && onlineCheck && checkStamps) ||
+        (localCheck && onlineTimestamps === appKeys.noConnection)
+      ) {
+        handleLocalStorage();
+      }
     }
-  }, [checkStamps]);
+  }, [localTimestamps, onlineTimestamps, checkStamps]);
 
   useEffect(() => {
     if (initLoad) {
@@ -91,17 +105,26 @@ function Body() {
     }
   }, [initLoad]);
 
+  if (
+    localTimestamps === appKeys.noLocalData &&
+    onlineTimestamps === appKeys.noConnection
+  )
+    return (
+      <Announcement
+        title={t("error.title")}
+        text={t("error.text")}
+        cta={t("error.cta")}
+        onPress={() => dispatch(actions.checkTimestamps())}
+      />
+    );
+
   if (loading) return <Loading />;
 
   return (
     <View style={main_style.container}>
       <StatusBar hidden />
 
-      {alert && !global.scales && (
-        <View style={main_style.alert}>
-          <Text style={main_style.alertText}>{t("alert.noKey")}</Text>
-        </View>
-      )}
+      {alert && !global.scales && <Alert text={t("alert.noKey")} />}
 
       <NativeRouter>
         <BG />

@@ -11,13 +11,14 @@ import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-native";
 import { indexOf, times, includes, forEach, isEqual, sortBy } from "lodash";
 
-import Bottom from "../elements/Bottom";
+import Bottom from "../block/Bottom";
 import Legend from "../../assets/img/legend.svg";
 import LegendExtra from "../../assets/img/legendExtra.svg";
 import Disclamer from "../../assets/img/disclamer.svg";
 import ListArrow from "../../assets/img/arrow.svg";
 
 import useLocale from "../../locales";
+import { useReview } from "../../utils";
 import { actions } from "../../store/globalStore";
 
 import colors from "../../styles/colors";
@@ -25,6 +26,7 @@ import styles from "../../styles/styles";
 
 const Chords = (props) => {
   const t = useLocale;
+  const callReview = useReview;
   const dispatch = useDispatch();
   const scrollChords = useRef(null);
   const global = useSelector((state) => state.global);
@@ -152,7 +154,7 @@ const Chords = (props) => {
     });
 
     handleChords(selectedChord, index);
-    // props.review();
+    callReview(global.unlocked, global.reviewDelay);
   };
 
   const handleHideBanner = () => {

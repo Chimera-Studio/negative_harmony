@@ -1,7 +1,7 @@
 import React from "react";
+import { Provider } from "react-redux";
 import AppLoading from "expo-app-loading";
 import { useFonts } from "expo-font";
-import { Provider } from "react-redux";
 
 import Body from "./app/components/screens/Body";
 import { configureStore } from "./app/store";

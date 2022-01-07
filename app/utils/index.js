@@ -10,9 +10,9 @@ export const isRealDevice = Device.isDevice;
 export const isApple = Platform.OS === "ios";
 export const isProduction = Constants.appOwnership === "standalone";
 
-export const useReview = async (chordsUnlocked, time) => {
+export const useReview = async (unlocked, reviewDelay) => {
   const date = Date.now();
-  if (chordsUnlocked && time <= date) {
+  if (unlocked && reviewDelay <= date) {
     const timestamp = await AsyncStorage.getItem(
       localStorageKeys.reviewTimestamp
     );

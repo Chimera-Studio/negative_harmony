@@ -1,8 +1,8 @@
 import { get, groupBy, merge } from "lodash";
 import * as API from "../api";
-import { VALID_QUERY, MASTER_QUERY } from "../api/cms";
+import { MASTER_QUERY } from "../api/cms";
 import { storeDataToLocal } from "../utils";
-import { localStorageKeys } from "../tokens";
+import { appKeys, localStorageKeys } from "../tokens";
 
 export const types = {
   CMS_CHECK_TIMESTAMPS: "CMS/CMS_CHECK_TIMESTAMPS",
@@ -15,9 +15,9 @@ export const selectors = {
   getCMS: (state) => state.cms,
 };
 
-const storeTimestamps = (res) => ({
+const storeTimestamps = (local, online) => ({
   type: types.CMS_CHECK_TIMESTAMPS,
-  payload: res,
+  payload: { local, online },
 });
 
 const storeCMS = (res, timestamps) => ({
@@ -28,8 +28,10 @@ const storeCMS = (res, timestamps) => ({
 export const actions = {
   checkTimestamps: () => {
     return async function (dispatch) {
-      return API.fetchTimestamps(VALID_QUERY).then((res) =>
-        dispatch(storeTimestamps(res))
+      return API.fetchLocalTimestamps().then((local) =>
+        API.fetchCMSTimestamps().then((online) =>
+          dispatch(storeTimestamps(local, online))
+        )
       );
     };
   },
@@ -69,10 +71,28 @@ const _storeCMS = (state, payload, local) => {
   return newState;
 };
 
+const _storeTimestamps = (state, payload) => {
+  const newState = {};
+  if (!payload.local) {
+    merge(newState, state, {
+      timestamps: {
+        local: appKeys.noLocalData,
+        online: payload.online,
+      },
+    });
+
+    return newState;
+  }
+
+  merge(newState, state, { timestamps: payload });
+
+  return newState;
+};
+
 export const reducer = (state, action) => {
   switch (action.type) {
     case types.CMS_CHECK_TIMESTAMPS:
-      return merge({}, state, { timestamps: action.payload });
+      return _storeTimestamps(state, action.payload);
     case types.CMS_FETCH_APP:
       return _storeCMS(state, action.payload, false);
     case types.CMS_STORE_APP:

@@ -12,11 +12,12 @@ import { Svg, Circle, Path, Polygon, G } from "react-native-svg";
 import { times } from "lodash";
 
 import Logo from "../elements/Logo";
-import Bottom from "../elements/Bottom";
+import Bottom from "../block/Bottom";
 import Legend from "../../assets/img/legend.svg";
 import ListArrow from "../../assets/img/arrow.svg";
 
 import useLocale from "../../locales";
+import { useReview } from "../../utils";
 import { musicScale } from "../../utils/patterns";
 
 import colors from "../../styles/colors";
@@ -45,6 +46,7 @@ const keyG12 = "G12";
 
 export const Scales = (props) => {
   const t = useLocale;
+  const callReview = useReview;
   const dispatch = useDispatch();
   const global = useSelector((state) => state.global);
   const scaleList = useSelector((state) => state.cms.scales);
@@ -128,7 +130,7 @@ export const Scales = (props) => {
     dispatch(actions.storeActiveKey({ x, y, group: keyG, field: value }));
 
     handleScales(value, selectedScale);
-    // props.review();
+    callReview(global.unlocked, global.reviewDelay);
   };
 
   return (
