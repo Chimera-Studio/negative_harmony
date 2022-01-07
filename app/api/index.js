@@ -2,13 +2,23 @@ import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { cms, localStorageKeys, appKeys } from "../tokens";
 import cmsHeader from "./cms.config";
-import { VALID_QUERY } from "./cms";
+import { VALID_PRODUCTION_QUERY, VALID_STAGING_QUERY } from "./cms";
+import { isRealDevice } from "../utils";
+
+const VALID_QUERY = isRealDevice ? VALID_PRODUCTION_QUERY : VALID_STAGING_QUERY;
 
 export const fetchLocalTimestamps = async () => {
-  const res = await AsyncStorage.getItem(localStorageKeys.contentTimestamps);
+  const contentTimestamps = await AsyncStorage.getItem(
+    localStorageKeys.contentTimestamps
+  );
+  const announcementTimestamp = await AsyncStorage.getItem(
+    localStorageKeys.announcementTimestamp
+  );
 
-  const data = JSON.parse(res);
-  return data;
+  const local = JSON.parse(contentTimestamps);
+  const announcement = JSON.parse(announcementTimestamp);
+
+  return { local, announcement: announcement };
 };
 
 export const fetchCMSTimestamps = async () => {
@@ -24,6 +34,9 @@ export const fetchCMSTimestamps = async () => {
       const data = {
         master: new Date(
           response.data.data.appCollection.items[0].sys.publishedAt
+        ).valueOf(),
+        announcement: new Date(
+          response.data.data.announcementCollection.items[0].sys.publishedAt
         ).valueOf(),
         patterns: new Date(
           response.data.data.negativeHarmonyCollection.items[0].sys.publishedAt

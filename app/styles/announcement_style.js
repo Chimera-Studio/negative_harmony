@@ -17,12 +17,36 @@ const announcement_style = StyleSheet.create({
     fontSize: 16,
   },
 
+  list: {
+    flexDirection: "column",
+  },
+
+  listItem: {
+    alignItems: "center",
+    flexDirection: "row",
+    justifyContent: "flex-start",
+  },
+
+  listCount: {
+    color: colors.blue,
+    fontFamily: "NegativeHarmonyBold",
+    fontSize: 15,
+    marginRight: 6,
+  },
+
+  listBullet: {
+    backgroundColor: colors.blue,
+    borderRadius: 4,
+    height: 8,
+    marginRight: 6,
+    width: 8,
+  },
+
   button: {
     backgroundColor: colors.blue,
     borderRadius: 30,
-    marginBottom: 20,
-    marginHorizontal: 40,
-    marginTop: 60,
+    marginBottom: 60,
+    marginVertical: 60,
     paddingHorizontal: 20,
     paddingVertical: 15,
   },

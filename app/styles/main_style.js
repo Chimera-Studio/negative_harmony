@@ -16,6 +16,13 @@ const main_style = StyleSheet.create({
     width: "100%",
   },
 
+  scrollContainer: {
+    backgroundColor: colors.white,
+    flexGrow: 1,
+    position: "relative",
+    width: "90%",
+  },
+
   alert: {
     alignItems: "center",
     backgroundColor: colors.white,
@@ -48,6 +55,7 @@ const main_style = StyleSheet.create({
     justifyContent: "flex-end",
     position: "absolute",
     width: "100%",
+    zIndex: 999,
   },
 });
 

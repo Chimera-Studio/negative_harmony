@@ -1,8 +1,10 @@
 import { get, groupBy, merge } from "lodash";
 import * as API from "../api";
-import { MASTER_QUERY } from "../api/cms";
-import { storeDataToLocal } from "../utils";
+import { PRODUCTION_QUERY, STAGING_QUERY } from "../api/cms";
+import { isRealDevice, storeDataToLocal } from "../utils";
 import { appKeys, localStorageKeys } from "../tokens";
+
+const MASTER_QUERY = isRealDevice ? PRODUCTION_QUERY : STAGING_QUERY;
 
 export const types = {
   CMS_CHECK_TIMESTAMPS: "CMS/CMS_CHECK_TIMESTAMPS",
@@ -15,9 +17,13 @@ export const selectors = {
   getCMS: (state) => state.cms,
 };
 
-const storeTimestamps = (local, online) => ({
+const storeTimestamps = (localData, online) => ({
   type: types.CMS_CHECK_TIMESTAMPS,
-  payload: { local, online },
+  payload: {
+    local: localData.local,
+    announcement: localData.announcement,
+    online,
+  },
 });
 
 const storeCMS = (res, timestamps) => ({
@@ -58,15 +64,22 @@ const _storeCMS = (state, payload, local) => {
 
   merge(newState, state, {
     master: payload.data.appCollection.items[0],
+    announcement: payload.data.announcementCollection.items[0],
     scales: get(types, "Scales[0].list", []),
     chords: get(types, "Chords[0].list", []),
   });
+
+  const storeState = {
+    master: payload.data.appCollection.items[0],
+    scales: get(types, "Scales[0].list", []),
+    chords: get(types, "Chords[0].list", []),
+  };
 
   storeDataToLocal(
     localStorageKeys.contentTimestamps,
     JSON.stringify(payload.timestamps)
   );
-  storeDataToLocal(localStorageKeys.appContent, JSON.stringify(newState));
+  storeDataToLocal(localStorageKeys.appContent, JSON.stringify(storeState));
 
   return newState;
 };

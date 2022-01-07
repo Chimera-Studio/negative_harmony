@@ -35,6 +35,10 @@
     "paragraph_3": "If you find any bugs incorrect representations of the notes or chords, please contact us at:\n",
     "email": "chimerastudiotm@gmail.com"
   },
+  "announcement": {
+    "title": "Attention!",
+    "cta": "Okay"
+  },
   "error": {
     "title": "Attention!",
     "text": "The new version of Negative Harmony requires internet to download all of the latest features.\n\nPlease make sure you are connected and try again.\n\n*You only need internet to download the leatest features once, afterwards you can use the app offline if you wish to do so.",

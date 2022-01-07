@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { SafeAreaView, Text, View } from "react-native";
+import { SafeAreaView, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { NativeRouter, Redirect, Route } from "react-router-native";
 import { StatusBar } from "expo-status-bar";
@@ -23,7 +23,7 @@ import Alert from "../elements/Alert";
 
 import useLocale from "../../locales";
 import { isRealDevice, useAdmobIds } from "../../utils";
-import { actions, selectors } from "../../store/cmsStore";
+import { actions } from "../../store/cmsStore";
 import { appKeys, localStorageKeys } from "../../tokens";
 
 import main_style from "../../styles/main_style";
@@ -32,23 +32,26 @@ function Body() {
   const t = useLocale;
   const dispatch = useDispatch();
   const [initLoad, setInitLoad] = useState(true);
-  const varifyTimestamps = useSelector((state) =>
-    selectors.getTimestamps(state)
-  );
   const cms = useSelector((state) => state.cms);
   const global = useSelector((state) => state.global);
   const admobId = useAdmobIds(get(cms, "master.adIds", null)).banner;
+  const [showAnnouncement, setShowAnnouncement] = useState(true);
   const [ads, setAds] = useState(false);
   const [personalised, setPersonalised] = useState(false);
   const [alert, setAlert] = useState(false);
   const [legend, setLegend] = useState(false);
-  const localTimestamps = get(varifyTimestamps, "local", 0);
-  const onlineTimestamps = get(varifyTimestamps, "online", null);
+
+  const localTimestamps = get(cms, "timestamps.local", 0);
+  const onlineTimestamps = get(cms, "timestamps.online", null);
   const checkStamps = isEqual(localTimestamps, onlineTimestamps);
+  const announcementSeen =
+    get(cms, "timestamps.local.announcement", 0) <
+    get(cms, "timestamps.announcement", 0);
   const displayAds = isRealDevice
     ? get(cms, "master.ads", false)
     : get(cms, "master.adsStaging", false);
   const loading = !["master", "scales", "chords"].every((key) => key in cms);
+  const hasAnnouncement = get(cms, "announcement.content", null);
 
   const askForPermission = async () => {
     const { granted } = await getPermissionsAsync();
@@ -68,6 +71,14 @@ function Body() {
     setAlert(true);
     setTimeout(() => setAlert(false), 3000);
   };
+
+  useEffect(() => {
+    if (initLoad) {
+      dispatch(actions.checkTimestamps());
+      setTimeout(askForPermission, 1000);
+      setInitLoad(false);
+    }
+  }, [initLoad]);
 
   useEffect(() => {
     if (loading) {
@@ -106,15 +117,15 @@ function Body() {
   }, [initLoad]);
 
   if (
-    localTimestamps === appKeys.noLocalData &&
-    onlineTimestamps === appKeys.noConnection
+    (localTimestamps === appKeys.noLocalData &&
+      onlineTimestamps === appKeys.noConnection) ||
+    (hasAnnouncement && !announcementSeen && showAnnouncement)
   )
     return (
       <Announcement
-        title={t("error.title")}
-        text={t("error.text")}
-        cta={t("error.cta")}
-        onPress={() => dispatch(actions.checkTimestamps())}
+        reload={() => dispatch(actions.checkTimestamps())}
+        dismiss={() => setShowAnnouncement(false)}
+        cms={hasAnnouncement}
       />
     );
 
