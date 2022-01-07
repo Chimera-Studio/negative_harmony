@@ -22,7 +22,7 @@ import Scales from "./Scales";
 import Alert from "../elements/Alert";
 
 import useLocale from "../../locales";
-import { isRealDevice, useAdmobIds } from "../../utils";
+import { isRealDevice, isProduction, useAdmobIds } from "../../utils";
 import { actions } from "../../store/cmsStore";
 import { appKeys, localStorageKeys } from "../../tokens";
 
@@ -47,9 +47,10 @@ function Body() {
   const announcementSeen =
     get(cms, "timestamps.local.announcement", 0) <
     get(cms, "timestamps.announcement", 0);
-  const displayAds = isRealDevice
-    ? get(cms, "master.ads", false)
-    : get(cms, "master.adsStaging", false);
+  const displayAds =
+    isRealDevice && isProduction
+      ? get(cms, "master.ads", false)
+      : get(cms, "master.adsStaging", false);
   const loading = !["master", "scales", "chords"].every((key) => key in cms);
   const hasAnnouncement = get(cms, "announcement.content", null);
 

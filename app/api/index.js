@@ -3,9 +3,9 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { cms, localStorageKeys, appKeys } from "../tokens";
 import cmsHeader from "./cms.config";
 import { VALID_PRODUCTION_QUERY, VALID_STAGING_QUERY } from "./cms";
-import { isRealDevice } from "../utils";
+import { isProduction } from "../utils";
 
-const VALID_QUERY = isRealDevice ? VALID_PRODUCTION_QUERY : VALID_STAGING_QUERY;
+const VALID_QUERY = isProduction ? VALID_PRODUCTION_QUERY : VALID_STAGING_QUERY;
 
 export const fetchLocalTimestamps = async () => {
   const contentTimestamps = await AsyncStorage.getItem(

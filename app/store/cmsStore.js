@@ -1,10 +1,10 @@
 import { get, groupBy, merge } from "lodash";
 import * as API from "../api";
 import { PRODUCTION_QUERY, STAGING_QUERY } from "../api/cms";
-import { isRealDevice, storeDataToLocal } from "../utils";
+import { isProduction, storeDataToLocal } from "../utils";
 import { appKeys, localStorageKeys } from "../tokens";
 
-const MASTER_QUERY = isRealDevice ? PRODUCTION_QUERY : STAGING_QUERY;
+const MASTER_QUERY = isProduction ? PRODUCTION_QUERY : STAGING_QUERY;
 
 export const types = {
   CMS_CHECK_TIMESTAMPS: "CMS/CMS_CHECK_TIMESTAMPS",
