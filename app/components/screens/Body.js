@@ -9,7 +9,7 @@ import {
   AdMobBanner,
 } from "expo-ads-admob";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { get, isEqual } from "lodash";
+import { get } from "lodash";
 
 import BG from "./BG";
 import Navigation from "../block/Navigation";
@@ -43,7 +43,8 @@ function Body() {
 
   const localTimestamps = get(cms, "timestamps.local", 0);
   const onlineTimestamps = get(cms, "timestamps.online", null);
-  const checkStamps = isEqual(localTimestamps, onlineTimestamps);
+  const checkStamps =
+    JSON.stringify(localTimestamps) === JSON.stringify(onlineTimestamps);
   const announcementSeen =
     get(cms, "timestamps.local.announcement", 0) <
     get(cms, "timestamps.announcement", 0);

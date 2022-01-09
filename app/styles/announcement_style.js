@@ -22,12 +22,14 @@ const announcement_style = StyleSheet.create({
   },
 
   listItem: {
-    alignItems: "center",
+    alignItems: "flex-start",
     flexDirection: "row",
     justifyContent: "flex-start",
+    marginBottom: 10,
   },
 
   listCount: {
+    alignSelf: "center",
     color: colors.blue,
     fontFamily: "NegativeHarmonyBold",
     fontSize: 15,
@@ -38,6 +40,7 @@ const announcement_style = StyleSheet.create({
     backgroundColor: colors.blue,
     borderRadius: 4,
     height: 8,
+    marginTop: 6,
     marginRight: 6,
     width: 8,
   },
