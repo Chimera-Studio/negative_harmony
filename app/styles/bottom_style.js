@@ -7,7 +7,7 @@ const smallScreenHeight = screenHeight <= 700;
 
 const bottom = StyleSheet.create({
   space: {
-    height: smallScreenHeight ? "35%" : "32%",
+    height: smallScreenHeight ? "37%" : "32%",
     position: "relative",
     width: "100%",
   },
@@ -96,7 +96,7 @@ const bottom = StyleSheet.create({
     fontSize: 15,
     marginHorizontal: 2,
     textAlign: "center",
-    width: 30,
+    width: 28,
   },
 });
 

@@ -1,5 +1,12 @@
-import React, { useEffect, useState } from "react";
-import { Animated, Text, TouchableHighlight, View } from "react-native";
+import React, { useEffect, useRef, useState } from "react";
+import {
+  Animated,
+  Dimensions,
+  Easing,
+  Text,
+  TouchableHighlight,
+  View,
+} from "react-native";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faPause, faPlay } from "@fortawesome/free-solid-svg-icons";
 import { includes } from "lodash";
@@ -10,13 +17,25 @@ import colors from "../../styles/colors";
 import bottom from "../../styles/bottom_style";
 import chords_style from "../../styles/chords_style";
 
+const screenHeight = Dimensions.get("window").height;
+
 const Bottom = (props) => {
   const locationInfo = useLocationInfo();
   const [positivePlaying, setPositivePlaying] = useState(false);
   const [negativePlaying, setNegativePlaying] = useState(false);
+  const slideUp = useRef(new Animated.Value(screenHeight / 2)).current;
   const { data } = props;
   const animateBottom = {
-    transform: [{ translateY: 0 }],
+    transform: [{ translateY: slideUp }],
+  };
+
+  const handleAnimation = () => {
+    Animated.timing(slideUp, {
+      toValue: 0,
+      duration: 300,
+      useNativeDriver: true,
+      easing: Easing.linear,
+    }).start();
   };
 
   const handleNegativeChordName = (positiveChord, negativeChord) => {
@@ -41,6 +60,9 @@ const Bottom = (props) => {
   };
 
   useEffect(() => {
+    if (data && slideUp && slideUp !== 0) {
+      handleAnimation();
+    }
     setPositivePlaying(false);
     setNegativePlaying(false);
 
@@ -49,6 +71,10 @@ const Bottom = (props) => {
       setNegativePlaying(false);
     };
   }, [data]);
+
+  useEffect(() => {
+    if (data && slideUp) slideUp.setValue(0);
+  }, []);
 
   return (
     <>

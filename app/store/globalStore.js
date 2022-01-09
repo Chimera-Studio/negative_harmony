@@ -53,13 +53,13 @@ export const actions = {
 export const reducer = (state, action) => {
   switch (action.type) {
     case types.GP_STORE_SELECTED_SCALE:
-      return merge({}, state, { selectedScale: action.payload });
+      return { ...state, ...{ selectedScale: action.payload } };
     case types.GP_STORE_SELECTED_CHORD:
-      return merge({}, state, { selectedChord: action.payload });
+      return { ...state, ...{ selectedChord: action.payload } };
     case types.GP_STORE_SCALES:
-      return merge({}, state, { scales: action.payload });
+      return { ...state, ...{ scales: action.payload } };
     case types.GP_STORE_CHORDS:
-      return merge({}, state, { chords: action.payload });
+      return { ...state, ...{ chords: action.payload } };
     case types.GP_STORE_AXIS:
       return merge({}, state, { axis: action.payload });
     case types.GP_STORE_ACTIVE_KEY:

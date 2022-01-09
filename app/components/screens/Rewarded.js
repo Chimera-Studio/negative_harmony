@@ -48,7 +48,7 @@ const Rewarded = () => {
     setTimeoutState(
       setTimeout(() => {
         setLoading(false);
-      }, 10000)
+      }, 5000)
     );
   };
 
@@ -95,10 +95,7 @@ const Rewarded = () => {
   useEffect(() => {
     handleScreenAnimation(1);
 
-    return () => {
-      clearTimeout(timeoutState);
-      handleScreenAnimation(0);
-    };
+    return () => handleScreenAnimation(0);
   }, []);
 
   return (
