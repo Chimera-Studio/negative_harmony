@@ -13,5 +13,6 @@ web-build/
 .DS_Store
 
 # sensitive info
-app.json
 .env
+app.json
+credentials.json
