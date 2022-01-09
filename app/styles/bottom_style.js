@@ -1,9 +1,13 @@
-import { StyleSheet, Platform } from "react-native";
+import { Dimensions, StyleSheet } from "react-native";
+import { isApple, isPad } from "../utils";
 import colors from "./colors";
+
+const screenHeight = Dimensions.get("window").height;
+const smallScreenHeight = screenHeight <= 700;
 
 const bottom = StyleSheet.create({
   space: {
-    height: "32%",
+    height: smallScreenHeight ? "35%" : "32%",
     position: "relative",
     width: "100%",
   },
@@ -20,7 +24,7 @@ const bottom = StyleSheet.create({
     paddingBottom: "17%",
     paddingLeft: 20,
     paddingRight: 20,
-    paddingTop: Platform.OS == "ios" && !Platform.isPad ? 10 : 5,
+    paddingTop: isApple && !isPad ? 10 : 5,
     position: "absolute",
     width: "110%",
     zIndex: 1,
@@ -85,6 +89,9 @@ const bottom = StyleSheet.create({
   },
 
   notesText: {
+    display: "flex",
+    flexShrink: 1,
+    flexWrap: "wrap",
     fontFamily: "NegativeHarmonyBold",
     fontSize: 15,
     marginHorizontal: 2,

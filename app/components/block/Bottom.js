@@ -52,7 +52,7 @@ const Bottom = (props) => {
 
   return (
     <>
-      {locationInfo.isChords && data && (
+      {/* {locationInfo.isChords && data && (
         <View style={chords_style.soundButtonWrapper}>
           <TouchableHighlight
             onPress={() => handlePlay("positive", data.positive)}
@@ -121,7 +121,7 @@ const Bottom = (props) => {
             </>
           </TouchableHighlight>
         </View>
-      )}
+      )} */}
 
       <View style={bottom.space}>
         {locationInfo.isScales && data && (

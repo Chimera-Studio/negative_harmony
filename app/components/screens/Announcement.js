@@ -39,32 +39,34 @@ const Announcement = (props) => {
   };
 
   return (
-    <SafeAreaView style={main_style.safe}>
+    <View style={main_style.container}>
       <WhiteBG />
-      <View style={main_style.container}>
-        <Text style={announcement_style.title}>{title}</Text>
-        <ScrollView
-          style={{ flex: 1 }}
-          contentContainerStyle={main_style.scrollContainer}
-          bounces={false}
-        >
-          {cms ? (
-            <>
-              {documentToReactComponents(cms.json, contentfulToReactNative())}
-            </>
-          ) : (
-            <Text style={announcement_style.text}>{t("error.text")}</Text>
-          )}
-        </ScrollView>
-        <TouchableOpacity
-          style={announcement_style.button}
-          activeOpacity={0.6}
-          onPress={handleButton}
-        >
-          <Text style={announcement_style.buttonText}>{cta}</Text>
-        </TouchableOpacity>
-      </View>
-    </SafeAreaView>
+      <SafeAreaView style={main_style.safe}>
+        <View style={main_style.container}>
+          <Text style={announcement_style.title}>{title}</Text>
+          <ScrollView
+            style={{ flex: 1 }}
+            contentContainerStyle={main_style.scrollContainer}
+            bounces={false}
+          >
+            {cms ? (
+              <>
+                {documentToReactComponents(cms.json, contentfulToReactNative())}
+              </>
+            ) : (
+              <Text style={announcement_style.text}>{t("error.text")}</Text>
+            )}
+          </ScrollView>
+          <TouchableOpacity
+            style={announcement_style.button}
+            activeOpacity={0.6}
+            onPress={handleButton}
+          >
+            <Text style={announcement_style.buttonText}>{cta}</Text>
+          </TouchableOpacity>
+        </View>
+      </SafeAreaView>
+    </View>
   );
 };
 

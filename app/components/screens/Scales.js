@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
   Text,
   View,
@@ -6,6 +6,8 @@ import {
   TouchableOpacity,
   Modal,
   Platform,
+  Animated,
+  Easing,
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { Svg, Circle, Path, Polygon, G } from "react-native-svg";
@@ -19,10 +21,10 @@ import ListArrow from "../../assets/img/arrow.svg";
 import useLocale from "../../locales";
 import { useReview } from "../../utils";
 import { musicScale } from "../../utils/patterns";
+import { actions } from "../../store/globalStore";
 
 import colors from "../../styles/colors";
-import styles from "../../styles/styles";
-import { actions } from "../../store/globalStore";
+import scales_chords_style from "../../styles/scales_chords_styles";
 
 const keyColorBG = colors.white;
 const keyColorText = colors.negativeText;
@@ -51,6 +53,7 @@ export const Scales = (props) => {
   const global = useSelector((state) => state.global);
   const scaleList = useSelector((state) => state.cms.scales);
   const [openSelect, setOpenSelect] = useState(false);
+  const screenOpacity = useRef(new Animated.Value(0)).current;
   const selectedScale = global.selectedScale || scaleList[0];
 
   const handleSelect = (scale) => {
@@ -133,32 +136,53 @@ export const Scales = (props) => {
     callReview(global.unlocked, global.reviewDelay);
   };
 
+  const handleScreenAnimation = (to) => {
+    Animated.timing(screenOpacity, {
+      toValue: to,
+      duration: 500,
+      useNativeDriver: true,
+      easing: Easing.linear,
+    }).start();
+  };
+
+  useEffect(() => {
+    handleScreenAnimation(1);
+
+    return () => handleScreenAnimation(0);
+  }, []);
+
   return (
-    <View style={styles.screenWrapper}>
-      <View style={styles.selectWrapper}>
+    <Animated.View
+      style={[scales_chords_style.wrapper, { opacity: screenOpacity }]}
+    >
+      <View style={scales_chords_style.selectWrapper}>
         {props.legend ? (
-          <Legend style={styles.legend} />
+          <Legend style={scales_chords_style.legend} />
         ) : (
           <>
-            <Text style={styles.selectTextExp}>{t("select.scales")}</Text>
+            <Text style={scales_chords_style.selectTextExp}>
+              {t("select.scales")}
+            </Text>
 
             <TouchableOpacity
-              style={styles.selectInput}
+              style={scales_chords_style.selectInput}
               onPress={() => setOpenSelect(true)}
             >
-              <Text style={styles.selectInputText}>{selectedScale.name}</Text>
-              <ListArrow style={styles.selectListArrow} />
+              <Text style={scales_chords_style.selectInputText}>
+                {selectedScale.name}
+              </Text>
+              <ListArrow style={scales_chords_style.selectListArrow} />
             </TouchableOpacity>
           </>
         )}
       </View>
 
-      <View style={styles.circleWrapper}>
+      <View style={scales_chords_style.circleWrapper}>
         <Svg
           viewBox="-30 -30 690 690"
-          style={styles.circleKeys}
-          height={!Platform.isPad ? "90%" : "100%"}
-          width={!Platform.isPad ? "90%" : "100%"}
+          style={scales_chords_style.circleKeys}
+          height={"90%"}
+          width={"90%"}
         >
           <G>
             <G>
@@ -1536,24 +1560,24 @@ export const Scales = (props) => {
       <Bottom data={global.scales} />
 
       <Modal animationType="fade" transparent={true} visible={openSelect}>
-        <View style={styles.selectListWrapper}>
+        <View style={scales_chords_style.selectListWrapper}>
           <ScrollView
             showsVerticalScrollIndicator={false}
-            style={styles.selectList}
+            style={scales_chords_style.selectList}
           >
             {scaleList.map((scale, index) => (
               <TouchableOpacity
                 key={scale.name}
                 style={
                   index === scaleList.length - 1
-                    ? styles.selectItemNoBorder
-                    : styles.selectItem
+                    ? scales_chords_style.selectItemNoBorder
+                    : scales_chords_style.selectItem
                 }
                 onPress={() => handleSelect(scale)}
               >
                 <Text
                   style={[
-                    styles.selectText,
+                    scales_chords_style.selectText,
                     {
                       color:
                         selectedScale.name === scale.name
@@ -1569,7 +1593,7 @@ export const Scales = (props) => {
           </ScrollView>
         </View>
       </Modal>
-    </View>
+    </Animated.View>
   );
 };
 

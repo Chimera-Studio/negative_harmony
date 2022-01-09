@@ -6,6 +6,8 @@ import {
   TouchableOpacity,
   TouchableHighlight,
   Modal,
+  Animated,
+  Easing,
 } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-native";
@@ -22,7 +24,7 @@ import { useReview } from "../../utils";
 import { actions } from "../../store/globalStore";
 
 import colors from "../../styles/colors";
-import styles from "../../styles/styles";
+import scales_chords_style from "../../styles/scales_chords_styles";
 
 const Chords = (props) => {
   const t = useLocale;
@@ -41,6 +43,7 @@ const Chords = (props) => {
   const [tonic, setTonic] = useState(0);
   const [tonicSpacer, setTonicSpacer] = useState(0);
   const [openSelect, setOpenSelect] = useState(false);
+  const screenOpacity = useRef(new Animated.Value(0)).current;
   const selectedScale = global.selectedScale || lists.scales[0];
 
   const getDimentions = (event) => {
@@ -161,61 +164,88 @@ const Chords = (props) => {
     dispatch(actions.showBanner(false));
   };
 
-  useEffect(() => handleChords(selectedChord, tonic), []);
+  const handleScreenAnimation = (to) => {
+    Animated.timing(screenOpacity, {
+      toValue: to,
+      duration: 500,
+      useNativeDriver: true,
+      easing: Easing.linear,
+    }).start();
+  };
+
+  useEffect(() => {
+    handleScreenAnimation(1);
+    handleChords(selectedChord, tonic);
+
+    return () => handleScreenAnimation(0);
+  }, []);
 
   return (
-    <View style={styles.screenWrapper}>
-      <View style={styles.selectChordsWrapper}>
+    <Animated.View
+      style={[scales_chords_style.wrapper, { opacity: screenOpacity }]}
+    >
+      <View style={scales_chords_style.selectChordsWrapper}>
         {props.legend ? (
-          <View style={styles.legendContainer}>
-            <Legend style={styles.legend} />
+          <View style={scales_chords_style.legendContainer}>
+            <Legend style={scales_chords_style.legend} />
 
-            <View style={styles.legendExtra}>
+            <View style={scales_chords_style.legendExtra}>
               <LegendExtra style={{ flexShrink: 1 }} />
               <Link
                 to="/info"
                 underlayColor={colors.transparent}
-                style={styles.disclamerBtn}
+                style={scales_chords_style.disclamerBtn}
               >
-                <Disclamer style={styles.disclamer} />
+                <Disclamer style={scales_chords_style.disclamer} />
               </Link>
             </View>
           </View>
         ) : (
           <>
-            <Text style={styles.selectTextExp}>{t("select.chords")}</Text>
+            <Text style={scales_chords_style.selectTextExp}>
+              {t("select.chords")}
+            </Text>
 
-            <View style={styles.selectedScaleNameWrapper}>
-              <Text style={styles.selectedScaleKey}>
+            <View style={scales_chords_style.selectedScaleNameWrapper}>
+              <Text style={scales_chords_style.selectedScaleKey}>
                 {global.scales.positive[0]}
               </Text>
-              <Text style={styles.selectedScaleName}>{selectedScale.name}</Text>
+              <Text style={scales_chords_style.selectedScaleName}>
+                {selectedScale.name}
+              </Text>
             </View>
 
             <TouchableOpacity
-              style={styles.selectInput}
+              style={scales_chords_style.selectInput}
               onPress={() => setOpenSelect(true)}
             >
-              <Text style={styles.selectInputText}>{selectedChord.name}</Text>
-              <ListArrow style={styles.selectListArrow} />
+              <Text style={scales_chords_style.selectInputText}>
+                {selectedChord.name}
+              </Text>
+              <ListArrow style={scales_chords_style.selectListArrow} />
             </TouchableOpacity>
           </>
         )}
       </View>
 
-      <View style={styles.chordsWrapper} onLayout={getDimentions}>
+      <View style={scales_chords_style.chordsWrapper} onLayout={getDimentions}>
         {!props.displayAds || global.unlocked ? (
-          <View style={styles.scrollChords}>
-            <Text style={styles.scrollChordsExpText}>{t("select.tonics")}</Text>
+          <View style={scales_chords_style.scrollChords}>
+            <Text style={scales_chords_style.scrollChordsExpText}>
+              {t("select.tonics")}
+            </Text>
 
             <ScrollView
               ref={scrollChords}
               horizontal={true}
               showsHorizontalScrollIndicator={false}
-              contentContainerStyle={styles.scrollChordsWrapper}
+              contentContainerStyle={scales_chords_style.scrollChordsWrapper}
             >
               <View
-                style={(styles.scrollChordsSpace, { width: tonicSpacer })}
+                style={
+                  (scales_chords_style.scrollChordsSpace,
+                  { width: tonicSpacer })
+                }
               />
               {global.scales.positive.map((note, index) => (
                 <React.Fragment key={note + index}>
@@ -225,8 +255,8 @@ const Chords = (props) => {
                       underlayColor={colors.lightBlue}
                       style={
                         index === tonic
-                          ? styles.scrollChordsNoteSelected
-                          : styles.scrollChordsNote
+                          ? scales_chords_style.scrollChordsNoteSelected
+                          : scales_chords_style.scrollChordsNote
                       }
                       key={index}
                       onPress={() => handleTonic(index)}
@@ -234,8 +264,8 @@ const Chords = (props) => {
                       <Text
                         style={
                           index === tonic
-                            ? styles.scrollChordsNoteTextSelected
-                            : styles.scrollChordsNoteText
+                            ? scales_chords_style.scrollChordsNoteTextSelected
+                            : scales_chords_style.scrollChordsNoteText
                         }
                       >
                         {note}
@@ -245,7 +275,10 @@ const Chords = (props) => {
                 </React.Fragment>
               ))}
               <View
-                style={(styles.scrollChordsSpace, { width: tonicSpacer })}
+                style={
+                  (scales_chords_style.scrollChordsSpace,
+                  { width: tonicSpacer })
+                }
               />
             </ScrollView>
           </View>
@@ -254,9 +287,11 @@ const Chords = (props) => {
             to="/rewarded"
             onPress={handleHideBanner}
             underlayColor={colors.blueTransparent}
-            style={styles.rewardedOpen}
+            style={scales_chords_style.rewardedOpen}
           >
-            <Text style={styles.rewardedOpenText}>{t("cta.chords")}</Text>
+            <Text style={scales_chords_style.rewardedOpenText}>
+              {t("cta.chords")}
+            </Text>
           </Link>
         )}
       </View>
@@ -264,10 +299,10 @@ const Chords = (props) => {
       <Bottom data={chords} />
 
       <Modal animationType="fade" transparent={true} visible={openSelect}>
-        <View style={styles.selectListWrapper}>
+        <View style={scales_chords_style.selectListWrapper}>
           <ScrollView
             showsVerticalScrollIndicator={false}
-            style={styles.selectList}
+            style={scales_chords_style.selectList}
             centerContent={true}
           >
             {lists.chords.map((item, index) => (
@@ -275,8 +310,8 @@ const Chords = (props) => {
                 key={item.name}
                 style={
                   index === lists.chords.length - 1
-                    ? styles.selectItemNoBorder
-                    : styles.selectItem
+                    ? scales_chords_style.selectItemNoBorder
+                    : scales_chords_style.selectItem
                 }
                 onPress={
                   global.unlocked
@@ -289,10 +324,10 @@ const Chords = (props) => {
                 <Text
                   style={[
                     global.unlocked
-                      ? styles.selectText
+                      ? scales_chords_style.selectText
                       : index === 0
-                      ? styles.selectText
-                      : styles.selectDisabledText,
+                      ? scales_chords_style.selectText
+                      : scales_chords_style.selectDisabledText,
                     {
                       color:
                         selectedChord.name === item.name
@@ -310,7 +345,7 @@ const Chords = (props) => {
           </ScrollView>
         </View>
       </Modal>
-    </View>
+    </Animated.View>
   );
 };
 

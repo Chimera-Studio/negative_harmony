@@ -1,6 +1,7 @@
 import React from "react";
-import { StyleSheet, Platform, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
+import { isApple, isPad } from "../../utils";
 import colors from "../../styles/colors";
 
 function GradientBG() {
@@ -18,7 +19,7 @@ const styles = StyleSheet.create({
   background: {
     backgroundColor: colors.blue,
     bottom: 0,
-    flex: Platform.OS === "ios" && !Platform.isPad ? null : 1,
+    flex: isApple && !isPad ? null : 1,
     height: "120%",
     left: "-10%",
     position: "absolute",

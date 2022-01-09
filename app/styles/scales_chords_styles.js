@@ -1,7 +1,11 @@
-import { StyleSheet, Platform } from "react-native";
+import { Dimensions, StyleSheet } from "react-native";
+import { isApple } from "../utils";
 import colors from "./colors";
 
-const styles = StyleSheet.create({
+const screenHeight = Dimensions.get("window").height;
+const smallScreenHeight = screenHeight <= 700;
+
+const scales_chords_style = StyleSheet.create({
   legendContainer: {
     display: "flex",
     justifyContent: "space-evenly",
@@ -9,7 +13,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   legend: {
-    width: !Platform.isPad ? "80%" : "60%",
+    width: "80%",
     aspectRatio: 5 / 1,
     marginBottom: 5,
   },
@@ -17,7 +21,7 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-between",
-    width: !Platform.isPad ? "80%" : "60%",
+    width: "80%",
     height: "32%",
     backgroundColor: colors.whiteTransparent,
     borderRadius: 15,
@@ -29,64 +33,24 @@ const styles = StyleSheet.create({
     height: "100%",
     aspectRatio: 2.4 / 1,
   },
-  screenWrapper: {
+  wrapper: {
     flex: 1,
     position: "relative",
-  },
-  rewardedWrapper: {
-    flex: 1,
-    display: "flex",
-    alignItems: "center",
-  },
-  disclamerWrapper: {
-    flex: 1,
-    display: "flex",
-    alignItems: "center",
-  },
-  discTextWrapper: {
-    width: "90%",
-    height: "75%",
-  },
-  discTitle: {
-    color: colors.black,
-    fontFamily: "NegativeHarmonyBold",
-    textAlign: "center",
-    fontSize: 22,
-    marginTop: "10%",
-    marginBottom: "5%",
-  },
-  discSubTitle: {
-    color: colors.black,
-    fontFamily: "NegativeHarmonyBold",
-    textAlign: "left",
-    fontSize: 16,
-    marginVertical: 15,
-  },
-  discContactTitle: {
-    color: colors.black,
-    fontFamily: "NegativeHarmonyBold",
-    textAlign: "left",
-    fontSize: 14,
-    marginVertical: 15,
-  },
-  discText: {
-    color: colors.black,
-    fontFamily: "NegativeHarmonyRegular",
-    textAlign: "left",
-    fontSize: 14,
   },
   selectWrapper: {
     display: "flex",
     justifyContent: "flex-end",
     height: "12%",
-    marginVertical: "5%",
+    marginTop: "5%",
+    marginBottom: smallScreenHeight ? "2%" : "5%",
     alignItems: "center",
   },
   selectChordsWrapper: {
     display: "flex",
     justifyContent: "flex-end",
     height: "20%",
-    marginVertical: "5%",
+    marginTop: "5%",
+    marginBottom: smallScreenHeight ? "2%" : "5%",
   },
   selectTextExp: {
     color: colors.black,
@@ -116,9 +80,11 @@ const styles = StyleSheet.create({
   selectListWrapper: {
     borderRadius: 30,
     marginBottom: "30%",
-    marginHorizontal: "5%",
+    marginLeft: "auto",
+    marginRight: "auto",
     marginTop: "15%",
-    overflow: Platform.OS == "ios" ? "scroll" : "hidden",
+    maxWidth: 500,
+    overflow: isApple ? "scroll" : "hidden",
     width: "90%",
   },
   selectList: {
@@ -156,81 +122,28 @@ const styles = StyleSheet.create({
     aspectRatio: 1 / 1,
   },
   circleWrapper: {
-    flex: 1,
-    display: "flex",
-    justifyContent: "center",
     alignItems: "center",
-  },
-  icon: {
-    position: "absolute",
-    marginVertical: "22%",
-    left: "40%",
-    width: "20%",
-    aspectRatio: 1 / 1,
-    zIndex: 4,
-  },
-  circleKeys: {
-    width: "100%",
-    aspectRatio: 1 / 1,
-    zIndex: 3,
-  },
-  scaleSpace: {
-    height: "32%",
-    width: "100%",
+    display: "flex",
+    flex: 1,
+    justifyContent: "center",
     position: "relative",
   },
-  scaleWrapper: {
+  icon: {
+    aspectRatio: 1 / 1,
     position: "absolute",
-    left: "-5%",
-    justifyContent: "flex-start",
-    width: "110%",
-    bottom: "-15%",
-    height: "100%",
-    backgroundColor: colors.white,
-    borderTopLeftRadius: 40,
-    borderTopRightRadius: 40,
-    paddingTop: Platform.OS == "ios" && !Platform.isPad ? 10 : 5,
-    paddingBottom: "17%",
-    paddingLeft: 20,
-    paddingRight: 20,
-    zIndex: 1,
-    elevation: 0,
+    width: "20%",
+    zIndex: 4,
+    marginTop: "40%",
+    marginBottom: "40%",
+    marginLeft: "40%",
+    marginRight: "40%",
   },
-  positiveScale: {
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "space-evenly",
-    alignItems: "flex-end",
-    height: "26%",
-  },
-  negativeScale: {
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "space-evenly",
-    alignItems: "flex-start",
-    height: "26%",
-  },
-  positiveScaleText: {
-    fontFamily: "NegativeHarmonyBold",
-    fontSize: 15,
-    width: 30,
-    textAlign: "center",
-    color: colors.positiveText,
-  },
-  negativeScaleText: {
-    fontFamily: "NegativeHarmonyBold",
-    fontSize: 15,
-    width: 30,
-    textAlign: "center",
-    color: colors.negativeText,
-  },
-  axisLegend: {
+  circleKeys: {
+    aspectRatio: 1 / 1,
+    marginLeft: "auto",
+    marginRight: "auto",
     width: "100%",
-    height: 6,
-    borderRadius: 6,
-    marginTop: 10,
-    marginBottom: 10,
-    backgroundColor: colors.blue,
+    zIndex: 3,
   },
   selectedScaleNameWrapper: {
     display: "flex",
@@ -334,74 +247,6 @@ const styles = StyleSheet.create({
     textAlign: "center",
     color: colors.blue,
   },
-  scaleNameWrapper: {
-    alignItems: "baseline",
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "center",
-    paddingVertical: 10,
-  },
-  exit: {
-    position: "absolute",
-    top: 0,
-    right: 0,
-    width: 25,
-    aspectRatio: 1 / 1,
-  },
-  exitDisabled: {
-    position: "absolute",
-    top: 0,
-    right: 0,
-    width: 25,
-    aspectRatio: 1 / 1,
-  },
-  rewardedExp: {
-    marginTop: "30%",
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  rewardedExpText: {
-    color: colors.black,
-    textAlign: "center",
-    fontFamily: "NegativeHarmonyBold",
-    fontSize: 24,
-    marginVertical: 2,
-  },
-  rewardedStart: {
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: colors.blue,
-    width: "75%",
-    height: 70,
-    borderRadius: 35,
-    marginTop: 60,
-    marginBottom: 30,
-  },
-  rewardedDisabled: {
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: colors.disabled,
-    width: "75%",
-    height: 70,
-    borderRadius: 35,
-    marginTop: 60,
-    marginBottom: 30,
-  },
-  rewardedStartText: {
-    color: colors.white,
-    textAlign: "center",
-    fontFamily: "NegativeHarmonyBold",
-    fontSize: 20,
-  },
-  rewardedDisc: {
-    color: colors.black,
-    textAlign: "center",
-    fontFamily: "NegativeHarmonyRegular",
-    fontSize: 12,
-  },
 });
 
-export default styles;
+export default scales_chords_style;

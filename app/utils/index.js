@@ -8,7 +8,9 @@ import { localStorageKeys, admob } from "../tokens";
 
 export const isRealDevice = Device.isDevice;
 export const isApple = Platform.OS === "ios";
-export const isProduction = Constants.appOwnership === "standalone";
+export const isPad = Platform.isPad;
+export const isProduction =
+  Constants.appOwnership === "standalone" && isRealDevice;
 
 export const useReview = async (unlocked, reviewDelay) => {
   const date = Date.now();
@@ -17,12 +19,13 @@ export const useReview = async (unlocked, reviewDelay) => {
       localStorageKeys.reviewTimestamp
     );
 
-    if (
-      (Number(timestamp) <= date || Number(timestamp) === 0) &&
-      (await StoreReview.isAvailableAsync()) &&
-      (await StoreReview.hasAction())
-    ) {
-      StoreReview.requestReview();
+    if (Number(timestamp) <= date || Number(timestamp) === 0) {
+      if (
+        (await StoreReview.isAvailableAsync()) &&
+        (await StoreReview.hasAction())
+      ) {
+        StoreReview.requestReview();
+      }
 
       const newTimestamp = new Date(date)
         .setMonth(new Date(date).getMonth() + 1)

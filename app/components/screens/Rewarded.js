@@ -1,5 +1,12 @@
-import React, { useEffect, useState } from "react";
-import { Text, View, TouchableOpacity, ActivityIndicator } from "react-native";
+import React, { useEffect, useRef, useState } from "react";
+import {
+  Text,
+  View,
+  TouchableOpacity,
+  ActivityIndicator,
+  Animated,
+  Easing,
+} from "react-native";
 import { AdMobRewarded } from "expo-ads-admob";
 import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-native";
@@ -13,7 +20,8 @@ import { useAdmobIds } from "../../utils";
 import { actions } from "../../store/globalStore";
 
 import colors from "../../styles/colors";
-import styles from "../../styles/styles";
+import main_style from "../../styles/main_style";
+import rewarded_style from "../../styles/rewarded_style";
 
 const Rewarded = () => {
   const t = useLocale;
@@ -24,6 +32,7 @@ const Rewarded = () => {
   const admobId = useAdmobIds(get(cmsData, "adIds", null)).rewarded;
   const [timeoutState, setTimeoutState] = useState(null);
   const [loading, setLoading] = useState(false);
+  const screenOpacity = useRef(new Animated.Value(0)).current;
 
   const handleBack = (e) => {
     if (loading) {
@@ -67,6 +76,15 @@ const Rewarded = () => {
     clearTimeout(timeoutState);
   });
 
+  const handleScreenAnimation = (to) => {
+    Animated.timing(screenOpacity, {
+      toValue: to,
+      duration: 500,
+      useNativeDriver: true,
+      easing: Easing.linear,
+    }).start();
+  };
+
   useEffect(() => {
     if (unlocked) {
       clearTimeout(timeoutState);
@@ -75,37 +93,46 @@ const Rewarded = () => {
   }, [unlocked]);
 
   useEffect(() => {
-    return () => clearTimeout(timeoutState);
+    handleScreenAnimation(1);
+
+    return () => {
+      clearTimeout(timeoutState);
+      handleScreenAnimation(0);
+    };
   }, []);
 
   return (
-    <View style={styles.rewardedWrapper}>
+    <Animated.View style={[rewarded_style.wrapper, { opacity: screenOpacity }]}>
       <Link
         to="/chords"
         onPress={(e) => handleBack(e)}
         underlayColor={colors.transparent}
-        style={styles.exit}
+        style={main_style.exit}
       >
         <Exit color={!loading ? colors.blue : colors.disabled} />
       </Link>
-      <View style={styles.rewardedExp}>
-        <Text style={styles.rewardedExpText}>{t("rewarded.paragraph_1")}</Text>
-        <Text style={styles.rewardedExpText}>{t("rewarded.paragraph_2")}</Text>
+      <View style={rewarded_style.paragraph}>
+        <Text style={rewarded_style.paragraphText}>
+          {t("rewarded.paragraph_1")}
+        </Text>
+        <Text style={rewarded_style.paragraphText}>
+          {t("rewarded.paragraph_2")}
+        </Text>
       </View>
       <TouchableOpacity
-        style={!loading ? styles.rewardedStart : styles.rewardedDisabled}
+        style={!loading ? rewarded_style.start : rewarded_style.disabled}
         activeOpacity={1}
         disabled={loading}
         onPress={handleRequest}
       >
         {!loading ? (
-          <Text style={styles.rewardedStartText}>{t("rewarded.cta")}</Text>
+          <Text style={rewarded_style.startText}>{t("rewarded.cta")}</Text>
         ) : (
           <ActivityIndicator size="large" color={colors.white} />
         )}
       </TouchableOpacity>
-      <Text style={styles.rewardedDisc}>{t("rewarded.disclamer")}</Text>
-    </View>
+      <Text style={rewarded_style.disclamer}>{t("rewarded.disclamer")}</Text>
+    </Animated.View>
   );
 };
 

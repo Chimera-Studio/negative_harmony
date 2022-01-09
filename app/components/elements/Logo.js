@@ -1,19 +1,19 @@
 import React, { useEffect } from "react";
 import { Animated, Easing } from "react-native";
 import Icon from "../../assets/img/icon.svg";
-import styles from "../../styles/styles";
+import scales_chords_styles from "../../styles/scales_chords_styles";
 
 const Logo = () => {
   const rotate = new Animated.Value(0);
 
   const startAnimation = () => {
-    rotate.setValue(0);
     Animated.timing(rotate, {
       toValue: 1,
       duration: 24000,
       useNativeDriver: true,
       easing: Easing.linear,
     }).start(() => {
+      rotate.setValue(0);
       startAnimation();
     });
   };
@@ -25,7 +25,7 @@ const Logo = () => {
   return (
     <Animated.View
       style={[
-        styles.icon,
+        scales_chords_styles.icon,
         {
           transform: [
             {
