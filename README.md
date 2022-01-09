@@ -6,15 +6,15 @@
 
 ## You can download "Negative Harmony" on:
 
--   [Google Play Store](https://play.google.com/store/apps/details?id=com.chimerastudio.negativeharmony)
--   [App Store](https://apps.apple.com/us/app/negative-harmony-simplified/id1561674380)
+- [Google Play Store](https://play.google.com/store/apps/details?id=com.chimerastudio.negativeharmony)
+- [App Store](https://apps.apple.com/us/app/negative-harmony-simplified/id1561674380)
 
 ### Negative Harmony is an app made to make the musical theory of negative harmony easier to understand and visualise.
 
--   Selection of all western scales and modes
--   Over 10 different chord types
--   Diatonic note detection / Indicator for notes/chords outside of the scale
--   Easy to understand UI design
+- Selection of all western scales and modes
+- Over 10 different chord types
+- Diatonic note detection / Indicator for notes/chords outside of the scale
+- Easy to understand UI design
 
 The app shows in a clear and easy way to understand what are the notes inside the chosen scale/mode and their relative negative harmony while also representing this inside the circle of fifths with the blue axis showing the relationship between each note.
 
@@ -26,18 +26,20 @@ The second-page "Chords" is made available after selecting the key and scale on 
 
 ### New features and updates
 
--   [ ] More chords
--   [ ] Guitar chord diagrams
--   [ ] Play sound examples
--   [ ] Chord sequences
--   [ ] Save favourite configurations
--   [ ] Import and export MIDI
+- [x] CMS integration
+- [x] More chords
+- [ ] Guitar chord diagrams
+- [ ] Play sound examples
+- [ ] Chord sequences
+- [ ] Save favourite configurations
+- [ ] Import and export MIDI
+- [ ] Piano view with negative playback
 
 ## The Chimera Team
 
--   [Dario Dumlijan - Developer](https://linktr.ee/DarioDumlijan)
--   [Damjan Gazibaric - UI/UX Designer](https://behance.net/gazdadesigns)
--   [Boris Vida - Assets Designer](https://behance.net/lemondesignuk)
+- [Dario Dumlijan - Developer](https://linktr.ee/DarioDumlijan)
+- [Damjan Gazibaric - UI/UX Designer](https://behance.net/gazdadesigns)
+- [Boris Vida - Assets Designer](https://behance.net/lemondesignuk)
 
 [More by Chimera Studio](https://linktr.ee/chimerastudiotm)
 
@@ -45,4 +47,4 @@ The second-page "Chords" is made available after selecting the key and scale on 
 
 ###### Copyright
 
-© 2021 Chimera Studio
+© 2022 Chimera Studio

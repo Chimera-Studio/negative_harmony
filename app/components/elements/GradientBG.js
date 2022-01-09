@@ -1,7 +1,8 @@
 import React from "react";
-import { StyleSheet, Platform, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
-import colors from "../config/colors";
+import { isApple, isPad } from "../../utils";
+import colors from "../../styles/colors";
 
 function GradientBG() {
   return (
@@ -16,20 +17,20 @@ function GradientBG() {
 
 const styles = StyleSheet.create({
   background: {
-    position: "absolute",
-    top: "-5%",
-    left: "-10%",
-    right: 0,
-    bottom: 0,
-    width: "120%",
-    height: "120%",
     backgroundColor: colors.blue,
-    flex: Platform.OS === "ios" && !Platform.isPad ? null : 1,
+    bottom: 0,
+    flex: isApple && !isPad ? null : 1,
+    height: "120%",
+    left: "-10%",
+    position: "absolute",
+    right: 0,
+    top: "-5%",
+    width: "120%",
   },
   gradient: {
-    width: "100%",
     height: "100%",
     opacity: 0.8,
+    width: "100%",
   },
 });
 

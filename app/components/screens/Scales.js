@@ -1,1212 +1,200 @@
-import { StatusBar } from "expo-status-bar";
-import React, {
-  Component,
-  useRef,
-  forwardRef,
-  useImperativeHandle,
-  useState,
-  useEffect,
-} from "react";
+import React, { useEffect, useRef, useState } from "react";
 import {
-  SafeAreaView,
   Text,
   View,
   ScrollView,
   TouchableOpacity,
-  TouchableHighlight,
-  Animated,
   Modal,
-  Easing,
-  ActivityIndicator,
   Platform,
-  Dimensions,
+  Animated,
+  Easing,
 } from "react-native";
+import { useDispatch, useSelector } from "react-redux";
 import { Svg, Circle, Path, Polygon, G } from "react-native-svg";
-import {
-  AdMobBanner,
-  AdMobRewarded,
-  requestPermissionsAsync,
-  getPermissionsAsync,
-} from "expo-ads-admob";
-import * as Device from "expo-device";
-import * as StoreReview from "expo-store-review";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-
-import styles from "../config/styles";
-import colors from "../config/colors";
-import admob from "../tokens";
-
-import GradientBG from "../screens/GradientBG";
-import WhiteBG from "../screens/WhiteBG";
-
-import Info from "../assets/img/info.svg";
-import Legend from "../assets/img/legend.svg";
-import Legend2 from "../assets/img/legend2Exp.svg";
-import Disclamer from "../assets/img/disclamer.svg";
-import ListArrow from "../assets/img/arrow.svg";
-import Icon from "../assets/img/icon.svg";
-
-var selectedScaleNameSaved = "Major";
-var selectedScaleValSaved = "major";
-var selectedScaleKeySaved = "C";
-var selectedScaleDisplaySaved = "major";
-
-var axisStatusSaved = false;
-var axisDegSaved = "0deg";
-
-var activeKeyXSaved = 0;
-var activeKeyYSaved = 0;
-var activeKeyGroupSaved = 0;
-var activeKeyFieldSaved = 0;
-
-var selectedTonic;
-var selectedTonicIndex;
-var selectedChordVal;
-var negativeTonic;
-var negativeChordVal;
-
-var visibleScales = false;
-var chordsUnlocked = true;
-var personalisedAds = false;
-
-const emulator = Device.isDevice;
-const admob_ios = {
-  banner: emulator ? admob.banner.ios : admob.banner.ios_test,
-  rewarded: emulator ? admob.rewarded.ios : admob.rewarded.ios_test,
-};
-const admob_android = {
-  banner: emulator ? admob.banner.android : admob.banner.android_test,
-  rewarded: emulator ? admob.rewarded.android : admob.rewarded.android_test,
-};
-
-const scaleList = [
-  { name: "Major", value: "major" },
-  { name: "Natural Minor", value: "naturalMinor" },
-  { name: "Harmonic Minor", value: "harmonicMinor" },
-  { name: "Melodic Minor", value: "melodicMinor" },
-  { name: "Chromatic", value: "chromatic" },
-  { name: "Whole Tone", value: "wholeTone" },
-  { name: "Major Pentatonic", value: "majorPentatonic" },
-  { name: "Minor Pentatonic", value: "minorPentatonic" },
-  { name: "Ionian", value: "ionian" },
-  { name: "Dorian", value: "dorian" },
-  { name: "Phrygian", value: "phrygian" },
-  { name: "Lydian", value: "lydian" },
-  { name: "Mixolydian", value: "mixolydian" },
-  { name: "Aeolian", value: "aeolian" },
-  { name: "Locrian", value: "locrian" },
-];
-
-const chordList = [
-  { name: "Major", value: "major" },
-  { name: "Minor", value: "minor" },
-  { name: "Major 7", value: "major7" },
-  { name: "Minor 7", value: "minor7" },
-  { name: "Minor 7♭ 5", value: "m7b5" },
-  { name: "Major 9", value: "maj9" },
-  { name: "Minor 6", value: "m6" },
-  { name: "Suspended 2", value: "sus2" },
-  { name: "Suspended 4", value: "sus4" },
-  { name: "Diminished", value: "dim" },
-  { name: "Augmented", value: "aug" },
-];
-
-const musicScale = [
-  "C",
-  "C♯ D♭",
-  "D",
-  "D♯ E♭",
-  "E",
-  "F",
-  "F♯ G♭",
-  "G",
-  "G♯ A♭",
-  "A",
-  "A♯ B♭",
-  "B",
-];
-var cloneScale = [];
-var cloneNegativeScale = [];
-var positiveScale = [];
-var negativeScale = [];
-
-var cloneChords = [];
-var cloneNegativeChords = [];
-var positiveScaleTonics = [];
-var positiveChord = [];
-var negativeChord = [];
-
-const majorScale = [0, 2, 4, 5, 7, 9, 11, 0];
-/* majorScale Pattern: R + 2 + 2 + 1 + 2 + 2 + 2 + R */
-
-const naturalMinorScale = [0, 2, 3, 5, 7, 8, 10, 0];
-/* naturalMinorScale Pattern: R + 2 + 1 + 2 + 2 + 1 + 2 + R */
-
-const harmonicMinorScale = [0, 2, 3, 5, 7, 8, 11, 0];
-/* harmonicMinorScale Pattern: R + 2 + 1 + 2 + 2 + 1 + 3 + R */
-
-const melodicMinorScale = [0, 2, 3, 5, 7, 9, 11, 0];
-/* melodicMinorScale Pattern: R + 2 + 1 + 2 + 2 + 2 + 2 + R */
-
-const chromaticScale = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 0];
-/* chromaticScale Pattern: R + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + 1 + R */
-
-const wholeToneScale = [0, 2, 4, 6, 8, 10, 0];
-/* wholeToneScale Pattern: R + 2 + 2 + 2 + 2 + 2 + R */
-
-const majorPentatonicScale = [0, 2, 4, 7, 9, 0];
-/* majorPentatonicScale Pattern: R + 2 + 2 + 3 + 2 + R */
-
-const minorPentatonicScale = [0, 3, 5, 7, 10, 0];
-/* minorPentatonicScale Pattern: R + 3 + 2 + 2 + 3 + R */
-
-const ionianScale = [0, 2, 4, 5, 7, 9, 11, 0];
-/* ionianScale Pattern: R + 2 + 2 + 1 + 2 + 2 + 2 + R */
-
-const dorianScale = [0, 2, 3, 5, 7, 9, 10, 0];
-/* dorianScale Pattern: R + 2 + 1 + 2 + 2 + 2 + 1 + R */
-
-const phrygianScale = [0, 1, 3, 5, 7, 8, 10, 0];
-/* phrygianScale Pattern: R + 1 + 2 + 2 + 2 + 1 + 2 + R */
-
-const lydianScale = [0, 2, 4, 6, 7, 9, 11, 0];
-/* lydianScale Pattern: R + 2 + 2 + 2 + 1 + 2 + 2 + R */
-
-const mixolydianScale = [0, 2, 4, 5, 7, 9, 10, 0];
-/* mixolydianScale Pattern: R + 2 + 2 + 1 + 2 + 2 + 1 + R */
-
-const aeolianScale = [0, 2, 3, 5, 7, 8, 10, 0];
-/* aeolianScale Pattern: R + 2 + 1 + 2 + 2 + 1 + 2 + R */
-
-const locrianScale = [0, 1, 3, 5, 6, 8, 10, 0];
-/* locrianScale Pattern: R + 1 + 2 + 2 + 1 + 2 + 2 + R */
-
-/* ----------------------------------------------------- */
-
-const majorChord = [0, 4, 7];
-/* majorChord Pattern: 0, 4, 1 */
-
-const minorChord = [0, 3, 7];
-/* minorChord Pattern: 0, 9, 1 */
-
-const major7Chord = [0, 4, 7, 11];
-/* major7Chord Pattern: 0, 4, 1, 5 */
-
-const minor7Chord = [0, 3, 7, 10];
-/* minor7Chord Pattern: 0, 9, 1, 10 */
-
-const m7b5Chord = [0, 3, 6, 10];
-/* m7b5Chord Pattern: 0, 9, 6, 10 */
-
-const maj9Chord = [0, 4, 7, 11, 2];
-/* maj9Chord Pattern: 0, 4, 1, 5, 2 */
-
-const m9Chord = [0, 3, 7, 10, 2];
-/* m9Chord Pattern: 0, 4, 1, 5, 2 */
-
-const m6Chord = [0, 3, 7, 9];
-/* m6Chord Pattern: 0, 9, 1, 3 */
-
-const sus2Chord = [0, 2, 7];
-/* sus2Chord Pattern: 0, 2, 1 */
-
-const sus4Chord = [0, 5, 7];
-/* sus4Chord Pattern: 0, 11, 1 */
-
-const dimChord = [0, 3, 6];
-/* dimChord Pattern: 0, 9, 6 */
-
-const augChord = [0, 4, 8];
-/* augChord Pattern: 0, 4, 8 */
-
-const chords5Chord = [0, 7, 0];
-/* 5ChordsChord Pattern: 0, 1, 0 */
-
-const chords6Chord = [0, 4, 7, 9];
-/* 6ChordsChord Pattern: 0, 4, 1, 3 */
-
-const dominant7Chord = [0, 4, 7, 10];
-/* dominant7Chord Pattern: 0, 4, 1, 10 */
-
-const diminished7Chord = [0, 9, 6, 8];
-/* diminished7Chord Pattern: 0, 3, 6, 8 */
-
-const dom7sus4Chord = [0, 5, 7, 11];
-/* dominant9Chord Pattern: 0, 11, 1, 5 */
-
-const m6NegChord = [0, 2, 6, 9];
-/* m6NegChord Pattern: 0, 2, 6, 3 */
-
-/*
-const dominant9Chord = [0, 4, 1, 10, 2];
-dominant9Chord Pattern: 0, 4, 7, 10, 2 */
-
-/*
-const dominant11Chord = [0, 4, 1, 10, 2, 5];
-dominant11Chord Pattern: 0, 4, 7, 10, 2, 11 */
-
-/*
-const dominant13Chord = [0, 4, 1, 10, 2, 5, 0];
-dominant13Chord Pattern: 0, 4, 7, 10, 2, 11, 0 */
-
-/* ----------------------------------------------------- */
-
-function arrayEquals(a, b) {
-  return (
-    Array.isArray(a) &&
-    Array.isArray(b) &&
-    a.length === b.length &&
-    a.every((val, index) => val === b[index])
-  );
-}
-
-function showInitialScales() {
-  cloneScale = musicScale.slice();
-
-  let rootNote = activeKeyFieldSaved;
-  for (let i = 0; i < rootNote; i++) cloneScale.push(cloneScale.shift());
-
-  cloneNegativeScale = cloneScale.slice();
-
-  for (let n = 0; n < 8; n++)
-    cloneNegativeScale.push(cloneNegativeScale.shift());
-  cloneNegativeScale.reverse();
-
-  selectedScaleKeySaved = cloneScale[0];
-  showScales();
-}
-
-function showScales() {
-  positiveScale = [];
-  negativeScale = [];
-
-  let pattern = 0;
-
-  if (selectedScaleValSaved == "major") {
-    for (let i = 0; i < majorScale.length; i++) {
-      positiveScale.push(cloneScale[majorScale[pattern]]);
-      negativeScale.push(cloneNegativeScale[majorScale[pattern]]);
-      pattern++;
-    }
-  } else if (selectedScaleValSaved == "naturalMinor") {
-    for (let i = 0; i < naturalMinorScale.length; i++) {
-      positiveScale.push(cloneScale[naturalMinorScale[pattern]]);
-      negativeScale.push(cloneNegativeScale[naturalMinorScale[pattern]]);
-      pattern++;
-    }
-  } else if (selectedScaleValSaved == "harmonicMinor") {
-    for (let i = 0; i < harmonicMinorScale.length; i++) {
-      positiveScale.push(cloneScale[harmonicMinorScale[pattern]]);
-      negativeScale.push(cloneNegativeScale[harmonicMinorScale[pattern]]);
-      pattern++;
-    }
-  } else if (selectedScaleValSaved == "melodicMinor") {
-    for (let i = 0; i < melodicMinorScale.length; i++) {
-      positiveScale.push(cloneScale[melodicMinorScale[pattern]]);
-      negativeScale.push(cloneNegativeScale[melodicMinorScale[pattern]]);
-      pattern++;
-    }
-  } else if (selectedScaleValSaved == "chromatic") {
-    for (let i = 0; i < chromaticScale.length; i++) {
-      positiveScale.push(cloneScale[chromaticScale[pattern]]);
-      negativeScale.push(cloneNegativeScale[chromaticScale[pattern]]);
-      pattern++;
-    }
-  } else if (selectedScaleValSaved == "wholeTone") {
-    for (let i = 0; i < wholeToneScale.length; i++) {
-      positiveScale.push(cloneScale[wholeToneScale[pattern]]);
-      negativeScale.push(cloneNegativeScale[wholeToneScale[pattern]]);
-      pattern++;
-    }
-  } else if (selectedScaleValSaved == "majorPentatonic") {
-    for (let i = 0; i < majorPentatonicScale.length; i++) {
-      positiveScale.push(cloneScale[majorPentatonicScale[pattern]]);
-      negativeScale.push(cloneNegativeScale[majorPentatonicScale[pattern]]);
-      pattern++;
-    }
-  } else if (selectedScaleValSaved == "minorPentatonic") {
-    for (let i = 0; i < minorPentatonicScale.length; i++) {
-      positiveScale.push(cloneScale[minorPentatonicScale[pattern]]);
-      negativeScale.push(cloneNegativeScale[minorPentatonicScale[pattern]]);
-      pattern++;
-    }
-  } else if (selectedScaleValSaved == "ionian") {
-    for (let i = 0; i < ionianScale.length; i++) {
-      positiveScale.push(cloneScale[ionianScale[pattern]]);
-      negativeScale.push(cloneNegativeScale[ionianScale[pattern]]);
-      pattern++;
-    }
-  } else if (selectedScaleValSaved == "dorian") {
-    for (let i = 0; i < dorianScale.length; i++) {
-      positiveScale.push(cloneScale[dorianScale[pattern]]);
-      negativeScale.push(cloneNegativeScale[dorianScale[pattern]]);
-      pattern++;
-    }
-  } else if (selectedScaleValSaved == "phrygian") {
-    for (let i = 0; i < phrygianScale.length; i++) {
-      positiveScale.push(cloneScale[phrygianScale[pattern]]);
-      negativeScale.push(cloneNegativeScale[phrygianScale[pattern]]);
-      pattern++;
-    }
-  } else if (selectedScaleValSaved == "lydian") {
-    for (let i = 0; i < lydianScale.length; i++) {
-      positiveScale.push(cloneScale[lydianScale[pattern]]);
-      negativeScale.push(cloneNegativeScale[lydianScale[pattern]]);
-      pattern++;
-    }
-  } else if (selectedScaleValSaved == "mixolydian") {
-    for (let i = 0; i < mixolydianScale.length; i++) {
-      positiveScale.push(cloneScale[mixolydianScale[pattern]]);
-      negativeScale.push(cloneNegativeScale[mixolydianScale[pattern]]);
-      pattern++;
-    }
-  } else if (selectedScaleValSaved == "aeolian") {
-    for (let i = 0; i < aeolianScale.length; i++) {
-      positiveScale.push(cloneScale[aeolianScale[pattern]]);
-      negativeScale.push(cloneNegativeScale[aeolianScale[pattern]]);
-      pattern++;
-    }
-  } else if (selectedScaleValSaved == "locrian") {
-    for (let i = 0; i < locrianScale.length; i++) {
-      positiveScale.push(cloneScale[locrianScale[pattern]]);
-      negativeScale.push(cloneNegativeScale[locrianScale[pattern]]);
-      pattern++;
-    }
-  }
-
-  positiveScaleTonics = positiveScale.slice();
-  positiveScaleTonics.splice(-1, 1);
-}
-
-function showInitialChords() {
-  selectedTonic = cloneScale[0];
-  selectedChordVal = chordList[0].value;
-
-  for (let i = 0; i < cloneScale.length; i++) {
-    if (selectedTonic == cloneScale[i]) {
-      selectedTonicIndex = i;
-    }
-  }
-
-  cloneChords = cloneScale.slice();
-
-  var rootNote = selectedTonicIndex;
-  for (var i = 0; i < rootNote; i++) cloneChords.push(cloneChords.shift());
-
-  cloneNegativeChords = cloneNegativeScale.slice();
-  for (var i = 0; i < rootNote; i++)
-    cloneNegativeChords.push(cloneNegativeChords.shift());
-
-  showChords();
-}
-
-function showChords() {
-  positiveChord = [];
-  negativeChord = [];
-
-  let pattern = 0;
-
-  if (selectedChordVal == "major") {
-    for (let i = 0; i < majorChord.length; i++) {
-      var obj = {};
-      obj["diatonic"] = true;
-      obj["note"] = cloneChords[majorChord[pattern]];
-      positiveChord.push(obj);
-      var objNeg = {};
-      objNeg["diatonic"] = true;
-      objNeg["note"] = cloneNegativeChords[majorChord[pattern]];
-      negativeChord.push(objNeg);
-      pattern++;
-    }
-  } else if (selectedChordVal == "minor") {
-    for (let i = 0; i < minorChord.length; i++) {
-      var obj = {};
-      obj["diatonic"] = true;
-      obj["note"] = cloneChords[minorChord[pattern]];
-      positiveChord.push(obj);
-      var objNeg = {};
-      objNeg["diatonic"] = true;
-      objNeg["note"] = cloneNegativeChords[minorChord[pattern]];
-      negativeChord.push(objNeg);
-      pattern++;
-    }
-  } else if (selectedChordVal == "major7") {
-    for (let i = 0; i < major7Chord.length; i++) {
-      var obj = {};
-      obj["diatonic"] = true;
-      obj["note"] = cloneChords[major7Chord[pattern]];
-      positiveChord.push(obj);
-      var objNeg = {};
-      objNeg["diatonic"] = true;
-      objNeg["note"] = cloneNegativeChords[major7Chord[pattern]];
-      negativeChord.push(objNeg);
-      pattern++;
-    }
-  } else if (selectedChordVal == "minor7") {
-    for (let i = 0; i < minor7Chord.length; i++) {
-      var obj = {};
-      obj["diatonic"] = true;
-      obj["note"] = cloneChords[minor7Chord[pattern]];
-      positiveChord.push(obj);
-      var objNeg = {};
-      objNeg["diatonic"] = true;
-      objNeg["note"] = cloneNegativeChords[minor7Chord[pattern]];
-      negativeChord.push(objNeg);
-      pattern++;
-    }
-  } else if (selectedChordVal == "m7b5") {
-    for (let i = 0; i < m7b5Chord.length; i++) {
-      var obj = {};
-      obj["diatonic"] = true;
-      obj["note"] = cloneChords[m7b5Chord[pattern]];
-      positiveChord.push(obj);
-      var objNeg = {};
-      objNeg["diatonic"] = true;
-      objNeg["note"] = cloneNegativeChords[m7b5Chord[pattern]];
-      negativeChord.push(objNeg);
-      pattern++;
-    }
-  } else if (selectedChordVal == "maj9") {
-    for (let i = 0; i < maj9Chord.length; i++) {
-      var obj = {};
-      obj["diatonic"] = true;
-      obj["note"] = cloneChords[maj9Chord[pattern]];
-      positiveChord.push(obj);
-      var objNeg = {};
-      objNeg["diatonic"] = true;
-      objNeg["note"] = cloneNegativeChords[maj9Chord[pattern]];
-      negativeChord.push(objNeg);
-      pattern++;
-    }
-  } else if (selectedChordVal == "m6") {
-    for (let i = 0; i < m6Chord.length; i++) {
-      var obj = {};
-      obj["diatonic"] = true;
-      obj["note"] = cloneChords[m6Chord[pattern]];
-      positiveChord.push(obj);
-      var objNeg = {};
-      objNeg["diatonic"] = true;
-      objNeg["note"] = cloneNegativeChords[m6Chord[pattern]];
-      negativeChord.push(objNeg);
-      pattern++;
-    }
-  } else if (selectedChordVal == "sus2") {
-    for (let i = 0; i < sus2Chord.length; i++) {
-      var obj = {};
-      obj["diatonic"] = true;
-      obj["note"] = cloneChords[sus2Chord[pattern]];
-      positiveChord.push(obj);
-      var objNeg = {};
-      objNeg["diatonic"] = true;
-      objNeg["note"] = cloneNegativeChords[sus2Chord[pattern]];
-      negativeChord.push(objNeg);
-      pattern++;
-    }
-  } else if (selectedChordVal == "sus4") {
-    for (let i = 0; i < sus4Chord.length; i++) {
-      var obj = {};
-      obj["diatonic"] = true;
-      obj["note"] = cloneChords[sus4Chord[pattern]];
-      positiveChord.push(obj);
-      var objNeg = {};
-      objNeg["diatonic"] = true;
-      objNeg["note"] = cloneNegativeChords[sus4Chord[pattern]];
-      negativeChord.push(objNeg);
-      pattern++;
-    }
-  } else if (selectedChordVal == "dim") {
-    for (let i = 0; i < dimChord.length; i++) {
-      var obj = {};
-      obj["diatonic"] = true;
-      obj["note"] = cloneChords[dimChord[pattern]];
-      positiveChord.push(obj);
-      var objNeg = {};
-      objNeg["diatonic"] = true;
-      objNeg["note"] = cloneNegativeChords[dimChord[pattern]];
-      negativeChord.push(objNeg);
-      pattern++;
-    }
-  } else if (selectedChordVal == "aug") {
-    for (let i = 0; i < augChord.length; i++) {
-      var obj = {};
-      obj["diatonic"] = true;
-      obj["note"] = cloneChords[augChord[pattern]];
-      positiveChord.push(obj);
-      var objNeg = {};
-      objNeg["diatonic"] = true;
-      objNeg["note"] = cloneNegativeChords[augChord[pattern]];
-      negativeChord.push(objNeg);
-      pattern++;
-    }
-  }
-
-  if (selectedChordVal == "m6") {
-    negativeTonic = negativeChord[negativeChord.length - 2].note;
-  } else {
-    negativeTonic = negativeChord[negativeChord.length - 1].note;
-  }
-
-  var negativeChordPattern = [];
-  for (let n = 0; n < negativeChord.length; n++) {
-    var checkChordNote = negativeChord[n].note;
-    for (let i = 0; i < cloneScale.length; i++) {
-      var tonicVal = i;
-      var tonicNote = cloneScale[i];
-      if (checkChordNote == tonicNote) {
-        negativeChordPattern.push(parseInt(tonicVal));
-      }
-    }
-  }
-
-  for (var i = 0; i < negativeChordPattern.length; i++) {
-    var subtractor = negativeChordPattern[negativeChordPattern.length - 1];
-    var noteValReset = negativeChordPattern[i] - subtractor;
-    if (noteValReset <= -1) {
-      var newNoteValReset = 12 - Math.abs(noteValReset);
-      negativeChordPattern[i] = parseInt(newNoteValReset);
-    } else if (noteValReset == 0) {
-      negativeChordPattern[i] = parseInt("0");
-    } else {
-      var newVal = negativeChordPattern[i] - subtractor;
-      negativeChordPattern[i] = parseInt(newVal);
-    }
-  }
-
-  negativeChordPattern.reverse();
-  if (arrayEquals(majorChord, negativeChordPattern)) {
-    negativeChordVal = "major";
-  } else if (arrayEquals(minorChord, negativeChordPattern)) {
-    negativeChordVal = "minor";
-  } else if (arrayEquals(major7Chord, negativeChordPattern)) {
-    negativeChordVal = "major7";
-  } else if (arrayEquals(minor7Chord, negativeChordPattern)) {
-    negativeChordVal = "minor7";
-  } else if (arrayEquals(m7b5Chord, negativeChordPattern)) {
-    negativeChordVal = "m7♭5";
-  } else if (arrayEquals(maj9Chord, negativeChordPattern)) {
-    negativeChordVal = "maj9";
-  } else if (arrayEquals(m9Chord, negativeChordPattern)) {
-    negativeChordVal = "m9";
-  } else if (arrayEquals(m6Chord, negativeChordPattern)) {
-    negativeChordVal = "m6";
-  } else if (arrayEquals(sus2Chord, negativeChordPattern)) {
-    negativeChordVal = "sus2";
-  } else if (arrayEquals(sus4Chord, negativeChordPattern)) {
-    negativeChordVal = "sus4";
-  } else if (arrayEquals(dimChord, negativeChordPattern)) {
-    negativeChordVal = "dim";
-  } else if (arrayEquals(augChord, negativeChordPattern)) {
-    negativeChordVal = "aug";
-  } else if (arrayEquals(dominant7Chord, negativeChordPattern)) {
-    negativeChordVal = "7";
-  } else if (arrayEquals(m6NegChord, negativeChordPattern)) {
-    negativeChordVal = "7";
-  } else if (arrayEquals(diminished7Chord, negativeChordPattern)) {
-    negativeChordVal = "dim7";
-  } else if (arrayEquals(dom7sus4Chord, negativeChordPattern)) {
-    negativeChordVal = "7sus4";
-  } else if (arrayEquals(chords5Chord, negativeChordPattern)) {
-    negativeChordVal = "5Chord";
-  } else if (arrayEquals(chords6Chord, negativeChordPattern)) {
-    negativeChordVal = "6Chord";
-  } else {
-    negativeChordVal = "???";
-  }
-
-  diatonicDetection();
-}
-
-function diatonicDetection() {
-  for (var n = 0; n < positiveChord.length; n++) {
-    var checkDiatonic = positiveChord[n].note;
-    for (var i = 0; i < positiveScale.length; i++) {
-      var scaleNote = positiveScale[i];
-      if (checkDiatonic == scaleNote) {
-        positiveChord[n].diatonic = false;
-      }
-    }
-  }
-  for (var n = 0; n < negativeChord.length; n++) {
-    var checkDiatonic = negativeChord[n].note;
-    for (var i = 0; i < negativeScale.length; i++) {
-      var scaleNote = negativeScale[i];
-      if (checkDiatonic == scaleNote) {
-        negativeChord[n].diatonic = false;
-      }
-    }
-  }
-}
-
-const delayTime = new Date().valueOf() + 60000;
-async function askForReview() {
-  if (chordsUnlocked == true && delayTime <= new Date().valueOf()) {
-    const numberDATE = new Date().valueOf();
-    const timeStamp = await AsyncStorage.getItem("reviewTimestamp");
-
-    if (
-      (Number(timeStamp) <= numberDATE || Number(timeStamp) == 0) &&
-      (await StoreReview.isAvailableAsync()) &&
-      (await StoreReview.hasAction())
-    ) {
-      StoreReview.requestReview();
-
-      const newTimeStamp =
-        numberDATE +
-        new Date(numberDATE)
-          .setMonth(new Date(numberDATE).getMonth() + 1)
-          .valueOf();
-      await AsyncStorage.setItem(
-        "reviewTimestamp",
-        JSON.stringify(newTimeStamp)
-      );
-    }
-  }
-}
-
-export class AnimatedIcon extends Component {
-  state = {
-    rotateAnim: new Animated.Value(0),
-  };
-
-  componentDidMount() {
-    this.startAnimation();
-  }
-
-  startAnimation() {
-    this.state.rotateAnim.setValue(0);
-    Animated.timing(this.state.rotateAnim, {
-      toValue: 1,
-      duration: 24000,
-      useNativeDriver: true,
-      easing: Easing.linear,
-    }).start(() => {
-      this.startAnimation();
-    });
-  }
-
-  render() {
-    return (
-      <Animated.View
-        style={[
-          styles.icon,
-          {
-            transform: [
-              {
-                rotate: this.state.rotateAnim.interpolate({
-                  inputRange: [0, 1],
-                  outputRange: ["0deg", "360deg"],
-                }),
-              },
-            ],
-          },
-        ]}
-      >
-        <Icon />
-      </Animated.View>
-    );
-  }
-}
-
-export const Exit = () => {
-  return (
-    <Svg height="100%" width="100%" viewBox="0 0 352 352">
-      <Path
-        fill={colors.blue}
-        d="M242.7,176L342.8,75.9c12.3-12.3,12.3-32.2,0-44.5L320.6,9.2c-12.3-12.3-32.2-12.3-44.5,0L176,109.3L75.9,9.2 C63.7-3.1,43.7-3.1,31.5,9.2L9.2,31.4c-12.3,12.3-12.3,32.2,0,44.5L109.3,176L9.2,276.1c-12.3,12.3-12.3,32.2,0,44.5l22.2,22.2 c12.3,12.3,32.2,12.3,44.5,0L176,242.7l100.1,100.1c12.3,12.3,32.2,12.3,44.5,0l22.2-22.2c12.3-12.3,12.3-32.2,0-44.5L242.7,176z"
-      />
-    </Svg>
-  );
-};
-
-export const DisclamerScreen = ({ disclamerCallback }) => {
-  const disclamerClose = () => {
-    if (chordsUnlocked == false) {
-      showInitialScales();
-      showInitialChords();
-      disclamerCallback(false);
-    } else {
-      visibleScales = true;
-      chordsUnlocked = true;
-      showInitialScales();
-      showInitialChords();
-      disclamerCallback(false);
-    }
-  };
-
-  return (
-    <View style={styles.disclamerWrapper}>
-      <TouchableOpacity style={styles.exit} onPress={disclamerClose}>
-        <Exit />
-      </TouchableOpacity>
-      <Text style={styles.discTitle}>Information</Text>
-      <View style={styles.discTextWrapper}>
-        <ScrollView showsVerticalScrollIndicator={false}>
-          <Text style={styles.discText}>
-            The notes in the chords coloured{" "}
-            <Text
-              style={{
-                fontFamily: "NegativeHarmonyBold",
-                color: colors.red,
-              }}
-            >
-              RED
-            </Text>{" "}
-            indicate that they are non-diatonic notes. {"\n"}
-            {"\n"}(Non-Diatonic refers to any notes or chords that are not
-            native to the key){"\n"}
-            {"\n"}This does not mean that the chord cannot be used in that
-            key/scale but that its sound is more complex and will not fit with
-            the other chords as easily.
-          </Text>
-          <Text style={styles.discSubTitle}>Disclaimer</Text>
-          <Text style={styles.discText}>
-            The negative chord names may not always be exactly right because of
-            the way the chord naming system works. {"\n"}
-            {"\n"}In practise the chord name comes from the tonic/root note
-            followed by the structure/pattern (major, minor, suspended...) this
-            rule is broken when looking at negative chords where the tonic/root
-            is actually the last note played going from left to right on the
-            piano. {"\n"}
-            {"\n"}Because of this, the app looks if the negative chord pattern
-            has a match when mirrored and compared to the regular one. If so it
-            determines the chord name by taking the "negative" tonic/root note
-            and displaying the chord name. {"\n"}
-            {"\n"}Though the chord name may vary depending on what you consider
-            to be the tonic/root note the notes displayed in the negative chords
-            are always correct.
-          </Text>
-          <Text style={styles.discContactTitle}>Contact</Text>
-          <Text style={styles.discText}>
-            If you find any bugs incorrect representations of the notes or
-            chords, please contact us at:{"\n"}
-            <Text style={{ color: colors.blue }}>
-              chimerastudiotm@gmail.com
-            </Text>
-          </Text>
-        </ScrollView>
-      </View>
-    </View>
-  );
-};
-
-export const RewardedScreen = ({ rewardedCallback }) => {
-  const [loadRewarded, setLoadRewarded] = useState(false);
-
-  const ref = useRef(null);
-
-  const rewardedTimeOut = () => {
-    setLoadRewarded(true);
-  };
-
-  AdMobRewarded.addEventListener("rewardedVideoDidFailToLoad", () => {
-    resetRewarded();
-  });
-
-  AdMobRewarded.addEventListener("rewardedVideoDidFailToPresent", () => {
-    resetRewarded();
-  });
-
-  AdMobRewarded.addEventListener("rewardedVideoDidDismiss", () => {
-    resetRewarded();
-  });
-
-  AdMobRewarded.addEventListener("rewardedVideoUserDidEarnReward", () => {
-    unlockChords();
-  });
-
-  function resetRewarded() {
-    if (chordsUnlocked == false) {
-      setTimeout(function () {
-        setLoadRewarded(false);
-      }, 10000);
-    }
-  }
-
-  async function requestReward() {
-    rewardedTimeOut();
-
-    await AdMobRewarded.setAdUnitID(
-      Platform.OS === "ios" ? admob_ios.rewarded : admob_android.rewarded
-    ); // 1. iOS, 2. Android
-    await AdMobRewarded.requestAdAsync();
-    await AdMobRewarded.showAdAsync();
-  }
-
-  function unlockChords() {
-    visibleScales = true;
-    chordsUnlocked = true;
-    showInitialScales();
-    showInitialChords();
-    rewardedCallback(false);
-  }
-
-  return (
-    <View style={styles.rewardedWrapper}>
-      <TouchableOpacity
-        style={styles.exit}
-        disabled={loadRewarded}
-        onPress={
-          (showScales(), showInitialChords(), () => rewardedCallback(false))
-        }
-      >
-        <Svg height="100%" width="100%" viewBox="0 0 352 352">
-          <Path
-            fill={!loadRewarded ? colors.blue : colors.disabled}
-            d="M242.7,176L342.8,75.9c12.3-12.3,12.3-32.2,0-44.5L320.6,9.2c-12.3-12.3-32.2-12.3-44.5,0L176,109.3L75.9,9.2 C63.7-3.1,43.7-3.1,31.5,9.2L9.2,31.4c-12.3,12.3-12.3,32.2,0,44.5L109.3,176L9.2,276.1c-12.3,12.3-12.3,32.2,0,44.5l22.2,22.2 c12.3,12.3,32.2,12.3,44.5,0L176,242.7l100.1,100.1c12.3,12.3,32.2,12.3,44.5,0l22.2-22.2c12.3-12.3,12.3-32.2,0-44.5L242.7,176z"
-          />
-        </Svg>
-      </TouchableOpacity>
-      <View style={styles.rewardedExp}>
-        <Text style={styles.rewardedExpText}>To unlock chords</Text>
-        <Text style={styles.rewardedExpText}>watch this Advert:</Text>
-      </View>
-      <TouchableOpacity
-        style={!loadRewarded ? styles.rewardedStart : styles.rewardedDisabled}
-        activeOpacity={1}
-        disabled={loadRewarded}
-        onPress={() => requestReward()}
-      >
-        {!loadRewarded ? (
-          <Text style={styles.rewardedStartText}>Watch the Ad</Text>
-        ) : (
-          <ActivityIndicator size="large" color={colors.white} />
-        )}
-      </TouchableOpacity>
-      <Text style={styles.rewardedDisc}>
-        If no Advert is shown come back a bit later
-      </Text>
-    </View>
-  );
-};
-
-var deviceHeight = Dimensions.get("screen").height;
-var scaleHeight =
-  Platform.OS === "ios" && !Platform.isPad
-    ? Math.round((34.9 / 100) * deviceHeight)
-    : Math.round((33 / 100) * deviceHeight);
-var visibleScalesHeight = deviceHeight;
-export const DisplayScales = forwardRef((props, ref) => {
-  const slideIn = useRef(new Animated.Value(visibleScalesHeight)).current;
-
-  const popScales = () => {
-    var bottomOfScreen = deviceHeight - scaleHeight;
-    visibleScalesHeight = bottomOfScreen;
-    Animated.timing(slideIn, {
-      toValue: bottomOfScreen,
-      duration: 300,
-      useNativeDriver: true,
-    }).start();
-  };
-
-  const slideUp = {
-    transform: [
-      {
-        translateY: slideIn,
-      },
-    ],
-  };
-
-  useImperativeHandle(ref, () => {
-    return {
-      popScales: popScales,
-    };
-  });
-  return (
-    <Animated.View style={[styles.scaleWrapper, slideUp]}>
-      <View style={styles.positiveScale}>
-        {positiveScale.map((note, index) => (
-          <Text style={styles.positiveScaleText} key={index}>
-            {note}
-          </Text>
-        ))}
-      </View>
-      <View style={styles.axisLegend} />
-      <View style={styles.negativeScale}>
-        {negativeScale.map((note, index) => (
-          <Text style={styles.negativeScaleText} key={index}>
-            {note}
-          </Text>
-        ))}
-      </View>
-    </Animated.View>
-  );
-});
-
-export const ScalesScreen = ({ switchCallback }) => {
-  const keyColorBG = colors.white;
-  const keyColorText = colors.negativeText;
-  const keyColorSymbol = colors.positiveText;
-  const activeKeyColorBG = colors.blue;
-  const activeKeyColorText = colors.white;
-  const activeKeyColorSymbol = colors.whiteGray;
-
-  const [legendStatus, setLegendStatus] = useState(false);
+import { times } from "lodash";
+
+import Logo from "../elements/Logo";
+import Bottom from "../block/Bottom";
+import Legend from "../../assets/img/legend.svg";
+import ListArrow from "../../assets/img/arrow.svg";
+
+import useLocale from "../../locales";
+import { useReview } from "../../utils";
+import { musicScale } from "../../utils/patterns";
+import { actions } from "../../store/globalStore";
+
+import colors from "../../styles/colors";
+import scales_chords_style from "../../styles/scales_chords_styles";
+
+const keyColorBG = colors.white;
+const keyColorText = colors.negativeText;
+const keyColorSymbol = colors.positiveText;
+const activeKeyColorBG = colors.blue;
+const activeKeyColorText = colors.white;
+const activeKeyColorSymbol = colors.whiteGray;
+
+const keyG1 = "G1";
+const keyG2 = "G2";
+const keyG3 = "G3";
+const keyG4 = "G4";
+const keyG5 = "G5";
+const keyG6 = "G6";
+const keyG7 = "G7";
+const keyG8 = "G8";
+const keyG9 = "G9";
+const keyG10 = "G10";
+const keyG11 = "G11";
+const keyG12 = "G12";
+
+export const Scales = (props) => {
+  const t = useLocale;
+  const callReview = useReview;
+  const dispatch = useDispatch();
+  const global = useSelector((state) => state.global);
+  const scaleList = useSelector((state) => state.cms.scales);
   const [openSelect, setOpenSelect] = useState(false);
+  const screenOpacity = useRef(new Animated.Value(0)).current;
+  const selectedScale = global.selectedScale || scaleList[0];
 
-  const ref = useRef(null);
-  const opacity = useState(new Animated.Value(0))[0];
-
-  function initialFadeIn() {
-    Animated.timing(opacity, {
-      toValue: 1,
-      duration: 0,
-      useNativeDriver: true,
-    }).start();
-  }
-
-  function fadeIn() {
-    Animated.timing(opacity, {
-      toValue: 1,
-      duration: 300,
-      useNativeDriver: true,
-    }).start();
-  }
-
-  function fadeOut() {
-    Animated.timing(opacity, {
-      toValue: 0,
-      duration: 300,
-      useNativeDriver: true,
-    }).start();
-  }
-
-  const legendToggle = () => {
-    if (legendStatus == false) {
-      fadeOut();
-      setTimeout(function () {
-        setLegendStatus(true);
-        fadeIn();
-      }, 150);
-    } else {
-      fadeOut();
-      setTimeout(function () {
-        setLegendStatus(false);
-        fadeIn();
-      }, 150);
-    }
-  };
-
-  const openSelectList = () => {
-    switchCallback(true);
-    setOpenSelect(true);
-  };
-
-  const selectedScale = (name, value) => {
-    setSelectedScaleName(name);
-    selectedScaleNameSaved = name;
-    selectedScaleDisplaySaved = name;
-    selectedScaleValSaved = value;
-
-    showScales();
-
-    switchCallback(false);
+  const handleSelect = (scale) => {
+    dispatch(actions.storeSelectedScale(scale));
+    if (global.scales) handleScales(global.activeKey.field, scale);
     setOpenSelect(false);
   };
 
-  const keyG1 = "G1";
-  const keyG2 = "G2";
-  const keyG3 = "G3";
-  const keyG4 = "G4";
-  const keyG5 = "G5";
-  const keyG6 = "G6";
-  const keyG7 = "G7";
-  const keyG8 = "G8";
-  const keyG9 = "G9";
-  const keyG10 = "G10";
-  const keyG11 = "G11";
-  const keyG12 = "G12";
+  const handleScales = (shift, scale) => {
+    const positive = [];
+    const negative = [];
 
-  const [activeKeyX, setActiveKeyX] = useState(activeKeyXSaved);
-  const [activeKeyY, setActiveKeyY] = useState(activeKeyYSaved);
-  const [activeKeyGroup, setActiveKeyGroup] = useState(activeKeyGroupSaved);
-  const [activeKeyField, setActiveKeyField] = useState(activeKeyFieldSaved);
-  const [selectedScaleName, setSelectedScaleName] = useState(
-    selectedScaleNameSaved
-  );
-  const [axisStatus, setAxisStatus] = useState(axisStatusSaved);
-  const [axisDeg, setAxisDeg] = useState(axisDegSaved);
+    const clone = musicScale.slice();
+    times(shift, () => clone.push(clone.shift()));
 
-  useEffect(() => {
-    setActiveKeyX(activeKeyXSaved);
-    setActiveKeyY(activeKeyYSaved);
-    setActiveKeyGroup(activeKeyGroupSaved);
-    setActiveKeyField(activeKeyFieldSaved);
-    setSelectedScaleName(selectedScaleNameSaved);
-    setAxisStatus(axisStatusSaved);
-    setAxisDeg(axisDegSaved);
-    initialFadeIn();
-  }, []);
+    const negativeClone = clone.slice();
+    times(8, () => negativeClone.push(negativeClone.shift()));
+    negativeClone.reverse();
 
-  const keyPress = (keyG, value, angle) => {
-    if (axisStatus == false) {
-      axisStatusSaved = true;
-      setAxisStatus(true);
-      ref.current.popScales();
-    }
+    times(scale.value.length, (i) => {
+      positive.push(clone[scale.value[i]]);
+      negative.push(negativeClone[scale.value[i]]);
+    });
 
-    cloneScale = musicScale.slice();
-
-    let rootNote = value;
-    for (let i = 0; i < rootNote; i++) cloneScale.push(cloneScale.shift());
-
-    cloneNegativeScale = cloneScale.slice();
-
-    for (let n = 0; n < 8; n++)
-      cloneNegativeScale.push(cloneNegativeScale.shift());
-    cloneNegativeScale.reverse();
-
-    selectedScaleKeySaved = cloneScale[0];
-    showScales();
-
-    if (visibleScales == false) {
-      visibleScales = true;
-    }
-
-    setActiveKeyGroup(keyG);
-    activeKeyGroupSaved = keyG;
-    setActiveKeyField(value);
-    activeKeyFieldSaved = value;
-    setAxisDeg(angle);
-    axisDegSaved = angle;
-
-    if (keyG == keyG1) {
-      let newX = -15;
-      let newY = -30;
-      setActiveKeyX(newX);
-      setActiveKeyY(newY);
-      activeKeyXSaved = newX;
-      activeKeyYSaved = newY;
-    } else if (keyG == keyG2) {
-      let newX = -30;
-      let newY = -20;
-      setActiveKeyX(newX);
-      setActiveKeyY(newY);
-      activeKeyXSaved = newX;
-      activeKeyYSaved = newY;
-    } else if (keyG == keyG3) {
-      let newX = -30;
-      let newY = 0;
-      setActiveKeyX(newX);
-      setActiveKeyY(newY);
-      activeKeyXSaved = newX;
-      activeKeyYSaved = newY;
-    } else if (keyG == keyG4) {
-      let newX = -30;
-      let newY = 15;
-      setActiveKeyX(newX);
-      setActiveKeyY(newY);
-      activeKeyXSaved = newX;
-      activeKeyYSaved = newY;
-    } else if (keyG == keyG5) {
-      let newX = -20;
-      let newY = 30;
-      setActiveKeyX(newX);
-      setActiveKeyY(newY);
-      activeKeyXSaved = newX;
-      activeKeyYSaved = newY;
-    } else if (keyG == keyG6) {
-      let newX = 0;
-      let newY = 30;
-      setActiveKeyX(newX);
-      setActiveKeyY(newY);
-      activeKeyXSaved = newX;
-      activeKeyYSaved = newY;
-    } else if (keyG == keyG7) {
-      let newX = 15;
-      let newY = 30;
-      setActiveKeyX(newX);
-      setActiveKeyY(newY);
-      activeKeyXSaved = newX;
-      activeKeyYSaved = newY;
-    } else if (keyG == keyG8) {
-      let newX = 30;
-      let newY = 20;
-      setActiveKeyX(newX);
-      setActiveKeyY(newY);
-      activeKeyXSaved = newX;
-      activeKeyYSaved = newY;
-    } else if (keyG == keyG9) {
-      let newX = 30;
-      let newY = 0;
-      setActiveKeyX(newX);
-      setActiveKeyY(newY);
-      activeKeyXSaved = newX;
-      activeKeyYSaved = newY;
-    } else if (keyG == keyG10) {
-      let newX = 30;
-      let newY = -15;
-      setActiveKeyX(newX);
-      setActiveKeyY(newY);
-      activeKeyXSaved = newX;
-      activeKeyYSaved = newY;
-    } else if (keyG == keyG11) {
-      let newX = 20;
-      let newY = -30;
-      setActiveKeyX(newX);
-      setActiveKeyY(newY);
-      activeKeyXSaved = newX;
-      activeKeyYSaved = newY;
-    } else if (keyG == keyG12) {
-      let newX = 0;
-      let newY = -30;
-      setActiveKeyX(newX);
-      setActiveKeyY(newY);
-      activeKeyXSaved = newX;
-      activeKeyYSaved = newY;
-    }
-
-    askForReview();
+    dispatch(
+      actions.storeScales({
+        positiveRange: clone,
+        negativeRange: negativeClone,
+        positive: positive,
+        negative: negative,
+      })
+    );
   };
 
-  return (
-    <View style={styles.screenWrapper}>
-      <View style={styles.navigation}>
-        <TouchableOpacity disabled={openSelect} onPress={legendToggle}>
-          <Info style={styles.info} />
-        </TouchableOpacity>
-      </View>
+  const handleKey = (keyG, value, angle) => {
+    let x = 0;
+    let y = 0;
+    if (keyG == keyG1) {
+      x = -15;
+      y = -30;
+    } else if (keyG == keyG2) {
+      x = -30;
+      y = -20;
+    } else if (keyG == keyG3) {
+      x = -30;
+      y = 0;
+    } else if (keyG == keyG4) {
+      x = -30;
+      y = 15;
+    } else if (keyG == keyG5) {
+      x = -20;
+      y = 30;
+    } else if (keyG == keyG6) {
+      x = 0;
+      y = 30;
+    } else if (keyG == keyG7) {
+      x = 15;
+      y = 30;
+    } else if (keyG == keyG8) {
+      x = 30;
+      y = 20;
+    } else if (keyG == keyG9) {
+      x = 30;
+      y = 0;
+    } else if (keyG == keyG10) {
+      x = 30;
+      y = -15;
+    } else if (keyG == keyG11) {
+      x = 20;
+      y = -30;
+    } else if (keyG == keyG12) {
+      x = 0;
+      y = -30;
+    }
 
-      <View style={styles.selectWrapper}>
-        {legendStatus ? (
-          <Animated.View style={[styles.legendContainer, { opacity }]}>
-            <Legend style={styles.legend} />
-          </Animated.View>
-        ) : null}
-        {legendStatus ? null : (
-          <Animated.View style={{ opacity }}>
-            <Text style={styles.selectTextExp}>
-              Select a scale and tap on a field:
+    dispatch(actions.storeAxis({ status: true, angle }));
+    dispatch(actions.storeActiveKey({ x, y, group: keyG, field: value }));
+
+    handleScales(value, selectedScale);
+    callReview(global.unlocked, global.reviewDelay);
+  };
+
+  const handleScreenAnimation = (to) => {
+    Animated.timing(screenOpacity, {
+      toValue: to,
+      duration: 500,
+      useNativeDriver: true,
+      easing: Easing.linear,
+    }).start();
+  };
+
+  useEffect(() => {
+    handleScreenAnimation(1);
+
+    return () => handleScreenAnimation(0);
+  }, []);
+
+  return (
+    <Animated.View
+      style={[scales_chords_style.wrapper, { opacity: screenOpacity }]}
+    >
+      <View style={scales_chords_style.selectWrapper}>
+        {props.legend ? (
+          <Legend style={scales_chords_style.legend} />
+        ) : (
+          <>
+            <Text style={scales_chords_style.selectTextExp}>
+              {t("select.scales")}
             </Text>
 
             <TouchableOpacity
-              style={styles.selectInput}
-              disabled={legendStatus}
-              onPress={openSelectList}
+              style={scales_chords_style.selectInput}
+              onPress={() => setOpenSelect(true)}
             >
-              <Text style={styles.selectInputText}>{selectedScaleName}</Text>
-              <ListArrow style={styles.selectListArrow} />
+              <Text style={scales_chords_style.selectInputText}>
+                {selectedScale.name}
+              </Text>
+              <ListArrow style={scales_chords_style.selectListArrow} />
             </TouchableOpacity>
-          </Animated.View>
+          </>
         )}
       </View>
 
-      <View style={styles.circleWrapper}>
+      <View style={scales_chords_style.circleWrapper}>
         <Svg
-          style={styles.circleKeys}
-          height={!Platform.isPad ? "90%" : "100%"}
-          width={!Platform.isPad ? "90%" : "100%"}
           viewBox="-30 -30 690 690"
+          style={scales_chords_style.circleKeys}
+          height={"90%"}
+          width={"90%"}
         >
           <G>
             <G>
               <G
-                x={activeKeyGroup == keyG1 ? activeKeyX : 0}
-                y={activeKeyGroup == keyG1 ? activeKeyY : 0}
-                onPress={() => keyPress(keyG1, 9, 0)}
+                x={global.activeKey.group == keyG1 ? global.activeKey.x : 0}
+                y={global.activeKey.group == keyG1 ? global.activeKey.y : 0}
+                onPress={() => handleKey(keyG1, 9, 0)}
               >
                 <Path
                   fill={
-                    activeKeyGroup == keyG1 && activeKeyField == 9
+                    global.activeKey.group == keyG1 &&
+                    global.activeKey.field == 9
                       ? activeKeyColorBG
                       : keyColorBG
                   }
@@ -1215,7 +203,8 @@ export const ScalesScreen = ({ switchCallback }) => {
                 />
                 <Path
                   fill={
-                    activeKeyGroup == keyG1 && activeKeyField == 9
+                    global.activeKey.group == keyG1 &&
+                    global.activeKey.field == 9
                       ? activeKeyColorBG
                       : keyColorBG
                   }
@@ -1224,7 +213,8 @@ export const ScalesScreen = ({ switchCallback }) => {
                 />
                 <Path
                   fill={
-                    activeKeyGroup == keyG1 && activeKeyField == 9
+                    global.activeKey.group == keyG1 &&
+                    global.activeKey.field == 9
                       ? activeKeyColorText
                       : keyColorText
                   }
@@ -1233,13 +223,14 @@ export const ScalesScreen = ({ switchCallback }) => {
                 />
               </G>
               <G
-                x={activeKeyGroup == keyG2 ? activeKeyX : 0}
-                y={activeKeyGroup == keyG2 ? activeKeyY : 0}
-                onPress={() => keyPress(keyG2, 2, 330)}
+                x={global.activeKey.group == keyG2 ? global.activeKey.x : 0}
+                y={global.activeKey.group == keyG2 ? global.activeKey.y : 0}
+                onPress={() => handleKey(keyG2, 2, 330)}
               >
                 <Path
                   fill={
-                    activeKeyGroup == keyG2 && activeKeyField == 2
+                    global.activeKey.group == keyG2 &&
+                    global.activeKey.field == 2
                       ? activeKeyColorBG
                       : keyColorBG
                   }
@@ -1248,7 +239,8 @@ export const ScalesScreen = ({ switchCallback }) => {
                 />
                 <Path
                   fill={
-                    activeKeyGroup == keyG2 && activeKeyField == 2
+                    global.activeKey.group == keyG2 &&
+                    global.activeKey.field == 2
                       ? activeKeyColorBG
                       : keyColorBG
                   }
@@ -1257,7 +249,8 @@ export const ScalesScreen = ({ switchCallback }) => {
                 />
                 <Path
                   fill={
-                    activeKeyGroup == keyG2 && activeKeyField == 2
+                    global.activeKey.group == keyG2 &&
+                    global.activeKey.field == 2
                       ? activeKeyColorText
                       : keyColorText
                   }
@@ -1266,13 +259,14 @@ export const ScalesScreen = ({ switchCallback }) => {
                 />
               </G>
               <G
-                x={activeKeyGroup == keyG3 ? activeKeyX : 0}
-                y={activeKeyGroup == keyG3 ? activeKeyY : 0}
-                onPress={() => keyPress(keyG3, 7, 300)}
+                x={global.activeKey.group == keyG3 ? global.activeKey.x : 0}
+                y={global.activeKey.group == keyG3 ? global.activeKey.y : 0}
+                onPress={() => handleKey(keyG3, 7, 300)}
               >
                 <Path
                   fill={
-                    activeKeyGroup == keyG3 && activeKeyField == 7
+                    global.activeKey.group == keyG3 &&
+                    global.activeKey.field == 7
                       ? activeKeyColorBG
                       : keyColorBG
                   }
@@ -1281,7 +275,8 @@ export const ScalesScreen = ({ switchCallback }) => {
                 />
                 <Path
                   fill={
-                    activeKeyGroup == keyG3 && activeKeyField == 7
+                    global.activeKey.group == keyG3 &&
+                    global.activeKey.field == 7
                       ? activeKeyColorBG
                       : keyColorBG
                   }
@@ -1290,7 +285,8 @@ export const ScalesScreen = ({ switchCallback }) => {
                 />
                 <Path
                   fill={
-                    activeKeyGroup == keyG3 && activeKeyField == 7
+                    global.activeKey.group == keyG3 &&
+                    global.activeKey.field == 7
                       ? activeKeyColorText
                       : keyColorText
                   }
@@ -1299,13 +295,14 @@ export const ScalesScreen = ({ switchCallback }) => {
                 />
               </G>
               <G
-                x={activeKeyGroup == keyG4 ? activeKeyX : 0}
-                y={activeKeyGroup == keyG4 ? activeKeyY : 0}
-                onPress={() => keyPress(keyG4, 0, 270)}
+                x={global.activeKey.group == keyG4 ? global.activeKey.x : 0}
+                y={global.activeKey.group == keyG4 ? global.activeKey.y : 0}
+                onPress={() => handleKey(keyG4, 0, 270)}
               >
                 <Path
                   fill={
-                    activeKeyGroup == keyG4 && activeKeyField == 0
+                    global.activeKey.group == keyG4 &&
+                    global.activeKey.field == 0
                       ? activeKeyColorBG
                       : keyColorBG
                   }
@@ -1314,7 +311,8 @@ export const ScalesScreen = ({ switchCallback }) => {
                 />
                 <Path
                   fill={
-                    activeKeyGroup == keyG4 && activeKeyField == 0
+                    global.activeKey.group == keyG4 &&
+                    global.activeKey.field == 0
                       ? activeKeyColorText
                       : keyColorText
                   }
@@ -1323,13 +321,14 @@ export const ScalesScreen = ({ switchCallback }) => {
                 />
               </G>
               <G
-                x={activeKeyGroup == keyG5 ? activeKeyX : 0}
-                y={activeKeyGroup == keyG5 ? activeKeyY : 0}
-                onPress={() => keyPress(keyG5, 5, 240)}
+                x={global.activeKey.group == keyG5 ? global.activeKey.x : 0}
+                y={global.activeKey.group == keyG5 ? global.activeKey.y : 0}
+                onPress={() => handleKey(keyG5, 5, 240)}
               >
                 <Path
                   fill={
-                    activeKeyGroup == keyG5 && activeKeyField == 5
+                    global.activeKey.group == keyG5 &&
+                    global.activeKey.field == 5
                       ? activeKeyColorBG
                       : keyColorBG
                   }
@@ -1338,7 +337,8 @@ export const ScalesScreen = ({ switchCallback }) => {
                 />
                 <Path
                   fill={
-                    activeKeyGroup == keyG5 && activeKeyField == 5
+                    global.activeKey.group == keyG5 &&
+                    global.activeKey.field == 5
                       ? activeKeyColorText
                       : keyColorText
                   }
@@ -1347,13 +347,14 @@ export const ScalesScreen = ({ switchCallback }) => {
                 />
               </G>
               <G
-                x={activeKeyGroup == keyG6 ? activeKeyX : 0}
-                y={activeKeyGroup == keyG6 ? activeKeyY : 0}
-                onPress={() => keyPress(keyG6, 10, 210)}
+                x={global.activeKey.group == keyG6 ? global.activeKey.x : 0}
+                y={global.activeKey.group == keyG6 ? global.activeKey.y : 0}
+                onPress={() => handleKey(keyG6, 10, 210)}
               >
                 <Path
                   fill={
-                    activeKeyGroup == keyG6 && activeKeyField == 10
+                    global.activeKey.group == keyG6 &&
+                    global.activeKey.field == 10
                       ? activeKeyColorBG
                       : keyColorBG
                   }
@@ -1362,7 +363,8 @@ export const ScalesScreen = ({ switchCallback }) => {
                 />
                 <Path
                   fill={
-                    activeKeyGroup == keyG6 && activeKeyField == 10
+                    global.activeKey.group == keyG6 &&
+                    global.activeKey.field == 10
                       ? activeKeyColorBG
                       : keyColorBG
                   }
@@ -1371,7 +373,8 @@ export const ScalesScreen = ({ switchCallback }) => {
                 />
                 <Path
                   fill={
-                    activeKeyGroup == keyG6 && activeKeyField == 10
+                    global.activeKey.group == keyG6 &&
+                    global.activeKey.field == 10
                       ? activeKeyColorBG
                       : keyColorBG
                   }
@@ -1380,7 +383,8 @@ export const ScalesScreen = ({ switchCallback }) => {
                 />
                 <Path
                   fill={
-                    activeKeyGroup == keyG6 && activeKeyField == 10
+                    global.activeKey.group == keyG6 &&
+                    global.activeKey.field == 10
                       ? activeKeyColorBG
                       : keyColorBG
                   }
@@ -1389,7 +393,8 @@ export const ScalesScreen = ({ switchCallback }) => {
                 />
                 <Path
                   fill={
-                    activeKeyGroup == keyG6 && activeKeyField == 10
+                    global.activeKey.group == keyG6 &&
+                    global.activeKey.field == 10
                       ? activeKeyColorBG
                       : keyColorBG
                   }
@@ -1398,7 +403,8 @@ export const ScalesScreen = ({ switchCallback }) => {
                 />
                 <Path
                   fill={
-                    activeKeyGroup == keyG6 && activeKeyField == 10
+                    global.activeKey.group == keyG6 &&
+                    global.activeKey.field == 10
                       ? activeKeyColorSymbol
                       : keyColorSymbol
                   }
@@ -1407,7 +413,8 @@ export const ScalesScreen = ({ switchCallback }) => {
                 />
                 <Path
                   fill={
-                    activeKeyGroup == keyG6 && activeKeyField == 10
+                    global.activeKey.group == keyG6 &&
+                    global.activeKey.field == 10
                       ? activeKeyColorSymbol
                       : keyColorSymbol
                   }
@@ -1416,7 +423,8 @@ export const ScalesScreen = ({ switchCallback }) => {
                 />
                 <Path
                   fill={
-                    activeKeyGroup == keyG6 && activeKeyField == 10
+                    global.activeKey.group == keyG6 &&
+                    global.activeKey.field == 10
                       ? activeKeyColorText
                       : keyColorText
                   }
@@ -1425,7 +433,8 @@ export const ScalesScreen = ({ switchCallback }) => {
                 />
                 <Path
                   fill={
-                    activeKeyGroup == keyG6 && activeKeyField == 10
+                    global.activeKey.group == keyG6 &&
+                    global.activeKey.field == 10
                       ? activeKeyColorText
                       : keyColorText
                   }
@@ -1434,13 +443,14 @@ export const ScalesScreen = ({ switchCallback }) => {
                 />
               </G>
               <G
-                x={activeKeyGroup == keyG7 ? activeKeyX : 0}
-                y={activeKeyGroup == keyG7 ? activeKeyY : 0}
-                onPress={() => keyPress(keyG7, 3, 180)}
+                x={global.activeKey.group == keyG7 ? global.activeKey.x : 0}
+                y={global.activeKey.group == keyG7 ? global.activeKey.y : 0}
+                onPress={() => handleKey(keyG7, 3, 180)}
               >
                 <Path
                   fill={
-                    activeKeyGroup == keyG7 && activeKeyField == 3
+                    global.activeKey.group == keyG7 &&
+                    global.activeKey.field == 3
                       ? activeKeyColorBG
                       : keyColorBG
                   }
@@ -1449,7 +459,8 @@ export const ScalesScreen = ({ switchCallback }) => {
                 />
                 <Path
                   fill={
-                    activeKeyGroup == keyG7 && activeKeyField == 3
+                    global.activeKey.group == keyG7 &&
+                    global.activeKey.field == 3
                       ? activeKeyColorBG
                       : keyColorBG
                   }
@@ -1458,7 +469,8 @@ export const ScalesScreen = ({ switchCallback }) => {
                 />
                 <Path
                   fill={
-                    activeKeyGroup == keyG7 && activeKeyField == 3
+                    global.activeKey.group == keyG7 &&
+                    global.activeKey.field == 3
                       ? activeKeyColorBG
                       : keyColorBG
                   }
@@ -1467,7 +479,8 @@ export const ScalesScreen = ({ switchCallback }) => {
                 />
                 <Path
                   fill={
-                    activeKeyGroup == keyG7 && activeKeyField == 3
+                    global.activeKey.group == keyG7 &&
+                    global.activeKey.field == 3
                       ? activeKeyColorBG
                       : keyColorBG
                   }
@@ -1476,7 +489,8 @@ export const ScalesScreen = ({ switchCallback }) => {
                 />
                 <Path
                   fill={
-                    activeKeyGroup == keyG7 && activeKeyField == 3
+                    global.activeKey.group == keyG7 &&
+                    global.activeKey.field == 3
                       ? activeKeyColorBG
                       : keyColorBG
                   }
@@ -1485,7 +499,8 @@ export const ScalesScreen = ({ switchCallback }) => {
                 />
                 <Path
                   fill={
-                    activeKeyGroup == keyG7 && activeKeyField == 3
+                    global.activeKey.group == keyG7 &&
+                    global.activeKey.field == 3
                       ? activeKeyColorSymbol
                       : keyColorSymbol
                   }
@@ -1494,7 +509,8 @@ export const ScalesScreen = ({ switchCallback }) => {
                 />
                 <Path
                   fill={
-                    activeKeyGroup == keyG7 && activeKeyField == 3
+                    global.activeKey.group == keyG7 &&
+                    global.activeKey.field == 3
                       ? activeKeyColorSymbol
                       : keyColorSymbol
                   }
@@ -1503,7 +519,8 @@ export const ScalesScreen = ({ switchCallback }) => {
                 />
                 <Path
                   fill={
-                    activeKeyGroup == keyG7 && activeKeyField == 3
+                    global.activeKey.group == keyG7 &&
+                    global.activeKey.field == 3
                       ? activeKeyColorText
                       : keyColorText
                   }
@@ -1512,7 +529,8 @@ export const ScalesScreen = ({ switchCallback }) => {
                 />
                 <Path
                   fill={
-                    activeKeyGroup == keyG7 && activeKeyField == 3
+                    global.activeKey.group == keyG7 &&
+                    global.activeKey.field == 3
                       ? activeKeyColorText
                       : keyColorText
                   }
@@ -1521,13 +539,14 @@ export const ScalesScreen = ({ switchCallback }) => {
                 />
               </G>
               <G
-                x={activeKeyGroup == keyG8 ? activeKeyX : 0}
-                y={activeKeyGroup == keyG8 ? activeKeyY : 0}
-                onPress={() => keyPress(keyG8, 8, 150)}
+                x={global.activeKey.group == keyG8 ? global.activeKey.x : 0}
+                y={global.activeKey.group == keyG8 ? global.activeKey.y : 0}
+                onPress={() => handleKey(keyG8, 8, 150)}
               >
                 <Path
                   fill={
-                    activeKeyGroup == keyG8 && activeKeyField == 8
+                    global.activeKey.group == keyG8 &&
+                    global.activeKey.field == 8
                       ? activeKeyColorBG
                       : keyColorBG
                   }
@@ -1536,7 +555,8 @@ export const ScalesScreen = ({ switchCallback }) => {
                 />
                 <Path
                   fill={
-                    activeKeyGroup == keyG8 && activeKeyField == 8
+                    global.activeKey.group == keyG8 &&
+                    global.activeKey.field == 8
                       ? activeKeyColorBG
                       : keyColorBG
                   }
@@ -1545,7 +565,8 @@ export const ScalesScreen = ({ switchCallback }) => {
                 />
                 <Path
                   fill={
-                    activeKeyGroup == keyG8 && activeKeyField == 8
+                    global.activeKey.group == keyG8 &&
+                    global.activeKey.field == 8
                       ? activeKeyColorBG
                       : keyColorBG
                   }
@@ -1554,7 +575,8 @@ export const ScalesScreen = ({ switchCallback }) => {
                 />
                 <Path
                   fill={
-                    activeKeyGroup == keyG8 && activeKeyField == 8
+                    global.activeKey.group == keyG8 &&
+                    global.activeKey.field == 8
                       ? activeKeyColorBG
                       : keyColorBG
                   }
@@ -1563,7 +585,8 @@ export const ScalesScreen = ({ switchCallback }) => {
                 />
                 <Path
                   fill={
-                    activeKeyGroup == keyG8 && activeKeyField == 8
+                    global.activeKey.group == keyG8 &&
+                    global.activeKey.field == 8
                       ? activeKeyColorBG
                       : keyColorBG
                   }
@@ -1572,7 +595,8 @@ export const ScalesScreen = ({ switchCallback }) => {
                 />
                 <Path
                   fill={
-                    activeKeyGroup == keyG8 && activeKeyField == 8
+                    global.activeKey.group == keyG8 &&
+                    global.activeKey.field == 8
                       ? activeKeyColorSymbol
                       : keyColorSymbol
                   }
@@ -1581,7 +605,8 @@ export const ScalesScreen = ({ switchCallback }) => {
                 />
                 <Path
                   fill={
-                    activeKeyGroup == keyG8 && activeKeyField == 8
+                    global.activeKey.group == keyG8 &&
+                    global.activeKey.field == 8
                       ? activeKeyColorSymbol
                       : keyColorSymbol
                   }
@@ -1590,7 +615,8 @@ export const ScalesScreen = ({ switchCallback }) => {
                 />
                 <Path
                   fill={
-                    activeKeyGroup == keyG8 && activeKeyField == 8
+                    global.activeKey.group == keyG8 &&
+                    global.activeKey.field == 8
                       ? activeKeyColorText
                       : keyColorText
                   }
@@ -1599,7 +625,8 @@ export const ScalesScreen = ({ switchCallback }) => {
                 />
                 <Path
                   fill={
-                    activeKeyGroup == keyG8 && activeKeyField == 8
+                    global.activeKey.group == keyG8 &&
+                    global.activeKey.field == 8
                       ? activeKeyColorText
                       : keyColorText
                   }
@@ -1608,13 +635,14 @@ export const ScalesScreen = ({ switchCallback }) => {
                 />
               </G>
               <G
-                x={activeKeyGroup == keyG9 ? activeKeyX : 0}
-                y={activeKeyGroup == keyG9 ? activeKeyY : 0}
-                onPress={() => keyPress(keyG9, 1, 120)}
+                x={global.activeKey.group == keyG9 ? global.activeKey.x : 0}
+                y={global.activeKey.group == keyG9 ? global.activeKey.y : 0}
+                onPress={() => handleKey(keyG9, 1, 120)}
               >
                 <Path
                   fill={
-                    activeKeyGroup == keyG9 && activeKeyField == 1
+                    global.activeKey.group == keyG9 &&
+                    global.activeKey.field == 1
                       ? activeKeyColorBG
                       : keyColorBG
                   }
@@ -1623,7 +651,8 @@ export const ScalesScreen = ({ switchCallback }) => {
                 />
                 <Path
                   fill={
-                    activeKeyGroup == keyG9 && activeKeyField == 1
+                    global.activeKey.group == keyG9 &&
+                    global.activeKey.field == 1
                       ? activeKeyColorBG
                       : keyColorBG
                   }
@@ -1632,7 +661,8 @@ export const ScalesScreen = ({ switchCallback }) => {
                 />
                 <Path
                   fill={
-                    activeKeyGroup == keyG9 && activeKeyField == 1
+                    global.activeKey.group == keyG9 &&
+                    global.activeKey.field == 1
                       ? activeKeyColorBG
                       : keyColorBG
                   }
@@ -1641,7 +671,8 @@ export const ScalesScreen = ({ switchCallback }) => {
                 />
                 <Path
                   fill={
-                    activeKeyGroup == keyG9 && activeKeyField == 1
+                    global.activeKey.group == keyG9 &&
+                    global.activeKey.field == 1
                       ? activeKeyColorBG
                       : keyColorBG
                   }
@@ -1650,7 +681,8 @@ export const ScalesScreen = ({ switchCallback }) => {
                 />
                 <Path
                   fill={
-                    activeKeyGroup == keyG9 && activeKeyField == 1
+                    global.activeKey.group == keyG9 &&
+                    global.activeKey.field == 1
                       ? activeKeyColorSymbol
                       : keyColorSymbol
                   }
@@ -1659,7 +691,8 @@ export const ScalesScreen = ({ switchCallback }) => {
                 />
                 <Path
                   fill={
-                    activeKeyGroup == keyG9 && activeKeyField == 1
+                    global.activeKey.group == keyG9 &&
+                    global.activeKey.field == 1
                       ? activeKeyColorSymbol
                       : keyColorSymbol
                   }
@@ -1668,7 +701,8 @@ export const ScalesScreen = ({ switchCallback }) => {
                 />
                 <Path
                   fill={
-                    activeKeyGroup == keyG9 && activeKeyField == 1
+                    global.activeKey.group == keyG9 &&
+                    global.activeKey.field == 1
                       ? activeKeyColorText
                       : keyColorText
                   }
@@ -1677,7 +711,8 @@ export const ScalesScreen = ({ switchCallback }) => {
                 />
                 <Path
                   fill={
-                    activeKeyGroup == keyG9 && activeKeyField == 1
+                    global.activeKey.group == keyG9 &&
+                    global.activeKey.field == 1
                       ? activeKeyColorText
                       : keyColorText
                   }
@@ -1686,13 +721,14 @@ export const ScalesScreen = ({ switchCallback }) => {
                 />
               </G>
               <G
-                x={activeKeyGroup == keyG10 ? activeKeyX : 0}
-                y={activeKeyGroup == keyG10 ? activeKeyY : 0}
-                onPress={() => keyPress(keyG10, 6, 90)}
+                x={global.activeKey.group == keyG10 ? global.activeKey.x : 0}
+                y={global.activeKey.group == keyG10 ? global.activeKey.y : 0}
+                onPress={() => handleKey(keyG10, 6, 90)}
               >
                 <Path
                   fill={
-                    activeKeyGroup == keyG10 && activeKeyField == 6
+                    global.activeKey.group == keyG10 &&
+                    global.activeKey.field == 6
                       ? activeKeyColorBG
                       : keyColorBG
                   }
@@ -1701,7 +737,8 @@ export const ScalesScreen = ({ switchCallback }) => {
                 />
                 <Path
                   fill={
-                    activeKeyGroup == keyG10 && activeKeyField == 6
+                    global.activeKey.group == keyG10 &&
+                    global.activeKey.field == 6
                       ? activeKeyColorBG
                       : keyColorBG
                   }
@@ -1710,7 +747,8 @@ export const ScalesScreen = ({ switchCallback }) => {
                 />
                 <Path
                   fill={
-                    activeKeyGroup == keyG10 && activeKeyField == 6
+                    global.activeKey.group == keyG10 &&
+                    global.activeKey.field == 6
                       ? activeKeyColorBG
                       : keyColorBG
                   }
@@ -1719,7 +757,8 @@ export const ScalesScreen = ({ switchCallback }) => {
                 />
                 <Path
                   fill={
-                    activeKeyGroup == keyG10 && activeKeyField == 6
+                    global.activeKey.group == keyG10 &&
+                    global.activeKey.field == 6
                       ? activeKeyColorBG
                       : keyColorBG
                   }
@@ -1728,7 +767,8 @@ export const ScalesScreen = ({ switchCallback }) => {
                 />
                 <Path
                   fill={
-                    activeKeyGroup == keyG10 && activeKeyField == 6
+                    global.activeKey.group == keyG10 &&
+                    global.activeKey.field == 6
                       ? activeKeyColorSymbol
                       : keyColorSymbol
                   }
@@ -1737,7 +777,8 @@ export const ScalesScreen = ({ switchCallback }) => {
                 />
                 <Path
                   fill={
-                    activeKeyGroup == keyG10 && activeKeyField == 6
+                    global.activeKey.group == keyG10 &&
+                    global.activeKey.field == 6
                       ? activeKeyColorSymbol
                       : keyColorSymbol
                   }
@@ -1746,7 +787,8 @@ export const ScalesScreen = ({ switchCallback }) => {
                 />
                 <Path
                   fill={
-                    activeKeyGroup == keyG10 && activeKeyField == 6
+                    global.activeKey.group == keyG10 &&
+                    global.activeKey.field == 6
                       ? activeKeyColorText
                       : keyColorText
                   }
@@ -1755,7 +797,8 @@ export const ScalesScreen = ({ switchCallback }) => {
                 />
                 <Path
                   fill={
-                    activeKeyGroup == keyG10 && activeKeyField == 6
+                    global.activeKey.group == keyG10 &&
+                    global.activeKey.field == 6
                       ? activeKeyColorText
                       : keyColorText
                   }
@@ -1764,13 +807,14 @@ export const ScalesScreen = ({ switchCallback }) => {
                 />
               </G>
               <G
-                x={activeKeyGroup == keyG11 ? activeKeyX : 0}
-                y={activeKeyGroup == keyG11 ? activeKeyY : 0}
-                onPress={() => keyPress(keyG11, 11, 60)}
+                x={global.activeKey.group == keyG11 ? global.activeKey.x : 0}
+                y={global.activeKey.group == keyG11 ? global.activeKey.y : 0}
+                onPress={() => handleKey(keyG11, 11, 60)}
               >
                 <Path
                   fill={
-                    activeKeyGroup == keyG11 && activeKeyField == 11
+                    global.activeKey.group == keyG11 &&
+                    global.activeKey.field == 11
                       ? activeKeyColorBG
                       : keyColorBG
                   }
@@ -1779,7 +823,8 @@ export const ScalesScreen = ({ switchCallback }) => {
                 />
                 <Path
                   fill={
-                    activeKeyGroup == keyG11 && activeKeyField == 11
+                    global.activeKey.group == keyG11 &&
+                    global.activeKey.field == 11
                       ? activeKeyColorBG
                       : keyColorBG
                   }
@@ -1788,7 +833,8 @@ export const ScalesScreen = ({ switchCallback }) => {
                 />
                 <Path
                   fill={
-                    activeKeyGroup == keyG11 && activeKeyField == 11
+                    global.activeKey.group == keyG11 &&
+                    global.activeKey.field == 11
                       ? activeKeyColorText
                       : keyColorText
                   }
@@ -1797,13 +843,14 @@ export const ScalesScreen = ({ switchCallback }) => {
                 />
               </G>
               <G
-                x={activeKeyGroup == keyG12 ? activeKeyX : 0}
-                y={activeKeyGroup == keyG12 ? activeKeyY : 0}
-                onPress={() => keyPress(keyG12, 4, 30)}
+                x={global.activeKey.group == keyG12 ? global.activeKey.x : 0}
+                y={global.activeKey.group == keyG12 ? global.activeKey.y : 0}
+                onPress={() => handleKey(keyG12, 4, 30)}
               >
                 <Path
                   fill={
-                    activeKeyGroup == keyG12 && activeKeyField == 4
+                    global.activeKey.group == keyG12 &&
+                    global.activeKey.field == 4
                       ? activeKeyColorBG
                       : keyColorBG
                   }
@@ -1812,7 +859,8 @@ export const ScalesScreen = ({ switchCallback }) => {
                 />
                 <Path
                   fill={
-                    activeKeyGroup == keyG12 && activeKeyField == 4
+                    global.activeKey.group == keyG12 &&
+                    global.activeKey.field == 4
                       ? activeKeyColorBG
                       : keyColorBG
                   }
@@ -1821,7 +869,8 @@ export const ScalesScreen = ({ switchCallback }) => {
                 />
                 <Path
                   fill={
-                    activeKeyGroup == keyG12 && activeKeyField == 4
+                    global.activeKey.group == keyG12 &&
+                    global.activeKey.field == 4
                       ? activeKeyColorText
                       : keyColorText
                   }
@@ -1830,13 +879,14 @@ export const ScalesScreen = ({ switchCallback }) => {
                 />
               </G>
               <G
-                x={activeKeyGroup == keyG1 ? activeKeyX : 0}
-                y={activeKeyGroup == keyG1 ? activeKeyY : 0}
-                onPress={() => keyPress(keyG1, 0, 0)}
+                x={global.activeKey.group == keyG1 ? global.activeKey.x : 0}
+                y={global.activeKey.group == keyG1 ? global.activeKey.y : 0}
+                onPress={() => handleKey(keyG1, 0, 0)}
               >
                 <Path
                   fill={
-                    activeKeyGroup == keyG1 && activeKeyField == 0
+                    global.activeKey.group == keyG1 &&
+                    global.activeKey.field == 0
                       ? activeKeyColorBG
                       : keyColorBG
                   }
@@ -1845,7 +895,8 @@ export const ScalesScreen = ({ switchCallback }) => {
                 />
                 <Path
                   fill={
-                    activeKeyGroup == keyG1 && activeKeyField == 0
+                    global.activeKey.group == keyG1 &&
+                    global.activeKey.field == 0
                       ? activeKeyColorText
                       : keyColorText
                   }
@@ -1854,13 +905,14 @@ export const ScalesScreen = ({ switchCallback }) => {
                 />
               </G>
               <G
-                x={activeKeyGroup == keyG2 ? activeKeyX : 0}
-                y={activeKeyGroup == keyG2 ? activeKeyY : 0}
-                onPress={() => keyPress(keyG2, 5, 330)}
+                x={global.activeKey.group == keyG2 ? global.activeKey.x : 0}
+                y={global.activeKey.group == keyG2 ? global.activeKey.y : 0}
+                onPress={() => handleKey(keyG2, 5, 330)}
               >
                 <Path
                   fill={
-                    activeKeyGroup == keyG2 && activeKeyField == 5
+                    global.activeKey.group == keyG2 &&
+                    global.activeKey.field == 5
                       ? activeKeyColorBG
                       : keyColorBG
                   }
@@ -1869,7 +921,8 @@ export const ScalesScreen = ({ switchCallback }) => {
                 />
                 <Polygon
                   fill={
-                    activeKeyGroup == keyG2 && activeKeyField == 5
+                    global.activeKey.group == keyG2 &&
+                    global.activeKey.field == 5
                       ? activeKeyColorText
                       : keyColorText
                   }
@@ -1877,13 +930,14 @@ export const ScalesScreen = ({ switchCallback }) => {
                 />
               </G>
               <G
-                x={activeKeyGroup == keyG3 ? activeKeyX : 0}
-                y={activeKeyGroup == keyG3 ? activeKeyY : 0}
-                onPress={() => keyPress(keyG3, 10, 300)}
+                x={global.activeKey.group == keyG3 ? global.activeKey.x : 0}
+                y={global.activeKey.group == keyG3 ? global.activeKey.y : 0}
+                onPress={() => handleKey(keyG3, 10, 300)}
               >
                 <Polygon
                   fill={
-                    activeKeyGroup == keyG3 && activeKeyField == 10
+                    global.activeKey.group == keyG3 &&
+                    global.activeKey.field == 10
                       ? activeKeyColorBG
                       : keyColorBG
                   }
@@ -1891,7 +945,8 @@ export const ScalesScreen = ({ switchCallback }) => {
                 />
                 <Path
                   fill={
-                    activeKeyGroup == keyG3 && activeKeyField == 10
+                    global.activeKey.group == keyG3 &&
+                    global.activeKey.field == 10
                       ? activeKeyColorBG
                       : keyColorBG
                   }
@@ -1900,7 +955,8 @@ export const ScalesScreen = ({ switchCallback }) => {
                 />
                 <Path
                   fill={
-                    activeKeyGroup == keyG3 && activeKeyField == 10
+                    global.activeKey.group == keyG3 &&
+                    global.activeKey.field == 10
                       ? activeKeyColorBG
                       : keyColorBG
                   }
@@ -1909,7 +965,8 @@ export const ScalesScreen = ({ switchCallback }) => {
                 />
                 <Path
                   fill={
-                    activeKeyGroup == keyG3 && activeKeyField == 10
+                    global.activeKey.group == keyG3 &&
+                    global.activeKey.field == 10
                       ? activeKeyColorBG
                       : keyColorBG
                   }
@@ -1918,7 +975,8 @@ export const ScalesScreen = ({ switchCallback }) => {
                 />
                 <Path
                   fill={
-                    activeKeyGroup == keyG3 && activeKeyField == 10
+                    global.activeKey.group == keyG3 &&
+                    global.activeKey.field == 10
                       ? activeKeyColorBG
                       : keyColorBG
                   }
@@ -1927,7 +985,8 @@ export const ScalesScreen = ({ switchCallback }) => {
                 />
                 <Path
                   fill={
-                    activeKeyGroup == keyG3 && activeKeyField == 10
+                    global.activeKey.group == keyG3 &&
+                    global.activeKey.field == 10
                       ? activeKeyColorBG
                       : keyColorBG
                   }
@@ -1936,7 +995,8 @@ export const ScalesScreen = ({ switchCallback }) => {
                 />
                 <Path
                   fill={
-                    activeKeyGroup == keyG3 && activeKeyField == 10
+                    global.activeKey.group == keyG3 &&
+                    global.activeKey.field == 10
                       ? activeKeyColorSymbol
                       : keyColorSymbol
                   }
@@ -1945,7 +1005,8 @@ export const ScalesScreen = ({ switchCallback }) => {
                 />
                 <Path
                   fill={
-                    activeKeyGroup == keyG3 && activeKeyField == 10
+                    global.activeKey.group == keyG3 &&
+                    global.activeKey.field == 10
                       ? activeKeyColorSymbol
                       : keyColorSymbol
                   }
@@ -1954,7 +1015,8 @@ export const ScalesScreen = ({ switchCallback }) => {
                 />
                 <Path
                   fill={
-                    activeKeyGroup == keyG3 && activeKeyField == 10
+                    global.activeKey.group == keyG3 &&
+                    global.activeKey.field == 10
                       ? activeKeyColorText
                       : keyColorText
                   }
@@ -1963,7 +1025,8 @@ export const ScalesScreen = ({ switchCallback }) => {
                 />
                 <Path
                   fill={
-                    activeKeyGroup == keyG3 && activeKeyField == 10
+                    global.activeKey.group == keyG3 &&
+                    global.activeKey.field == 10
                       ? activeKeyColorText
                       : keyColorText
                   }
@@ -1972,13 +1035,14 @@ export const ScalesScreen = ({ switchCallback }) => {
                 />
               </G>
               <G
-                x={activeKeyGroup == keyG4 ? activeKeyX : 0}
-                y={activeKeyGroup == keyG4 ? activeKeyY : 0}
-                onPress={() => keyPress(keyG4, 3, 270)}
+                x={global.activeKey.group == keyG4 ? global.activeKey.x : 0}
+                y={global.activeKey.group == keyG4 ? global.activeKey.y : 0}
+                onPress={() => handleKey(keyG4, 3, 270)}
               >
                 <Path
                   fill={
-                    activeKeyGroup == keyG4 && activeKeyField == 3
+                    global.activeKey.group == keyG4 &&
+                    global.activeKey.field == 3
                       ? activeKeyColorBG
                       : keyColorBG
                   }
@@ -1987,7 +1051,8 @@ export const ScalesScreen = ({ switchCallback }) => {
                 />
                 <Path
                   fill={
-                    activeKeyGroup == keyG4 && activeKeyField == 3
+                    global.activeKey.group == keyG4 &&
+                    global.activeKey.field == 3
                       ? activeKeyColorBG
                       : keyColorBG
                   }
@@ -1996,7 +1061,8 @@ export const ScalesScreen = ({ switchCallback }) => {
                 />
                 <Path
                   fill={
-                    activeKeyGroup == keyG4 && activeKeyField == 3
+                    global.activeKey.group == keyG4 &&
+                    global.activeKey.field == 3
                       ? activeKeyColorBG
                       : keyColorBG
                   }
@@ -2005,7 +1071,8 @@ export const ScalesScreen = ({ switchCallback }) => {
                 />
                 <Path
                   fill={
-                    activeKeyGroup == keyG4 && activeKeyField == 3
+                    global.activeKey.group == keyG4 &&
+                    global.activeKey.field == 3
                       ? activeKeyColorBG
                       : keyColorBG
                   }
@@ -2014,7 +1081,8 @@ export const ScalesScreen = ({ switchCallback }) => {
                 />
                 <Path
                   fill={
-                    activeKeyGroup == keyG4 && activeKeyField == 3
+                    global.activeKey.group == keyG4 &&
+                    global.activeKey.field == 3
                       ? activeKeyColorSymbol
                       : keyColorSymbol
                   }
@@ -2023,7 +1091,8 @@ export const ScalesScreen = ({ switchCallback }) => {
                 />
                 <Path
                   fill={
-                    activeKeyGroup == keyG4 && activeKeyField == 3
+                    global.activeKey.group == keyG4 &&
+                    global.activeKey.field == 3
                       ? activeKeyColorSymbol
                       : keyColorSymbol
                   }
@@ -2032,7 +1101,8 @@ export const ScalesScreen = ({ switchCallback }) => {
                 />
                 <Polygon
                   fill={
-                    activeKeyGroup == keyG4 && activeKeyField == 3
+                    global.activeKey.group == keyG4 &&
+                    global.activeKey.field == 3
                       ? activeKeyColorText
                       : keyColorText
                   }
@@ -2040,7 +1110,8 @@ export const ScalesScreen = ({ switchCallback }) => {
                 />
                 <Path
                   fill={
-                    activeKeyGroup == keyG4 && activeKeyField == 3
+                    global.activeKey.group == keyG4 &&
+                    global.activeKey.field == 3
                       ? activeKeyColorText
                       : keyColorText
                   }
@@ -2049,13 +1120,14 @@ export const ScalesScreen = ({ switchCallback }) => {
                 />
               </G>
               <G
-                x={activeKeyGroup == keyG5 ? activeKeyX : 0}
-                y={activeKeyGroup == keyG5 ? activeKeyY : 0}
-                onPress={() => keyPress(keyG5, 8, 240)}
+                x={global.activeKey.group == keyG5 ? global.activeKey.x : 0}
+                y={global.activeKey.group == keyG5 ? global.activeKey.y : 0}
+                onPress={() => handleKey(keyG5, 8, 240)}
               >
                 <Path
                   fill={
-                    activeKeyGroup == keyG5 && activeKeyField == 8
+                    global.activeKey.group == keyG5 &&
+                    global.activeKey.field == 8
                       ? activeKeyColorBG
                       : keyColorBG
                   }
@@ -2064,7 +1136,8 @@ export const ScalesScreen = ({ switchCallback }) => {
                 />
                 <Polygon
                   fill={
-                    activeKeyGroup == keyG5 && activeKeyField == 8
+                    global.activeKey.group == keyG5 &&
+                    global.activeKey.field == 8
                       ? activeKeyColorBG
                       : keyColorBG
                   }
@@ -2072,7 +1145,8 @@ export const ScalesScreen = ({ switchCallback }) => {
                 />
                 <Path
                   fill={
-                    activeKeyGroup == keyG5 && activeKeyField == 8
+                    global.activeKey.group == keyG5 &&
+                    global.activeKey.field == 8
                       ? activeKeyColorBG
                       : keyColorBG
                   }
@@ -2081,7 +1155,8 @@ export const ScalesScreen = ({ switchCallback }) => {
                 />
                 <Path
                   fill={
-                    activeKeyGroup == keyG5 && activeKeyField == 8
+                    global.activeKey.group == keyG5 &&
+                    global.activeKey.field == 8
                       ? activeKeyColorBG
                       : keyColorBG
                   }
@@ -2090,7 +1165,8 @@ export const ScalesScreen = ({ switchCallback }) => {
                 />
                 <Path
                   fill={
-                    activeKeyGroup == keyG5 && activeKeyField == 8
+                    global.activeKey.group == keyG5 &&
+                    global.activeKey.field == 8
                       ? activeKeyColorSymbol
                       : keyColorSymbol
                   }
@@ -2099,7 +1175,8 @@ export const ScalesScreen = ({ switchCallback }) => {
                 />
                 <Path
                   fill={
-                    activeKeyGroup == keyG5 && activeKeyField == 8
+                    global.activeKey.group == keyG5 &&
+                    global.activeKey.field == 8
                       ? activeKeyColorSymbol
                       : keyColorSymbol
                   }
@@ -2108,7 +1185,8 @@ export const ScalesScreen = ({ switchCallback }) => {
                 />
                 <Path
                   fill={
-                    activeKeyGroup == keyG5 && activeKeyField == 8
+                    global.activeKey.group == keyG5 &&
+                    global.activeKey.field == 8
                       ? activeKeyColorText
                       : keyColorText
                   }
@@ -2117,7 +1195,8 @@ export const ScalesScreen = ({ switchCallback }) => {
                 />
                 <Path
                   fill={
-                    activeKeyGroup == keyG5 && activeKeyField == 8
+                    global.activeKey.group == keyG5 &&
+                    global.activeKey.field == 8
                       ? activeKeyColorText
                       : keyColorText
                   }
@@ -2126,13 +1205,14 @@ export const ScalesScreen = ({ switchCallback }) => {
                 />
               </G>
               <G
-                x={activeKeyGroup == keyG6 ? activeKeyX : 0}
-                y={activeKeyGroup == keyG6 ? activeKeyY : 0}
-                onPress={() => keyPress(keyG6, 1, 210)}
+                x={global.activeKey.group == keyG6 ? global.activeKey.x : 0}
+                y={global.activeKey.group == keyG6 ? global.activeKey.y : 0}
+                onPress={() => handleKey(keyG6, 1, 210)}
               >
                 <Path
                   fill={
-                    activeKeyGroup == keyG6 && activeKeyField == 1
+                    global.activeKey.group == keyG6 &&
+                    global.activeKey.field == 1
                       ? activeKeyColorBG
                       : keyColorBG
                   }
@@ -2141,7 +1221,8 @@ export const ScalesScreen = ({ switchCallback }) => {
                 />
                 <Path
                   fill={
-                    activeKeyGroup == keyG6 && activeKeyField == 1
+                    global.activeKey.group == keyG6 &&
+                    global.activeKey.field == 1
                       ? activeKeyColorBG
                       : keyColorBG
                   }
@@ -2150,7 +1231,8 @@ export const ScalesScreen = ({ switchCallback }) => {
                 />
                 <Path
                   fill={
-                    activeKeyGroup == keyG6 && activeKeyField == 1
+                    global.activeKey.group == keyG6 &&
+                    global.activeKey.field == 1
                       ? activeKeyColorBG
                       : keyColorBG
                   }
@@ -2159,7 +1241,8 @@ export const ScalesScreen = ({ switchCallback }) => {
                 />
                 <Path
                   fill={
-                    activeKeyGroup == keyG6 && activeKeyField == 1
+                    global.activeKey.group == keyG6 &&
+                    global.activeKey.field == 1
                       ? activeKeyColorBG
                       : keyColorBG
                   }
@@ -2168,7 +1251,8 @@ export const ScalesScreen = ({ switchCallback }) => {
                 />
                 <Path
                   fill={
-                    activeKeyGroup == keyG6 && activeKeyField == 1
+                    global.activeKey.group == keyG6 &&
+                    global.activeKey.field == 1
                       ? activeKeyColorSymbol
                       : keyColorSymbol
                   }
@@ -2177,7 +1261,8 @@ export const ScalesScreen = ({ switchCallback }) => {
                 />
                 <Path
                   fill={
-                    activeKeyGroup == keyG6 && activeKeyField == 1
+                    global.activeKey.group == keyG6 &&
+                    global.activeKey.field == 1
                       ? activeKeyColorSymbol
                       : keyColorSymbol
                   }
@@ -2186,7 +1271,8 @@ export const ScalesScreen = ({ switchCallback }) => {
                 />
                 <Path
                   fill={
-                    activeKeyGroup == keyG6 && activeKeyField == 1
+                    global.activeKey.group == keyG6 &&
+                    global.activeKey.field == 1
                       ? activeKeyColorText
                       : keyColorText
                   }
@@ -2195,7 +1281,8 @@ export const ScalesScreen = ({ switchCallback }) => {
                 />
                 <Path
                   fill={
-                    activeKeyGroup == keyG6 && activeKeyField == 1
+                    global.activeKey.group == keyG6 &&
+                    global.activeKey.field == 1
                       ? activeKeyColorText
                       : keyColorText
                   }
@@ -2204,13 +1291,14 @@ export const ScalesScreen = ({ switchCallback }) => {
                 />
               </G>
               <G
-                x={activeKeyGroup == keyG7 ? activeKeyX : 0}
-                y={activeKeyGroup == keyG7 ? activeKeyY : 0}
-                onPress={() => keyPress(keyG7, 6, 180)}
+                x={global.activeKey.group == keyG7 ? global.activeKey.x : 0}
+                y={global.activeKey.group == keyG7 ? global.activeKey.y : 0}
+                onPress={() => handleKey(keyG7, 6, 180)}
               >
                 <Path
                   fill={
-                    activeKeyGroup == keyG7 && activeKeyField == 6
+                    global.activeKey.group == keyG7 &&
+                    global.activeKey.field == 6
                       ? activeKeyColorBG
                       : keyColorBG
                   }
@@ -2219,7 +1307,8 @@ export const ScalesScreen = ({ switchCallback }) => {
                 />
                 <Path
                   fill={
-                    activeKeyGroup == keyG7 && activeKeyField == 6
+                    global.activeKey.group == keyG7 &&
+                    global.activeKey.field == 6
                       ? activeKeyColorBG
                       : keyColorBG
                   }
@@ -2228,7 +1317,8 @@ export const ScalesScreen = ({ switchCallback }) => {
                 />
                 <Path
                   fill={
-                    activeKeyGroup == keyG7 && activeKeyField == 6
+                    global.activeKey.group == keyG7 &&
+                    global.activeKey.field == 6
                       ? activeKeyColorBG
                       : keyColorBG
                   }
@@ -2237,7 +1327,8 @@ export const ScalesScreen = ({ switchCallback }) => {
                 />
                 <Path
                   fill={
-                    activeKeyGroup == keyG7 && activeKeyField == 6
+                    global.activeKey.group == keyG7 &&
+                    global.activeKey.field == 6
                       ? activeKeyColorSymbol
                       : keyColorSymbol
                   }
@@ -2246,7 +1337,8 @@ export const ScalesScreen = ({ switchCallback }) => {
                 />
                 <Path
                   fill={
-                    activeKeyGroup == keyG7 && activeKeyField == 6
+                    global.activeKey.group == keyG7 &&
+                    global.activeKey.field == 6
                       ? activeKeyColorSymbol
                       : keyColorSymbol
                   }
@@ -2255,7 +1347,8 @@ export const ScalesScreen = ({ switchCallback }) => {
                 />
                 <Path
                   fill={
-                    activeKeyGroup == keyG7 && activeKeyField == 6
+                    global.activeKey.group == keyG7 &&
+                    global.activeKey.field == 6
                       ? activeKeyColorText
                       : keyColorText
                   }
@@ -2264,7 +1357,8 @@ export const ScalesScreen = ({ switchCallback }) => {
                 />
                 <Polygon
                   fill={
-                    activeKeyGroup == keyG7 && activeKeyField == 6
+                    global.activeKey.group == keyG7 &&
+                    global.activeKey.field == 6
                       ? activeKeyColorText
                       : keyColorText
                   }
@@ -2272,13 +1366,14 @@ export const ScalesScreen = ({ switchCallback }) => {
                 />
               </G>
               <G
-                x={activeKeyGroup == keyG8 ? activeKeyX : 0}
-                y={activeKeyGroup == keyG8 ? activeKeyY : 0}
-                onPress={() => keyPress(keyG8, 11, 150)}
+                x={global.activeKey.group == keyG8 ? global.activeKey.x : 0}
+                y={global.activeKey.group == keyG8 ? global.activeKey.y : 0}
+                onPress={() => handleKey(keyG8, 11, 150)}
               >
                 <Path
                   fill={
-                    activeKeyGroup == keyG8 && activeKeyField == 11
+                    global.activeKey.group == keyG8 &&
+                    global.activeKey.field == 11
                       ? activeKeyColorBG
                       : keyColorBG
                   }
@@ -2287,7 +1382,8 @@ export const ScalesScreen = ({ switchCallback }) => {
                 />
                 <Path
                   fill={
-                    activeKeyGroup == keyG8 && activeKeyField == 11
+                    global.activeKey.group == keyG8 &&
+                    global.activeKey.field == 11
                       ? activeKeyColorBG
                       : keyColorBG
                   }
@@ -2296,7 +1392,8 @@ export const ScalesScreen = ({ switchCallback }) => {
                 />
                 <Path
                   fill={
-                    activeKeyGroup == keyG8 && activeKeyField == 11
+                    global.activeKey.group == keyG8 &&
+                    global.activeKey.field == 11
                       ? activeKeyColorBG
                       : keyColorBG
                   }
@@ -2305,7 +1402,8 @@ export const ScalesScreen = ({ switchCallback }) => {
                 />
                 <Path
                   fill={
-                    activeKeyGroup == keyG8 && activeKeyField == 11
+                    global.activeKey.group == keyG8 &&
+                    global.activeKey.field == 11
                       ? activeKeyColorText
                       : keyColorText
                   }
@@ -2314,13 +1412,14 @@ export const ScalesScreen = ({ switchCallback }) => {
                 />
               </G>
               <G
-                x={activeKeyGroup == keyG9 ? activeKeyX : 0}
-                y={activeKeyGroup == keyG9 ? activeKeyY : 0}
-                onPress={() => keyPress(keyG9, 4, 120)}
+                x={global.activeKey.group == keyG9 ? global.activeKey.x : 0}
+                y={global.activeKey.group == keyG9 ? global.activeKey.y : 0}
+                onPress={() => handleKey(keyG9, 4, 120)}
               >
                 <Path
                   fill={
-                    activeKeyGroup == keyG9 && activeKeyField == 4
+                    global.activeKey.group == keyG9 &&
+                    global.activeKey.field == 4
                       ? activeKeyColorBG
                       : keyColorBG
                   }
@@ -2329,7 +1428,8 @@ export const ScalesScreen = ({ switchCallback }) => {
                 />
                 <Polygon
                   fill={
-                    activeKeyGroup == keyG9 && activeKeyField == 4
+                    global.activeKey.group == keyG9 &&
+                    global.activeKey.field == 4
                       ? activeKeyColorText
                       : keyColorText
                   }
@@ -2337,13 +1437,14 @@ export const ScalesScreen = ({ switchCallback }) => {
                 />
               </G>
               <G
-                x={activeKeyGroup == keyG10 ? activeKeyX : 0}
-                y={activeKeyGroup == keyG10 ? activeKeyY : 0}
-                onPress={() => keyPress(keyG10, 9, 90)}
+                x={global.activeKey.group == keyG10 ? global.activeKey.x : 0}
+                y={global.activeKey.group == keyG10 ? global.activeKey.y : 0}
+                onPress={() => handleKey(keyG10, 9, 90)}
               >
                 <Path
                   fill={
-                    activeKeyGroup == keyG10 && activeKeyField == 9
+                    global.activeKey.group == keyG10 &&
+                    global.activeKey.field == 9
                       ? activeKeyColorBG
                       : keyColorBG
                   }
@@ -2352,7 +1453,8 @@ export const ScalesScreen = ({ switchCallback }) => {
                 />
                 <Polygon
                   fill={
-                    activeKeyGroup == keyG10 && activeKeyField == 9
+                    global.activeKey.group == keyG10 &&
+                    global.activeKey.field == 9
                       ? activeKeyColorBG
                       : keyColorBG
                   }
@@ -2360,7 +1462,8 @@ export const ScalesScreen = ({ switchCallback }) => {
                 />
                 <Path
                   fill={
-                    activeKeyGroup == keyG10 && activeKeyField == 9
+                    global.activeKey.group == keyG10 &&
+                    global.activeKey.field == 9
                       ? activeKeyColorText
                       : keyColorText
                   }
@@ -2369,13 +1472,14 @@ export const ScalesScreen = ({ switchCallback }) => {
                 />
               </G>
               <G
-                x={activeKeyGroup == keyG11 ? activeKeyX : 0}
-                y={activeKeyGroup == keyG11 ? activeKeyY : 0}
-                onPress={() => keyPress(keyG11, 2, 60)}
+                x={global.activeKey.group == keyG11 ? global.activeKey.x : 0}
+                y={global.activeKey.group == keyG11 ? global.activeKey.y : 0}
+                onPress={() => handleKey(keyG11, 2, 60)}
               >
                 <Path
                   fill={
-                    activeKeyGroup == keyG11 && activeKeyField == 2
+                    global.activeKey.group == keyG11 &&
+                    global.activeKey.field == 2
                       ? activeKeyColorBG
                       : keyColorBG
                   }
@@ -2384,7 +1488,8 @@ export const ScalesScreen = ({ switchCallback }) => {
                 />
                 <Path
                   fill={
-                    activeKeyGroup == keyG11 && activeKeyField == 2
+                    global.activeKey.group == keyG11 &&
+                    global.activeKey.field == 2
                       ? activeKeyColorBG
                       : keyColorBG
                   }
@@ -2393,7 +1498,8 @@ export const ScalesScreen = ({ switchCallback }) => {
                 />
                 <Path
                   fill={
-                    activeKeyGroup == keyG11 && activeKeyField == 2
+                    global.activeKey.group == keyG11 &&
+                    global.activeKey.field == 2
                       ? activeKeyColorText
                       : keyColorText
                   }
@@ -2402,13 +1508,14 @@ export const ScalesScreen = ({ switchCallback }) => {
                 />
               </G>
               <G
-                x={activeKeyGroup == keyG12 ? activeKeyX : 0}
-                y={activeKeyGroup == keyG12 ? activeKeyY : 0}
-                onPress={() => keyPress(keyG12, 7, 30)}
+                x={global.activeKey.group == keyG12 ? global.activeKey.x : 0}
+                y={global.activeKey.group == keyG12 ? global.activeKey.y : 0}
+                onPress={() => handleKey(keyG12, 7, 30)}
               >
                 <Path
                   fill={
-                    activeKeyGroup == keyG12 && activeKeyField == 7
+                    global.activeKey.group == keyG12 &&
+                    global.activeKey.field == 7
                       ? activeKeyColorBG
                       : keyColorBG
                   }
@@ -2417,7 +1524,8 @@ export const ScalesScreen = ({ switchCallback }) => {
                 />
                 <Path
                   fill={
-                    activeKeyGroup == keyG12 && activeKeyField == 7
+                    global.activeKey.group == keyG12 &&
+                    global.activeKey.field == 7
                       ? activeKeyColorText
                       : keyColorText
                   }
@@ -2429,7 +1537,7 @@ export const ScalesScreen = ({ switchCallback }) => {
             <Circle fill={colors.blue} cx="315" cy="314.92" r="100" />
           </G>
 
-          {!axisStatus ? (
+          {!global.axis.status ? (
             <Path
               fill={colors.blue}
               d="M1986,2672.21a344.74,344.74,0,0,0-317.88-210.71q-3.75,0-7.5.09v11.17h0v663.65c-178.51-4-322.49-150.45-322.49-329.91,0-152.63,104.16-281.39,245.15-318.93a7.52,7.52,0,0,0,5.58-7.27h0a7.56,7.56,0,0,0-9.52-7.28,345,345,0,0,0,88.79,678.48q3.75,0,7.5-.09v-11.16h0V2476.6c178.51,4,322.5,150.45,322.5,329.9,0,152.65-104.18,281.41-245.17,318.94a7.52,7.52,0,0,0-5.57,7.27h0a7.56,7.56,0,0,0,9.52,7.28A345.33,345.33,0,0,0,1986,2672.21Z"
@@ -2439,550 +1547,54 @@ export const ScalesScreen = ({ switchCallback }) => {
             <Path
               fill={colors.blue}
               origin={(315, 315)}
-              rotation={axisDeg}
+              rotation={global.axis.angle}
               d="M1986,2672.2a344.69,344.69,0,0,0-317.88-210.7q-3.75,0-7.5.09h0v11.16h0V3136.4h0c-178.51-4-322.49-150.45-322.49-329.9,0-116.67,60.86-219.38,152.51-278.08a7.49,7.49,0,0,0,2.46-10.06l-.09-.16a7.51,7.51,0,0,0-10.54-2.58,345,345,0,0,0,185.66,635.88q3.73,0,7.49-.09h0v-11.16h0V2476.6h0c178.51,4,322.5,150.46,322.5,329.91,0,152.64-104.18,281.4-245.17,318.93a7.54,7.54,0,1,0,4,14.56A345.34,345.34,0,0,0,1986,2672.2Z"
               transform="translate(-1353.09 -2491.5)"
             />
           )}
 
-          <AnimatedIcon />
+          <Logo />
         </Svg>
       </View>
-      <View style={styles.scaleSpace}></View>
-      <DisplayScales ref={ref} />
+
+      <Bottom data={global.scales} />
 
       <Modal animationType="fade" transparent={true} visible={openSelect}>
-        <View style={styles.selectListShadow}>
-          <View style={styles.selectListWrapper}>
-            <ScrollView
-              showsVerticalScrollIndicator={false}
-              style={styles.selectList}
-            >
-              {scaleList.map((scale, index) => (
-                <TouchableOpacity
-                  style={
-                    index === scaleList.length - 1
-                      ? styles.selectItemNoBorder
-                      : styles.selectItem
-                  }
-                  key={scale.value}
-                  onPress={() => selectedScale(scale.name, scale.value)}
-                >
-                  <Text style={styles.selectText}>{scale.name}</Text>
-                </TouchableOpacity>
-              ))}
-            </ScrollView>
-          </View>
-        </View>
-      </Modal>
-    </View>
-  );
-};
-
-export const DisplayChords = () => {
-  return (
-    <View style={styles.chordWrapper}>
-      <View style={styles.positiveChord}>
-        <View style={styles.positiveChordNameWrapper}>
-          <Text style={styles.positiveChordTonic}>{selectedTonic}</Text>
-          <Text style={styles.positiveChordName}>{selectedChordVal}</Text>
-        </View>
-
-        <View style={styles.positiveChordNotes}>
-          {positiveChord.map((chordNote, index) => (
-            <Text
-              style={
-                chordNote.diatonic
-                  ? styles.diatonicChordText
-                  : styles.positiveChordText
-              }
-              key={index}
-            >
-              {chordNote.note}
-            </Text>
-          ))}
-        </View>
-      </View>
-
-      <View style={styles.axisLegend} />
-
-      <View style={styles.negativeChord}>
-        <View style={styles.negativeChordNameWrapper}>
-          <Text style={styles.negativeChordTonic}>{negativeTonic}</Text>
-          <Text style={styles.negativeChordName}>{negativeChordVal}</Text>
-        </View>
-
-        <View style={styles.negativeChordNotes}>
-          {negativeChord.map((chordNote, index) => (
-            <Text
-              style={
-                chordNote.diatonic
-                  ? styles.diatonicChordText
-                  : styles.negativeChordText
-              }
-              key={index}
-            >
-              {chordNote.note}
-            </Text>
-          ))}
-        </View>
-      </View>
-    </View>
-  );
-};
-
-export const ChordsScreen = ({
-  switchCallback,
-  rewardedCallback,
-  disclamerCallback,
-}) => {
-  const [legendStatus, setLegendStatus] = useState(false);
-  const [openSelect, setOpenSelect] = useState(false);
-  const [tonicSliderOpen, setTonicSliderOpen] = useState(chordsUnlocked);
-  const opacity = useState(new Animated.Value(0))[0];
-
-  function initialFadeIn() {
-    Animated.timing(opacity, {
-      toValue: 1,
-      duration: 0,
-      useNativeDriver: true,
-    }).start();
-  }
-
-  function fadeIn() {
-    Animated.timing(opacity, {
-      toValue: 1,
-      duration: 300,
-      useNativeDriver: true,
-    }).start();
-  }
-
-  function fadeOut() {
-    Animated.timing(opacity, {
-      toValue: 0,
-      duration: 300,
-      useNativeDriver: true,
-    }).start();
-  }
-
-  useEffect(() => {
-    setTonicSliderOpen(chordsUnlocked);
-    initialFadeIn();
-  }, []);
-
-  const legendToggle = () => {
-    if (legendStatus == false) {
-      fadeOut();
-      setTimeout(function () {
-        setLegendStatus(true);
-        fadeIn();
-      }, 150);
-    } else {
-      fadeOut();
-      setTimeout(function () {
-        setLegendStatus(false);
-        fadeIn();
-      }, 150);
-    }
-  };
-
-  const openSelectList = () => {
-    switchCallback(true);
-    setOpenSelect(true);
-  };
-
-  const selectedChord = (name, value) => {
-    setSelectedChordName(name);
-    selectedChordVal = value;
-
-    showChords();
-
-    switchCallback(false);
-    setOpenSelect(false);
-  };
-
-  const [selectedChordName, setSelectedChordName] = useState("Major");
-
-  const [tonicSpacer, setTonicSpacer] = useState(0);
-  const getDimentions = (event) => {
-    var { width } = event.nativeEvent.layout;
-    var spacerPadding = width / 2 - 55;
-    setTonicSpacer(spacerPadding);
-  };
-
-  const scrollChords = useRef(null);
-  let selectedIndexSaved = 0;
-  const [selectedIndex, setSelectedIndex] = useState(selectedIndexSaved);
-  var scrollRef = scrollRef;
-  const setTonic = (index) => {
-    setSelectedIndex(index);
-    var offsetInterval = 110 * index;
-    scrollChords.current.scrollTo({
-      x: offsetInterval,
-      animated: false,
-    });
-  };
-
-  const notePress = (name) => {
-    selectedTonic = name;
-
-    for (let i = 0; i < cloneScale.length; i++) {
-      if (selectedTonic == cloneScale[i]) {
-        selectedTonicIndex = i;
-      }
-    }
-
-    cloneChords = cloneScale.slice();
-
-    var rootNote = selectedTonicIndex;
-    for (var i = 0; i < rootNote; i++) cloneChords.push(cloneChords.shift());
-
-    cloneNegativeChords = cloneNegativeScale.slice();
-    for (var i = 0; i < rootNote; i++)
-      cloneNegativeChords.push(cloneNegativeChords.shift());
-
-    showChords();
-    askForReview();
-  };
-
-  return (
-    <View style={styles.screenWrapper}>
-      <View style={styles.navigation}>
-        <TouchableOpacity disabled={openSelect} onPress={legendToggle}>
-          <Info style={styles.info} />
-        </TouchableOpacity>
-      </View>
-
-      <View style={styles.selectChordsWrapper}>
-        {legendStatus ? (
-          <Animated.View style={[styles.legendContainer, { opacity }]}>
-            <Legend style={styles.legend} />
-
-            <View style={styles.legend2Wrapper}>
-              <Legend2 style={styles.legend2} />
-              <TouchableOpacity
-                style={styles.disclamerBtn}
-                onPress={() => disclamerCallback(true)}
-              >
-                <Disclamer style={styles.disclamer} />
-              </TouchableOpacity>
-            </View>
-          </Animated.View>
-        ) : null}
-
-        {legendStatus ? null : (
-          <Animated.View style={{ opacity }}>
-            <Text style={styles.selectTextExp}>
-              Select a chord from a key of:
-            </Text>
-
-            <View style={styles.selectedScaleNameWrapper}>
-              <Text style={styles.selectedScaleKey}>
-                {selectedScaleKeySaved}
-              </Text>
-              <Text style={styles.selectedScaleName}>
-                {selectedScaleNameSaved}
-              </Text>
-            </View>
-
-            <TouchableOpacity
-              style={styles.selectInput}
-              disabled={legendStatus}
-              onPress={openSelectList}
-            >
-              <Text style={styles.selectInputText}>{selectedChordName}</Text>
-              <ListArrow style={styles.selectListArrow} />
-            </TouchableOpacity>
-          </Animated.View>
-        )}
-      </View>
-
-      <View style={styles.chordsWrapper} onLayout={getDimentions}>
-        {tonicSliderOpen ? (
-          <View style={styles.scrollChords}>
-            <Text style={styles.scrollChordsExpText}>Choose a tonic:</Text>
-
-            <ScrollView
-              ref={scrollChords}
-              horizontal={true}
-              showsHorizontalScrollIndicator={false}
-              contentContainerStyle={styles.scrollChordsWrapper}
-            >
-              <View
-                style={(styles.scrollChordsSpace, { width: tonicSpacer })}
-              />
-              {positiveScaleTonics.map((note, index) => (
-                <TouchableHighlight
-                  activeOpacity={1}
-                  underlayColor={colors.lightBlue}
-                  style={
-                    index == selectedIndex
-                      ? styles.scrollChordsNoteSelected
-                      : styles.scrollChordsNote
-                  }
-                  key={index}
-                  onPress={() => {
-                    notePress(note), setTonic(index);
-                  }}
-                >
-                  <Text
-                    style={
-                      index == selectedIndex
-                        ? styles.scrollChordsNoteTextSelected
-                        : styles.scrollChordsNoteText
-                    }
-                  >
-                    {note}
-                  </Text>
-                </TouchableHighlight>
-              ))}
-              <View
-                style={(styles.scrollChordsSpace, { width: tonicSpacer })}
-              />
-            </ScrollView>
-          </View>
-        ) : (
-          <TouchableHighlight
-            style={styles.rewardedOpen}
-            onPress={() => rewardedCallback(true)}
+        <View style={scales_chords_style.selectListWrapper}>
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            style={scales_chords_style.selectList}
           >
-            <Text style={styles.rewardedOpenText}>Unlock negative chords</Text>
-          </TouchableHighlight>
-        )}
-      </View>
-      <View style={styles.chordSpace}></View>
-      <DisplayChords />
-
-      <Modal animationType="fade" transparent={true} visible={openSelect}>
-        <View style={styles.selectListShadow}>
-          <View style={styles.selectListWrapper}>
-            <ScrollView
-              showsVerticalScrollIndicator={false}
-              style={styles.selectList}
-              centerContent={true}
-            >
-              {chordList.map((chord, index) => (
-                <TouchableOpacity
-                  style={
-                    index === chordList.length - 1
-                      ? styles.selectItemNoBorder
-                      : styles.selectItem
-                  }
-                  key={chord.value}
-                  onPress={
-                    tonicSliderOpen
-                      ? () => selectedChord(chord.name, chord.value)
-                      : index == 0
-                      ? () => selectedChord(chord.name, chord.value)
-                      : null
-                  }
+            {scaleList.map((scale, index) => (
+              <TouchableOpacity
+                key={scale.name}
+                style={
+                  index === scaleList.length - 1
+                    ? scales_chords_style.selectItemNoBorder
+                    : scales_chords_style.selectItem
+                }
+                onPress={() => handleSelect(scale)}
+              >
+                <Text
+                  style={[
+                    scales_chords_style.selectText,
+                    {
+                      color:
+                        selectedScale.name === scale.name
+                          ? colors.blue
+                          : colors.black,
+                    },
+                  ]}
                 >
-                  <Text
-                    style={
-                      tonicSliderOpen
-                        ? styles.selectText
-                        : index == 0
-                        ? styles.selectText
-                        : styles.selectDisabledText
-                    }
-                  >
-                    {chord.name}
-                  </Text>
-                </TouchableOpacity>
-              ))}
-            </ScrollView>
-          </View>
+                  {scale.name}
+                </Text>
+              </TouchableOpacity>
+            ))}
+          </ScrollView>
         </View>
       </Modal>
-    </View>
+    </Animated.View>
   );
 };
 
-function MainScreen() {
-  const [switchText, setSwitchText] = useState("Scales");
-  const [pressAlert, setPressAlert] = useState(false);
-  const [zIndex, setzIndex] = useState(false);
-  const [rewardedOpen, setRewardedOpen] = useState(false);
-  const [disclamerOpen, setDisclamerOpen] = useState(false);
-  const [ads, setAds] = useState(false);
-
-  const fadeAlert = useState(new Animated.Value(0))[0];
-
-  function alertFadeIn() {
-    setPressAlert(true);
-    Animated.timing(fadeAlert, {
-      toValue: 1,
-      duration: 300,
-      useNativeDriver: true,
-    }).start();
-  }
-
-  function alertFadeOut() {
-    Animated.timing(fadeAlert, {
-      toValue: 0,
-      duration: 300,
-      useNativeDriver: true,
-    }).start();
-    setTimeout(function () {
-      setPressAlert(false);
-    }, 300);
-  }
-
-  const showAlert = {
-    opacity: fadeAlert,
-  };
-
-  const opacity = useState(new Animated.Value(0))[0];
-
-  function initialFadeIn() {
-    Animated.timing(opacity, {
-      toValue: 1,
-      duration: 0,
-      useNativeDriver: true,
-    }).start();
-  }
-
-  function fadeIn() {
-    Animated.timing(opacity, {
-      toValue: 1,
-      duration: 300,
-      useNativeDriver: true,
-    }).start();
-  }
-
-  function fadeOut() {
-    Animated.timing(opacity, {
-      toValue: 0,
-      duration: 300,
-      useNativeDriver: true,
-    }).start();
-  }
-
-  useEffect(() => {
-    initialFadeIn();
-    setTimeout(askForPermission, 1000);
-  }, []);
-
-  async function askForPermission() {
-    const { granted } = await getPermissionsAsync();
-    if (granted) {
-      personalisedAds = true;
-      setAds(true);
-    } else {
-      const { status } = await requestPermissionsAsync();
-      if (status === "granted") {
-        personalisedAds = true;
-      }
-      setAds(true);
-    }
-  }
-
-  const switchZindex = (value) => {
-    setzIndex(value);
-  };
-
-  const openRewardedModul = (value) => {
-    fadeOut();
-    setTimeout(function () {
-      setRewardedOpen(value);
-      fadeIn();
-    }, 150);
-  };
-
-  const openDisclamer = (value) => {
-    fadeOut();
-    setTimeout(function () {
-      setDisclamerOpen(value);
-      fadeIn();
-    }, 150);
-  };
-
-  const alertTimer = () => {
-    alertFadeIn();
-    setTimeout(function () {
-      alertFadeOut();
-    }, 2500);
-  };
-
-  const switchScreen = () => {
-    if (visibleScales == false && switchText == "Scales") {
-      alertTimer();
-    } else {
-      if (switchText == "Scales") {
-        fadeOut();
-        setTimeout(function () {
-          showInitialChords();
-          setSwitchText("Chords");
-          fadeIn();
-        }, 150);
-      } else {
-        fadeOut();
-        setTimeout(function () {
-          setSwitchText("Scales");
-          fadeIn();
-        }, 150);
-      }
-    }
-  };
-  return (
-    <SafeAreaView style={styles.container}>
-      <StatusBar hidden />
-      {rewardedOpen || disclamerOpen ? <WhiteBG /> : <GradientBG />}
-
-      {!pressAlert ? null : (
-        <Animated.View style={[styles.alert, showAlert]}>
-          <Text style={styles.alertText}>You need to tap on a field!</Text>
-        </Animated.View>
-      )}
-
-      {!rewardedOpen && !disclamerOpen && switchText == "Scales" ? (
-        <Animated.View style={{ opacity, flex: 1 }}>
-          <ScalesScreen switchCallback={switchZindex} />
-        </Animated.View>
-      ) : null}
-
-      {!rewardedOpen && !disclamerOpen && switchText == "Chords" ? (
-        <Animated.View style={{ opacity, flex: 1 }}>
-          <ChordsScreen
-            switchCallback={switchZindex}
-            rewardedCallback={openRewardedModul}
-            disclamerCallback={openDisclamer}
-          />
-        </Animated.View>
-      ) : null}
-
-      {!rewardedOpen && disclamerOpen ? (
-        <DisclamerScreen disclamerCallback={openDisclamer} />
-      ) : null}
-
-      {rewardedOpen ? (
-        <RewardedScreen rewardedCallback={openRewardedModul} />
-      ) : null}
-
-      <View style={styles.ads}>
-        {ads && !rewardedOpen ? (
-          <AdMobBanner
-            bannerSize="smartBannerPortrait"
-            adUnitID={
-              Platform.OS === "ios" ? admob_ios.banner : admob_android.banner
-            }
-            servePersonalizedAds={personalisedAds}
-          />
-        ) : null}
-      </View>
-
-      {rewardedOpen || disclamerOpen ? null : (
-        <TouchableHighlight
-          style={zIndex ? styles.switchBelow : styles.switch}
-          underlayColor={colors.lightBlue}
-          disabled={zIndex}
-          onPress={switchScreen}
-        >
-          <Text style={styles.switchText}>{switchText}</Text>
-        </TouchableHighlight>
-      )}
-    </SafeAreaView>
-  );
-}
-
-export default MainScreen;
+export default Scales;

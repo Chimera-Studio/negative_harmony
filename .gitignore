@@ -14,4 +14,4 @@ web-build/
 
 # sensitive info
 app.json
-app/tokens/
+.env
