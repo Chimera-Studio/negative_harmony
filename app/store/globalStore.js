@@ -1,4 +1,6 @@
-import { merge } from "lodash";
+import { merge, get } from "lodash";
+import { isProduction } from "../utils";
+import { types as cmsTypes } from "./cmsStore";
 
 export const types = {
   GP_STORE_SELECTED_SCALE: "GP/STORE_SELECTED_SCALE",
@@ -50,6 +52,14 @@ export const actions = {
   }),
 };
 
+const _unlockChords = (state, payload) => {
+  const displayAds = isProduction
+    ? get(payload, "master.ads", true)
+    : get(payload, "master.adsStaging", true);
+
+  return merge({}, state, { unlocked: !displayAds });
+};
+
 export const reducer = (state, action) => {
   switch (action.type) {
     case types.GP_STORE_SELECTED_SCALE:
@@ -68,6 +78,9 @@ export const reducer = (state, action) => {
       return merge({}, state, { showBanner: action.payload });
     case types.GP_UNLOCK_CHORDS:
       return merge({}, state, { unlocked: true, showBanner: true });
+    case cmsTypes.CMS_FETCH_APP:
+    case cmsTypes.CMS_STORE_APP:
+      return _unlockChords(state, action.payload);
 
     default:
       return state || {};
