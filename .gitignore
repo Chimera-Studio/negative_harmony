@@ -15,4 +15,5 @@ web-build/
 # sensitive info
 .env
 app.json
+env.json
 credentials.json

@@ -5,7 +5,8 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "eject": "expo eject"
+    "eject": "expo eject",
+    "build": "python ./scripts/build_app.py"
   },
   "dependencies": {
     "@contentful/rich-text-react-renderer": "^15.11.1",
@@ -27,6 +28,7 @@
     "expo-linear-gradient": "~11.0.0",
     "expo-linking": "~3.0.0",
     "expo-network": "~4.1.0",
+    "expo-splash-screen": "^0.14.1",
     "expo-status-bar": "~1.2.0",
     "expo-store-review": "~5.1.0",
     "expo-tracking-transparency": "~2.1.0",

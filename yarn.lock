@@ -3556,7 +3556,7 @@ expo-network@~4.1.0:
   resolved "https://registry.yarnpkg.com/expo-network/-/expo-network-4.1.0.tgz#28ef43206e47f3e572e42b7d876eaddcb4f67f5f"
   integrity sha512-FmiqvGsFKC4g3Fa2rkxcQ6+kS2yUFy/gwI8QgcUrwhVPXg8fkLyq6Vo1tdU9arWZNRQ99SVyW0JwKdmqy/+nQw==
 
-expo-splash-screen@~0.14.0:
+expo-splash-screen@^0.14.1, expo-splash-screen@~0.14.0:
   version "0.14.1"
   resolved "https://registry.yarnpkg.com/expo-splash-screen/-/expo-splash-screen-0.14.1.tgz#7647c8b98c679b8313d24a7c14729402c3c16631"
   integrity sha512-Y08wMIVjRuPbBnH2N6KwUfQYYnAiBrZMFAfXjjPPObyMDZ7v5VXTcbAWHqGdnYDcIbXRpat+fiWpTeU2HanBBg==

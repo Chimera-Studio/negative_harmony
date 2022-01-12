@@ -9,8 +9,7 @@ import { localStorageKeys, admob } from "../tokens";
 export const isRealDevice = Device.isDevice;
 export const isApple = Platform.OS === "ios";
 export const isPad = Platform.isPad;
-export const isProduction =
-  Constants.appOwnership === "standalone" && isRealDevice;
+export const isProduction = Constants.appOwnership !== "expo" && isRealDevice;
 
 export const useReview = async (unlocked, reviewDelay) => {
   const date = Date.now();
