@@ -17,3 +17,6 @@ web-build/
 app.json
 env.json
 credentials.json
+*.aab
+*.apk
+*.ipa
