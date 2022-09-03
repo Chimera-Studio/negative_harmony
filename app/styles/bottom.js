@@ -42,7 +42,7 @@ const bottomStyle: BottomStyle = StyleSheet.create({
   },
 
   scaleText: {
-    fontFamily: 'NegativeHarmonyBold',
+    fontFamily: 'NegativeHarmony-Bold',
     fontSize: 15,
     textAlign: 'center',
     width: 30,
@@ -72,14 +72,14 @@ const bottomStyle: BottomStyle = StyleSheet.create({
   },
 
   tonic: {
-    fontFamily: 'NegativeHarmonyBold',
+    fontFamily: 'NegativeHarmony-Bold',
     fontSize: 26,
     marginRight: 3,
   },
 
   name: {
     color: colors.positiveText,
-    fontFamily: 'NegativeHarmonyBold',
+    fontFamily: 'NegativeHarmony-Bold',
     fontSize: 16,
     marginLeft: 3,
   },
@@ -96,7 +96,7 @@ const bottomStyle: BottomStyle = StyleSheet.create({
     display: 'flex',
     flexShrink: 1,
     flexWrap: 'wrap',
-    fontFamily: 'NegativeHarmonyBold',
+    fontFamily: 'NegativeHarmony-Bold',
     fontSize: 15,
     marginHorizontal: 2,
     textAlign: 'center',

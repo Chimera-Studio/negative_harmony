@@ -20,7 +20,7 @@ const contentfulToReactNative = (): any => ({
       <Text
         style={[
           announcementStyle.text,
-          { fontFamily: 'NegativeHarmonyBold' },
+          { fontFamily: 'NegativeHarmony-Bold' },
         ]}
       >
         {text}
@@ -38,7 +38,7 @@ const contentfulToReactNative = (): any => ({
       <Text
         style={[
           announcementStyle.heading,
-          { fontFamily: 'NegativeHarmonyBold', fontSize: 26 },
+          { fontFamily: 'NegativeHarmony-Bold', fontSize: 26 },
         ]}
       >
         {children}
@@ -48,7 +48,7 @@ const contentfulToReactNative = (): any => ({
       <Text
         style={[
           announcementStyle.heading,
-          { fontFamily: 'NegativeHarmonyBold', fontSize: 24 },
+          { fontFamily: 'NegativeHarmony-Bold', fontSize: 24 },
         ]}
       >
         {children}
@@ -58,7 +58,7 @@ const contentfulToReactNative = (): any => ({
       <Text
         style={[
           announcementStyle.heading,
-          { fontFamily: 'NegativeHarmonyBold', fontSize: 22 },
+          { fontFamily: 'NegativeHarmony-Bold', fontSize: 22 },
         ]}
       >
         {children}
@@ -68,7 +68,7 @@ const contentfulToReactNative = (): any => ({
       <Text
         style={[
           announcementStyle.heading,
-          { fontFamily: 'NegativeHarmonyBold', fontSize: 20 },
+          { fontFamily: 'NegativeHarmony-Bold', fontSize: 20 },
         ]}
       >
         {children}
@@ -78,7 +78,7 @@ const contentfulToReactNative = (): any => ({
       <Text
         style={[
           announcementStyle.heading,
-          { fontFamily: 'NegativeHarmonyBold', fontSize: 18 },
+          { fontFamily: 'NegativeHarmony-Bold', fontSize: 18 },
         ]}
       >
         {children}
@@ -88,7 +88,7 @@ const contentfulToReactNative = (): any => ({
       <Text
         style={[
           announcementStyle.heading,
-          { fontFamily: 'NegativeHarmonyBold', fontSize: 15 },
+          { fontFamily: 'NegativeHarmony-Bold', fontSize: 15 },
         ]}
       >
         {children}

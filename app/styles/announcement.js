@@ -9,7 +9,7 @@ type AnnouncementStyle = {
 const announcementStyle: AnnouncementStyle = StyleSheet.create({
   title: {
     color: colors.black,
-    fontFamily: 'NegativeHarmonyBold',
+    fontFamily: 'NegativeHarmony-Bold',
     fontSize: 24,
     marginBottom: 40,
     marginTop: 40,
@@ -18,7 +18,7 @@ const announcementStyle: AnnouncementStyle = StyleSheet.create({
 
   text: {
     color: colors.black,
-    fontFamily: 'NegativeHarmonyRegular',
+    fontFamily: 'NegativeHarmony',
     fontSize: 16,
   },
 
@@ -36,7 +36,7 @@ const announcementStyle: AnnouncementStyle = StyleSheet.create({
   listCount: {
     alignSelf: 'center',
     color: colors.blue,
-    fontFamily: 'NegativeHarmonyBold',
+    fontFamily: 'NegativeHarmony-Bold',
     fontSize: 15,
     marginRight: 6,
   },
@@ -61,7 +61,7 @@ const announcementStyle: AnnouncementStyle = StyleSheet.create({
 
   buttonText: {
     color: colors.white,
-    fontFamily: 'NegativeHarmonyBold',
+    fontFamily: 'NegativeHarmony-Bold',
     fontSize: 16,
     textAlign: 'center',
   },

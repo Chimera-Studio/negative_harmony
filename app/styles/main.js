@@ -47,7 +47,7 @@ const mainStyle: MainStyle = StyleSheet.create({
   },
   alertText: {
     color: colors.black,
-    fontFamily: 'NegativeHarmonyBold',
+    fontFamily: 'NegativeHarmony-Bold',
     fontSize: 18,
     textAlign: 'center',
   },

@@ -24,7 +24,7 @@ const chordsStyle: ChordsStyle = StyleSheet.create({
   },
   soundButtonText: {
     textAlign: 'center',
-    fontFamily: 'NegativeHarmonyBold',
+    fontFamily: 'NegativeHarmony-Bold',
     marginLeft: 5,
     color: colors.white,
   },

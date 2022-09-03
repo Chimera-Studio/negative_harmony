@@ -47,7 +47,7 @@ function Info(): Node {
             {t('info.disclamer_1')}{' '}
             <Text
               style={{
-                fontFamily: 'NegativeHarmonyBold',
+                fontFamily: 'NegativeHarmony-Bold',
                 color: colors.red,
               }}
             >

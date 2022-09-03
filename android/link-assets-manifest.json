@@ -1,0 +1,13 @@
+{
+  "migIndex": 1,
+  "data": [
+    {
+      "path": "app/assets/fonts/NegativeHarmony-Bold.ttf",
+      "sha1": "5badbb44231b701baf77680db3d6b27ba33e41af"
+    },
+    {
+      "path": "app/assets/fonts/NegativeHarmony.ttf",
+      "sha1": "59895097e45842b87eb32f748fd60bc331fc5a72"
+    }
+  ]
+}

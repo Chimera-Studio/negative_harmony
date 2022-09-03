@@ -30,7 +30,7 @@ const navigationStyle: NavigationStyle = StyleSheet.create({
   },
   switchText: {
     color: colors.white,
-    fontFamily: 'NegativeHarmonyBold',
+    fontFamily: 'NegativeHarmony-Bold',
     fontSize: 12,
     textAlign: 'center',
   },

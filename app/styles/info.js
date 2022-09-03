@@ -20,7 +20,7 @@ const infoStyle: InfoStyle = StyleSheet.create({
   },
   title: {
     color: colors.black,
-    fontFamily: 'NegativeHarmonyBold',
+    fontFamily: 'NegativeHarmony-Bold',
     textAlign: 'center',
     fontSize: 22,
     marginTop: '10%',
@@ -28,21 +28,21 @@ const infoStyle: InfoStyle = StyleSheet.create({
   },
   subTitle: {
     color: colors.black,
-    fontFamily: 'NegativeHarmonyBold',
+    fontFamily: 'NegativeHarmony-Bold',
     textAlign: 'left',
     fontSize: 16,
     marginVertical: 15,
   },
   contactTitle: {
     color: colors.black,
-    fontFamily: 'NegativeHarmonyBold',
+    fontFamily: 'NegativeHarmony-Bold',
     textAlign: 'left',
     fontSize: 14,
     marginVertical: 15,
   },
   text: {
     color: colors.black,
-    fontFamily: 'NegativeHarmonyRegular',
+    fontFamily: 'NegativeHarmony',
     textAlign: 'left',
     fontSize: 14,
   },

@@ -23,7 +23,7 @@ const rewardedStyle: RewardedStyle = StyleSheet.create({
   paragraphText: {
     color: colors.black,
     textAlign: 'center',
-    fontFamily: 'NegativeHarmonyBold',
+    fontFamily: 'NegativeHarmony-Bold',
     fontSize: 24,
     marginVertical: 2,
   },
@@ -52,13 +52,13 @@ const rewardedStyle: RewardedStyle = StyleSheet.create({
   startText: {
     color: colors.white,
     textAlign: 'center',
-    fontFamily: 'NegativeHarmonyBold',
+    fontFamily: 'NegativeHarmony-Bold',
     fontSize: 20,
   },
   disclamer: {
     color: colors.black,
     textAlign: 'center',
-    fontFamily: 'NegativeHarmonyRegular',
+    fontFamily: 'NegativeHarmony',
     fontSize: 12,
   },
 });
