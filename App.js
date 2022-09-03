@@ -1,39 +1,52 @@
-import React from "react";
-import { Provider } from "react-redux";
-import AppLoading from "expo-app-loading";
-import { useFonts } from "expo-font";
+// @flow
+import React, { useEffect, useState } from 'react';
+import CodePush from 'react-native-code-push';
+import { Provider } from 'react-redux';
+import SplashScreen from 'react-native-splash-screen';
+import Body from './app/components/Body';
+import PortalProvider from './app/components/containers/portal/PortalProvider';
+import { getDeviceInfo } from './app/utils';
+import { configureStore } from './app/store';
+import type { ReduxState } from './app/types';
 
-import Body from "./app/components/screens/Body";
-import { configureStore } from "./app/store";
-
-const initialState = {
+const initialState: ReduxState = {
+  static: {
+    reviewMinutes: 2,
+    loadTime: Date.now(),
+  },
   global: {
-    reviewDelay: Date.now() + 60000,
-    scale: null,
-    chord: null,
-    axis: { status: false, angle: "0deg" },
-    activeKey: { x: 0, y: 0, group: null, field: null },
-    showBanner: true,
+    axis: { status: false, angle: 0 },
+    activeKey: {
+      x: 0, y: 0, group: null, field: null,
+    },
+    showAds: true,
     unlocked: false,
   },
 };
 const store = configureStore(initialState);
 
 function App() {
-  const [fontsLoaded] = useFonts({
-    NegativeHarmonyRegular: require("./app/assets/fonts/NegativeHarmony-Montserrat-Regular.ttf"),
-    NegativeHarmonyBold: require("./app/assets/fonts/NegativeHarmony-Montserrat-Bold.ttf"),
-  });
+  const [setupPending, setSetupPending] = useState(true);
 
-  if (!fontsLoaded) {
-    return <AppLoading />;
-  } else {
-    return (
-      <Provider store={store}>
+  useEffect(() => {
+    const handleDeviceSetup = async () => {
+      await getDeviceInfo();
+      setSetupPending(false);
+      SplashScreen.hide();
+    };
+
+    handleDeviceSetup();
+  }, []);
+
+  if (setupPending) return null;
+
+  return (
+    <Provider store={store}>
+      <PortalProvider>
         <Body />
-      </Provider>
-    );
-  }
+      </PortalProvider>
+    </Provider>
+  );
 }
 
-export default App;
+export default (CodePush(App): any);

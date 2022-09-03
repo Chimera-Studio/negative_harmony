@@ -1,4 +1,6 @@
-import React, { useEffect, useRef, useState } from "react";
+// @flow
+import React, { useEffect, useRef, useState } from 'react';
+import type { Node } from 'react';
 import {
   Text,
   View,
@@ -8,36 +10,33 @@ import {
   Modal,
   Animated,
   Easing,
-} from "react-native";
-import { useSelector, useDispatch } from "react-redux";
-import { Link } from "react-router-native";
-import { indexOf, times, includes, forEach, isEqual, sortBy } from "lodash";
+} from 'react-native';
+import { useSelector } from 'react-redux';
+import { Link } from 'react-router-native';
+import {
+  indexOf, times, includes, forEach, isEqual, sortBy,
+  map,
+} from 'lodash';
+import Bottom from '../containers/bottom/Bottom';
+import Legend from '../elements/misc/Legend';
+import LegendExtra from '../elements/misc/LegendExtra';
+import Disclamer from '../../assets/icons/Disclamer';
+import Arrow from '../../assets/icons/Arrow';
+import useLocale from '../../locales';
+import { useReview } from '../../utils/hooks';
+import { selectors } from '../../store/globalStore';
+import scalesChordsStyle from '../../styles/scales_chords';
+import colors from '../../styles/colors';
 
-import Bottom from "../block/Bottom";
-import Legend from "../../assets/img/legend.svg";
-import LegendExtra from "../../assets/img/legendExtra.svg";
-import Disclamer from "../../assets/img/disclamer.svg";
-import ListArrow from "../../assets/img/arrow.svg";
-
-import useLocale from "../../locales";
-import { useReview } from "../../utils";
-import { actions } from "../../store/globalStore";
-
-import colors from "../../styles/colors";
-import scales_chords_style from "../../styles/scales_chords_styles";
-
-const Chords = (props) => {
-  const t = useLocale;
-  const callReview = useReview;
-  const dispatch = useDispatch();
+function Chords(): Node {
+  const { t } = useLocale();
+  const reviewApp = useReview();
   const scrollChords = useRef(null);
-  const global = useSelector((state) => state.global);
-  const lists = useSelector((state) => {
-    return {
-      scales: state.cms.scales,
-      chords: state.cms.chords,
-    };
-  });
+  const global = useSelector(selectors.getGlobal, isEqual);
+  const lists = useSelector((state) => ({
+    scales: state.cms.scales,
+    chords: state.cms.chords,
+  }), isEqual);
   const [selectedChord, setSelectedChord] = useState(lists.chords[0]);
   const [chords, setChords] = useState(null);
   const [tonic, setTonic] = useState(0);
@@ -57,7 +56,7 @@ const Chords = (props) => {
 
     const shift = indexOf(
       global.scales.positiveRange,
-      global.scales.positive[tonicIndex]
+      global.scales.positive[tonicIndex],
     );
     const shiftRangeP = global.scales.positiveRange.slice();
     times(shift, () => shiftRangeP.push(shiftRangeP.shift()));
@@ -69,14 +68,14 @@ const Chords = (props) => {
       const obj = {
         diatonic: !includes(
           global.scales.positive,
-          shiftRangeP[selected.value[i]]
+          shiftRangeP[selected.value[i]],
         ),
         note: shiftRangeP[selected.value[i]],
       };
       const objNeg = {
         diatonic: !includes(
           global.scales.negative,
-          shiftRangeN[selected.value[i]]
+          shiftRangeN[selected.value[i]],
         ),
         note: shiftRangeN[selected.value[i]],
       };
@@ -99,32 +98,32 @@ const Chords = (props) => {
     pattern.reverse();
 
     const handleFindChordMatch = () => {
-      let chordName = t("chords.noMatch");
+      let chordName = t('chords.noMatch');
       forEach(lists.chords, (c) => {
         if (isEqual(c.value, pattern)) {
           chordName = c.display;
-          return;
         }
       });
 
-      if (chordName === t("chords.noMatch")) {
+      if (chordName === t('chords.noMatch')) {
         times(11, (i) => {
           forEach(lists.chords, (c) => {
             const checkPattern = c.value.map((value) => {
               const calc = value - i;
               if (calc <= -1) return Number(12 - Math.abs(calc));
               if (calc === 0) return 0;
+
               return calc;
             });
 
             if (isEqual(checkPattern, pattern)) {
               chordName = c.display;
+
               return;
             }
 
             if (isEqual(sortBy(checkPattern), sortBy(pattern))) {
               chordName = c.display;
-              return;
             }
           });
         });
@@ -139,7 +138,7 @@ const Chords = (props) => {
       positive: positiveChord,
       positiveName: selected.display,
       negative: negativeChord,
-      negativeName: negativeName,
+      negativeName,
     });
   };
 
@@ -151,103 +150,102 @@ const Chords = (props) => {
 
   const handleTonic = (index) => {
     setTonic(index);
-    scrollChords.current.scrollTo({
+    scrollChords.current?.scrollTo({
       x: 110 * index,
       animated: false,
     });
 
     handleChords(selectedChord, index);
-    callReview(global.unlocked, global.reviewDelay);
-  };
-
-  const handleHideBanner = () => {
-    dispatch(actions.showBanner(false));
-  };
-
-  const handleScreenAnimation = (to) => {
-    Animated.timing(screenOpacity, {
-      toValue: to,
-      duration: 500,
-      useNativeDriver: true,
-      easing: Easing.linear,
-    }).start();
+    reviewApp();
   };
 
   useEffect(() => {
+    const handleScreenAnimation = (to) => {
+      Animated.timing(screenOpacity, {
+        toValue: to,
+        duration: 500,
+        useNativeDriver: true,
+        easing: Easing.linear,
+      }).start();
+    };
+
     handleScreenAnimation(1);
     handleChords(selectedChord, tonic);
 
     return () => handleScreenAnimation(0);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
     <Animated.View
-      style={[scales_chords_style.wrapper, { opacity: screenOpacity }]}
+      style={[scalesChordsStyle.wrapper, { opacity: screenOpacity }]}
     >
-      <View style={scales_chords_style.selectChordsWrapper}>
-        {props.legend ? (
-          <View style={scales_chords_style.legendContainer}>
-            <Legend style={scales_chords_style.legend} />
+      <View style={scalesChordsStyle.selectChordsWrapper}>
+        {global.showLegend ? (
+          <View style={scalesChordsStyle.legendContainer}>
+            <Legend style={scalesChordsStyle.legend} />
 
-            <View style={scales_chords_style.legendExtra}>
+            <View style={scalesChordsStyle.legendExtra}>
               <LegendExtra style={{ flexShrink: 1 }} />
               <Link
                 to="/info"
                 underlayColor={colors.transparent}
-                style={scales_chords_style.disclamerBtn}
+                style={scalesChordsStyle.disclamerBtn}
               >
-                <Disclamer style={scales_chords_style.disclamer} />
+                <Disclamer style={scalesChordsStyle.disclamer} />
               </Link>
             </View>
           </View>
         ) : (
           <>
-            <Text style={scales_chords_style.selectTextExp}>
-              {t("select.chords")}
+            <Text style={scalesChordsStyle.selectTextExp}>
+              {t('select.chords')}
             </Text>
 
-            <View style={scales_chords_style.selectedScaleNameWrapper}>
-              <Text style={scales_chords_style.selectedScaleKey}>
+            <View style={scalesChordsStyle.selectedScaleNameWrapper}>
+              <Text style={scalesChordsStyle.selectedScaleKey}>
                 {global.scales.positive[0]}
               </Text>
-              <Text style={scales_chords_style.selectedScaleName}>
+              <Text style={scalesChordsStyle.selectedScaleName}>
                 {selectedScale.name}
               </Text>
             </View>
 
             <TouchableOpacity
-              style={scales_chords_style.selectInput}
+              style={scalesChordsStyle.selectInput}
               onPress={() => setOpenSelect(true)}
             >
-              <Text style={scales_chords_style.selectInputText}>
-                {selectedChord.name}
-              </Text>
-              <ListArrow style={scales_chords_style.selectListArrow} />
+              <View>
+                <Text style={scalesChordsStyle.selectInputText}>
+                  {selectedChord.name}
+                </Text>
+                <Arrow style={scalesChordsStyle.selectListArrow} />
+              </View>
             </TouchableOpacity>
           </>
         )}
       </View>
 
-      <View style={scales_chords_style.chordsWrapper} onLayout={getDimentions}>
-        {!props.displayAds || global.unlocked ? (
-          <View style={scales_chords_style.scrollChords}>
-            <Text style={scales_chords_style.scrollChordsExpText}>
-              {t("select.tonics")}
+      <View style={scalesChordsStyle.chordsWrapper} onLayout={getDimentions}>
+        {global.unlocked ? (
+          <View style={scalesChordsStyle.scrollChords}>
+            <Text style={scalesChordsStyle.scrollChordsExpText}>
+              {t('select.tonics')}
             </Text>
 
             <ScrollView
               ref={scrollChords}
-              horizontal={true}
+              horizontal
               showsHorizontalScrollIndicator={false}
-              contentContainerStyle={scales_chords_style.scrollChordsWrapper}
+              contentContainerStyle={scalesChordsStyle.scrollChordsWrapper}
             >
               <View
                 style={
-                  (scales_chords_style.scrollChordsSpace,
+                  (scalesChordsStyle.scrollChordsSpace,
                   { width: tonicSpacer })
                 }
               />
-              {global.scales.positive.map((note, index) => (
+              {map(global.scales.positive, (note: string, index: number) => (
                 <React.Fragment key={note + index}>
                   {global.scales.positive.length - 1 !== index && (
                     <TouchableHighlight
@@ -255,8 +253,8 @@ const Chords = (props) => {
                       underlayColor={colors.lightBlue}
                       style={
                         index === tonic
-                          ? scales_chords_style.scrollChordsNoteSelected
-                          : scales_chords_style.scrollChordsNote
+                          ? scalesChordsStyle.scrollChordsNoteSelected
+                          : scalesChordsStyle.scrollChordsNote
                       }
                       key={index}
                       onPress={() => handleTonic(index)}
@@ -264,8 +262,8 @@ const Chords = (props) => {
                       <Text
                         style={
                           index === tonic
-                            ? scales_chords_style.scrollChordsNoteTextSelected
-                            : scales_chords_style.scrollChordsNoteText
+                            ? scalesChordsStyle.scrollChordsNoteTextSelected
+                            : scalesChordsStyle.scrollChordsNoteText
                         }
                       >
                         {note}
@@ -276,7 +274,7 @@ const Chords = (props) => {
               ))}
               <View
                 style={
-                  (scales_chords_style.scrollChordsSpace,
+                  (scalesChordsStyle.scrollChordsSpace,
                   { width: tonicSpacer })
                 }
               />
@@ -285,12 +283,11 @@ const Chords = (props) => {
         ) : (
           <Link
             to="/rewarded"
-            onPress={handleHideBanner}
             underlayColor={colors.blueTransparent}
-            style={scales_chords_style.rewardedOpen}
+            style={scalesChordsStyle.rewardedOpen}
           >
-            <Text style={scales_chords_style.rewardedOpenText}>
-              {t("cta.chords")}
+            <Text style={scalesChordsStyle.rewardedOpenText}>
+              {t('cta.chords')}
             </Text>
           </Link>
         )}
@@ -298,43 +295,30 @@ const Chords = (props) => {
 
       <Bottom data={chords} />
 
-      <Modal animationType="fade" transparent={true} visible={openSelect}>
-        <View style={scales_chords_style.selectListWrapper}>
+      <Modal animationType="fade" transparent visible={openSelect}>
+        <View style={scalesChordsStyle.selectListWrapper}>
           <ScrollView
             showsVerticalScrollIndicator={false}
-            style={scales_chords_style.selectList}
-            centerContent={true}
+            style={scalesChordsStyle.selectList}
+            centerContent
           >
-            {lists.chords.map((item, index) => (
+            {map(lists.chords, (item: Object, index: number) => (
               <TouchableOpacity
                 key={item.name}
                 style={
                   index === lists.chords.length - 1
-                    ? scales_chords_style.selectItemNoBorder
-                    : scales_chords_style.selectItem
+                    ? scalesChordsStyle.selectItemNoBorder
+                    : scalesChordsStyle.selectItem
                 }
-                onPress={
-                  global.unlocked
-                    ? () => handleSelect(item)
-                    : index === 0
-                    ? () => handleSelect(item)
-                    : null
-                }
+                onPress={() => handleSelect(item)}
+                disabled={!global.unlocked && index !== 0}
               >
                 <Text
-                  style={[
-                    global.unlocked
-                      ? scales_chords_style.selectText
-                      : index === 0
-                      ? scales_chords_style.selectText
-                      : scales_chords_style.selectDisabledText,
+                  style={[global.unlocked || index === 0 ? scalesChordsStyle.selectText : scalesChordsStyle.selectDisabledText,
                     {
-                      color:
-                        selectedChord.name === item.name
-                          ? colors.blue
-                          : global.unlocked
-                          ? colors.black
-                          : colors.whiteGray,
+                      color: colors.whiteGray,
+                      ...(global.unlocked && { color: colors.black }),
+                      ...(selectedChord.name === item.name && { color: colors.blue }),
                     },
                   ]}
                 >
@@ -347,6 +331,6 @@ const Chords = (props) => {
       </Modal>
     </Animated.View>
   );
-};
+}
 
 export default Chords;

@@ -1,92 +1,89 @@
-import { Platform } from "react-native";
-import * as StoreReview from "expo-store-review";
-import * as Device from "expo-device";
-import Constants from "expo-constants";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useLocation } from "react-router-dom";
-import { localStorageKeys, admob } from "../tokens";
+// @flow
+/* eslint-disable no-undef */
+import { Dimensions, Platform } from 'react-native';
+import DeviceInfo from 'react-native-device-info';
+import { AdsConsent, AdsConsentStatus } from 'react-native-google-mobile-ads';
+import { includes } from 'lodash';
+// $FlowFixMe[cannot-resolve-module] (Git Ignored)
+import ENV from '../../env.json';
 
-export const isRealDevice = Device.isDevice;
-export const isApple = Platform.OS === "ios";
-export const isPad = Platform.isPad;
-export const isProduction = Constants.appOwnership !== "expo" && isRealDevice;
+type DeviceInfoType = {
+  isApple: boolean,
+  isTablet: boolean,
+  isiPhone: boolean,
+  isRealDevice?: boolean,
+  isAdminDevice?: boolean,
+  showAdminActions?: boolean,
+  deviceId?: string,
+};
 
-export const useReview = async (unlocked, reviewDelay) => {
-  const date = Date.now();
-  if (unlocked && reviewDelay <= date) {
-    const timestamp = await AsyncStorage.getItem(
-      localStorageKeys.reviewTimestamp
-    );
+export const isApple: boolean = Platform.OS === 'ios';
+export const isTablet: boolean = DeviceInfo.isTablet();
+export const isiPhone: boolean = isApple && !isTablet;
+export const deviceInfo: DeviceInfoType = {
+  isApple,
+  isTablet,
+  isiPhone,
+};
+export const deviceWidth: number = Dimensions.get('screen').width;
+export const deviceHeight: number = Dimensions.get('screen').height;
 
-    if (Number(timestamp) <= date || Number(timestamp) === 0) {
-      if (
-        (await StoreReview.isAvailableAsync()) &&
-        (await StoreReview.hasAction())
-      ) {
-        StoreReview.requestReview();
-      }
+export const getDeviceInfo = async (): Promise<any> => {
+  const isEmulator = await DeviceInfo.isEmulator();
+  const deviceID = await DeviceInfo.getUniqueId();
+  const isAdminDevice = includes(ENV.ADMIN_DEVICE_IDS, deviceID);
+  const showAdminActions = isEmulator || isAdminDevice;
 
-      const newTimestamp = new Date(date)
-        .setMonth(new Date(date).getMonth() + 1)
-        .valueOf();
-      await AsyncStorage.setItem(
-        localStorageKeys.reviewTimestamp,
-        JSON.stringify(newTimestamp)
-      );
-    }
+  deviceInfo.isRealDevice = !isEmulator;
+  deviceInfo.isAdminDevice = isAdminDevice;
+  deviceInfo.showAdminActions = showAdminActions;
+  deviceInfo.deviceId = deviceID;
+};
+
+// $FlowFixMe
+export const isPromise = (p) => !!p && typeof p.then === 'function';
+
+export const checkAdsConsent = async (): Promise<{
+  showAds: boolean,
+  personalisedAds: boolean,
+}> => {
+  const { selectPersonalisedAds, storeAndAccessInformationOnDevice } = await AdsConsent.getUserChoices();
+
+  return {
+    showAds: storeAndAccessInformationOnDevice,
+    personalisedAds: selectPersonalisedAds,
+  };
+};
+
+export const handleAdsConsent = async (): Promise<{
+  showAds: boolean,
+  personalisedAds: boolean,
+}> => {
+  const consentInfo = await AdsConsent.requestInfoUpdate();
+  const consentObtained = consentInfo.status === AdsConsentStatus.OBTAINED;
+  const consentRequired = consentInfo.status === AdsConsentStatus.REQUIRED;
+
+  if (consentObtained) {
+    const { showAds, personalisedAds } = await checkAdsConsent();
+
+    return {
+      showAds,
+      personalisedAds,
+    };
   }
-};
 
-export const storeDataToLocal = async (key, dataString) => {
-  await AsyncStorage.setItem(key, dataString);
-};
+  if (consentInfo.isConsentFormAvailable && consentRequired) {
+    await AdsConsent.showForm();
+    const { showAds, personalisedAds } = await checkAdsConsent();
 
-export const useAdmobIds = (adIds) => {
-  const realAd = isRealDevice && isProduction;
-  let adId = null;
-
-  const getBannerID = () => {
-    if (!adIds) return null;
-
-    if (isApple) {
-      adId = realAd ? adIds.banner.ios : admob.banner.ios_test;
-    } else {
-      adId = realAd ? adIds.banner.android : admob.banner.android_test;
-    }
-
-    return adId;
-  };
-
-  const getRewardedID = () => {
-    if (!adIds) return null;
-
-    if (isApple) {
-      adId = realAd ? adIds.rewarded.ios : admob.rewarded.ios_test;
-    } else {
-      adId = realAd ? adIds.rewarded.android : admob.rewarded.android_test;
-    }
-
-    return adId;
-  };
+    return {
+      showAds,
+      personalisedAds,
+    };
+  }
 
   return {
-    banner: getBannerID(),
-    rewarded: getRewardedID(),
-  };
-};
-
-export const useLocationInfo = () => {
-  const location = useLocation();
-  const pathScales = location.pathname === "/";
-  const pathChords = location.pathname === "/chords";
-  const pathRewarded = location.pathname === "/rewarded";
-  const pathInfo = location.pathname === "/info";
-
-  return {
-    current: location.pathname,
-    isScales: pathScales,
-    isChords: pathChords,
-    isRewarded: pathRewarded,
-    isInfo: pathInfo,
+    showAds: true,
+    personalisedAds: true,
   };
 };

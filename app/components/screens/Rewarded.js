@@ -1,4 +1,6 @@
-import React, { useEffect, useRef, useState } from "react";
+// @flow
+import React, { useEffect, useRef, useState } from 'react';
+import type { Node } from 'react';
 import {
   Text,
   View,
@@ -6,131 +8,106 @@ import {
   ActivityIndicator,
   Animated,
   Easing,
-} from "react-native";
-import { AdMobRewarded } from "expo-ads-admob";
-import { useSelector, useDispatch } from "react-redux";
-import { Link } from "react-router-native";
-import { useHistory } from "react-router-dom";
-import { get } from "lodash";
+} from 'react-native';
+import { useDispatch, useSelector } from 'react-redux';
+import { RewardedAdEventType } from 'react-native-google-mobile-ads';
+import { Link, useNavigate } from 'react-router-native';
+import { isEqual } from 'lodash';
+import Exit from '../../assets/icons/Exit';
+import useLocale from '../../locales';
+import { useRewardedAd } from '../../utils/hooks';
+import { actions } from '../../store/globalStore';
+import { selectors as selectorsCMS } from '../../store/cmsStore';
+import rewardedStyle from '../../styles/rewarded';
+import mainStyle from '../../styles/main';
+import colors from '../../styles/colors';
+import type { ReduxState } from '../../types';
 
-import Exit from "../../assets/icons/Exit";
-
-import useLocale from "../../locales";
-import { useAdmobIds } from "../../utils";
-import { actions } from "../../store/globalStore";
-
-import colors from "../../styles/colors";
-import main_style from "../../styles/main_style";
-import rewarded_style from "../../styles/rewarded_style";
-
-const Rewarded = () => {
-  const t = useLocale;
+function Rewarded(): Node {
+  const { t } = useLocale();
   const dispatch = useDispatch();
-  const history = useHistory();
-  const cmsData = useSelector((state) => state.cms.master);
-  const unlocked = useSelector((state) => state.global.unlocked);
-  const admobId = useAdmobIds(get(cmsData, "adIds", null)).rewarded;
-  const [timeoutState, setTimeoutState] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+  const personalisedAds = useSelector((state: ReduxState) => (state.global.personalisedAds), isEqual);
+  const { rewarded } = useSelector(selectorsCMS.getAdmobIds, isEqual);
+  const [adLoading, setAdLoading] = useState(true);
+  const rewardedAd = useRewardedAd(rewarded, personalisedAds);
   const screenOpacity = useRef(new Animated.Value(0)).current;
 
-  const handleBack = (e) => {
-    if (loading) {
-      e.preventDefault();
+  useEffect(() => {
+    if (rewardedAd) {
+      rewardedAd.addAdEventListener(
+        RewardedAdEventType.LOADED, () => {
+          setAdLoading(false);
+        });
 
-      return;
+      rewardedAd.addAdEventListener(
+        RewardedAdEventType.EARNED_REWARD, () => {
+          dispatch(actions.unlockChords());
+          navigate('/chords');
+        },
+      );
+
+      rewardedAd.load();
     }
 
-    dispatch(actions.showBanner(true));
-  };
-
-  const handleReset = () => {
-    setTimeoutState(
-      setTimeout(() => {
-        setLoading(false);
-      }, 5000)
-    );
-  };
-
-  const handleRequest = async () => {
-    setLoading(true);
-    await AdMobRewarded.setAdUnitID(admobId);
-    await AdMobRewarded.requestAdAsync();
-    await AdMobRewarded.showAdAsync();
-  };
-
-  AdMobRewarded.addEventListener("rewardedVideoDidFailToLoad", () => {
-    handleReset();
-  });
-
-  AdMobRewarded.addEventListener("rewardedVideoDidFailToPresent", () => {
-    handleReset();
-  });
-
-  AdMobRewarded.addEventListener("rewardedVideoDidPresent", () => {
-    handleReset();
-  });
-
-  AdMobRewarded.addEventListener("rewardedVideoUserDidEarnReward", () => {
-    dispatch(actions.unlockChords());
-    clearTimeout(timeoutState);
-  });
-
-  const handleScreenAnimation = (to) => {
-    Animated.timing(screenOpacity, {
-      toValue: to,
-      duration: 500,
-      useNativeDriver: true,
-      easing: Easing.linear,
-    }).start();
-  };
+    return () => {
+      rewardedAd?.removeAllListeners();
+    };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [rewardedAd]);
 
   useEffect(() => {
-    if (unlocked) {
-      clearTimeout(timeoutState);
-      history.push("/chords");
-    }
-  }, [unlocked]);
+    const handleScreenAnimation = (to) => {
+      Animated.timing(screenOpacity, {
+        toValue: to,
+        duration: 500,
+        useNativeDriver: true,
+        easing: Easing.linear,
+      }).start();
+    };
 
-  useEffect(() => {
     handleScreenAnimation(1);
 
     return () => handleScreenAnimation(0);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const requestReward = () => {
+    rewardedAd?.show();
+  };
+
   return (
-    <Animated.View style={[rewarded_style.wrapper, { opacity: screenOpacity }]}>
+    <Animated.View style={[rewardedStyle.wrapper, { opacity: screenOpacity }]}>
       <Link
         to="/chords"
-        onPress={(e) => handleBack(e)}
         underlayColor={colors.transparent}
-        style={main_style.exit}
+        style={mainStyle.exit}
       >
-        <Exit color={!loading ? colors.blue : colors.disabled} />
+        <Exit color={adLoading ? colors.disabled : colors.blue} />
       </Link>
-      <View style={rewarded_style.paragraph}>
-        <Text style={rewarded_style.paragraphText}>
-          {t("rewarded.paragraph_1")}
+      <View style={rewardedStyle.paragraph}>
+        <Text style={rewardedStyle.paragraphText}>
+          {t('rewarded.paragraph_1')}
         </Text>
-        <Text style={rewarded_style.paragraphText}>
-          {t("rewarded.paragraph_2")}
+        <Text style={rewardedStyle.paragraphText}>
+          {t('rewarded.paragraph_2')}
         </Text>
       </View>
       <TouchableOpacity
-        style={!loading ? rewarded_style.start : rewarded_style.disabled}
+        style={adLoading ? rewardedStyle.disabled : rewardedStyle.start}
         activeOpacity={1}
-        disabled={loading}
-        onPress={handleRequest}
+        disabled={adLoading}
+        onPress={requestReward}
       >
-        {!loading ? (
-          <Text style={rewarded_style.startText}>{t("rewarded.cta")}</Text>
-        ) : (
+        {adLoading ? (
           <ActivityIndicator size="large" color={colors.white} />
+        ) : (
+          <Text style={rewardedStyle.startText}>{t('rewarded.cta')}</Text>
         )}
       </TouchableOpacity>
-      <Text style={rewarded_style.disclamer}>{t("rewarded.disclamer")}</Text>
+      <Text style={rewardedStyle.disclamer}>{t('rewarded.disclamer')}</Text>
     </Animated.View>
   );
-};
+}
 
 export default Rewarded;

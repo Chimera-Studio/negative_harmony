@@ -1,35 +1,33 @@
-import React from "react";
+// @flow
+import React from 'react';
+import type { Node } from 'react';
 import {
-  SafeAreaView,
-  ScrollView,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
-import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
+  SafeAreaView, ScrollView, StatusBar, Text, TouchableOpacity, View,
+} from 'react-native';
+import { documentToReactComponents } from '@contentful/rich-text-react-renderer';
+import useLocale from '../../locales';
+import { useLocalStorage } from '../../utils/hooks';
+import contentfulToReactNative from '../../utils/cmsArticleBlocks';
+import { localStorageKeys } from '../../tokens';
+import mainStyle from '../../styles/main';
+import announcementStyle from '../../styles/announcement';
 
-import WhiteBG from "../elements/WhiteBG";
+type Props = {
+  cms: Object,
+  dismiss: Function,
+  reload: Function,
+};
 
-import useLocale from "../../locales";
-import { storeDataToLocal } from "../../utils";
-import contentfulToReactNative from "../../utils/cmsArticleBlocks";
-
-import main_style from "../../styles/main_style";
-import announcement_style from "../../styles/announcement_style";
-import { localStorageKeys } from "../../tokens";
-
-const Announcement = (props) => {
-  const t = useLocale;
+function Announcement(props: Props): Node {
+  const { t } = useLocale();
+  const localStorage = useLocalStorage();
   const { cms } = props;
-  const title = cms ? t("announcement.title") : t("error.title");
-  const cta = cms ? t("announcement.cta") : t("error.cta");
+  const title = cms ? t('announcement.title') : t('error.title');
+  const cta = cms ? t('announcement.cta') : t('error.cta');
 
   const handleButton = () => {
     if (cms) {
-      storeDataToLocal(
-        localStorageKeys.announcementTimestamp,
-        Date.now().toString()
-      );
+      localStorage.setItem(localStorageKeys.announcementTimestamp, String(Date.now()));
       props.dismiss();
 
       return;
@@ -39,35 +37,33 @@ const Announcement = (props) => {
   };
 
   return (
-    <View style={main_style.container}>
-      <WhiteBG />
-      <SafeAreaView style={main_style.safe}>
-        <View style={main_style.container}>
-          <Text style={announcement_style.title}>{title}</Text>
+    <View style={mainStyle.container}>
+      <StatusBar hidden />
+      <SafeAreaView style={mainStyle.safe}>
+        <View style={mainStyle.container}>
+          <Text style={announcementStyle.title}>{title}</Text>
           <ScrollView
-            style={{ flex: 1 }}
-            contentContainerStyle={main_style.scrollContainer}
+            style={[{ flex: 1 }]}
+            contentContainerStyle={mainStyle.scrollContainer}
             bounces={false}
           >
             {cms ? (
-              <>
-                {documentToReactComponents(cms.json, contentfulToReactNative())}
-              </>
+              documentToReactComponents(cms.json, contentfulToReactNative())
             ) : (
-              <Text style={announcement_style.text}>{t("error.text")}</Text>
+              <Text style={announcementStyle.text}>{t('error.text')}</Text>
             )}
           </ScrollView>
           <TouchableOpacity
-            style={announcement_style.button}
+            style={announcementStyle.button}
             activeOpacity={0.6}
             onPress={handleButton}
           >
-            <Text style={announcement_style.buttonText}>{cta}</Text>
+            <Text style={announcementStyle.buttonText}>{cta}</Text>
           </TouchableOpacity>
         </View>
       </SafeAreaView>
     </View>
   );
-};
+}
 
 export default Announcement;

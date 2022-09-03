@@ -1,30 +1,31 @@
-import React, { useEffect, useRef, useState } from "react";
+// @flow
+import React, { useEffect, useRef, useState } from 'react';
+import type { Node } from 'react';
 import {
   Text,
   View,
   ScrollView,
   TouchableOpacity,
   Modal,
-  Platform,
   Animated,
   Easing,
-} from "react-native";
-import { useDispatch, useSelector } from "react-redux";
-import { Svg, Circle, Path, Polygon, G } from "react-native-svg";
-import { times } from "lodash";
-
-import Logo from "../elements/Logo";
-import Bottom from "../block/Bottom";
-import Legend from "../../assets/img/legend.svg";
-import ListArrow from "../../assets/img/arrow.svg";
-
-import useLocale from "../../locales";
-import { useReview } from "../../utils";
-import { musicScale } from "../../utils/patterns";
-import { actions } from "../../store/globalStore";
-
-import colors from "../../styles/colors";
-import scales_chords_style from "../../styles/scales_chords_styles";
+} from 'react-native';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+  Svg, Circle, Path, Polygon, G,
+} from 'react-native-svg';
+import { isEqual, times } from 'lodash';
+import Logo from '../elements/misc/Logo';
+import Bottom from '../containers/bottom/Bottom';
+import Legend from '../elements/misc/Legend';
+import Arrow from '../../assets/icons/Arrow';
+import useLocale from '../../locales';
+import { useReview } from '../../utils/hooks';
+import { musicScale } from '../../utils/patterns';
+import { actions, selectors } from '../../store/globalStore';
+import scalesChordsStyle from '../../styles/scales_chords';
+import colors from '../../styles/colors';
+import type { ReduxState } from '../../types';
 
 const keyColorBG = colors.white;
 const keyColorText = colors.negativeText;
@@ -33,34 +34,28 @@ const activeKeyColorBG = colors.blue;
 const activeKeyColorText = colors.white;
 const activeKeyColorSymbol = colors.whiteGray;
 
-const keyG1 = "G1";
-const keyG2 = "G2";
-const keyG3 = "G3";
-const keyG4 = "G4";
-const keyG5 = "G5";
-const keyG6 = "G6";
-const keyG7 = "G7";
-const keyG8 = "G8";
-const keyG9 = "G9";
-const keyG10 = "G10";
-const keyG11 = "G11";
-const keyG12 = "G12";
+const keyG1 = 'G1';
+const keyG2 = 'G2';
+const keyG3 = 'G3';
+const keyG4 = 'G4';
+const keyG5 = 'G5';
+const keyG6 = 'G6';
+const keyG7 = 'G7';
+const keyG8 = 'G8';
+const keyG9 = 'G9';
+const keyG10 = 'G10';
+const keyG11 = 'G11';
+const keyG12 = 'G12';
 
-export const Scales = (props) => {
-  const t = useLocale;
-  const callReview = useReview;
+export function Scales(): Node {
+  const { t } = useLocale();
   const dispatch = useDispatch();
-  const global = useSelector((state) => state.global);
-  const scaleList = useSelector((state) => state.cms.scales);
+  const reviewApp = useReview();
+  const global = useSelector(selectors.getGlobal, isEqual);
+  const scaleList: Object[] = useSelector((state: ReduxState) => state.cms?.scales, isEqual);
   const [openSelect, setOpenSelect] = useState(false);
   const screenOpacity = useRef(new Animated.Value(0)).current;
   const selectedScale = global.selectedScale || scaleList[0];
-
-  const handleSelect = (scale) => {
-    dispatch(actions.storeSelectedScale(scale));
-    if (global.scales) handleScales(global.activeKey.field, scale);
-    setOpenSelect(false);
-  };
 
   const handleScales = (shift, scale) => {
     const positive = [];
@@ -82,119 +77,131 @@ export const Scales = (props) => {
       actions.storeScales({
         positiveRange: clone,
         negativeRange: negativeClone,
-        positive: positive,
-        negative: negative,
-      })
+        positive,
+        negative,
+      }),
     );
   };
 
-  const handleKey = (keyG, value, angle) => {
+  const handleSelect = (scale) => {
+    dispatch(actions.storeSelectedScale(scale));
+    if (global.scales) handleScales(global.activeKey.field, scale);
+    setOpenSelect(false);
+  };
+
+  const handleKey = (keyG: string, value: number, angle: number) => {
     let x = 0;
     let y = 0;
-    if (keyG == keyG1) {
+    if (keyG === keyG1) {
       x = -15;
       y = -30;
-    } else if (keyG == keyG2) {
+    } else if (keyG === keyG2) {
       x = -30;
       y = -20;
-    } else if (keyG == keyG3) {
+    } else if (keyG === keyG3) {
       x = -30;
       y = 0;
-    } else if (keyG == keyG4) {
+    } else if (keyG === keyG4) {
       x = -30;
       y = 15;
-    } else if (keyG == keyG5) {
+    } else if (keyG === keyG5) {
       x = -20;
       y = 30;
-    } else if (keyG == keyG6) {
+    } else if (keyG === keyG6) {
       x = 0;
       y = 30;
-    } else if (keyG == keyG7) {
+    } else if (keyG === keyG7) {
       x = 15;
       y = 30;
-    } else if (keyG == keyG8) {
+    } else if (keyG === keyG8) {
       x = 30;
       y = 20;
-    } else if (keyG == keyG9) {
+    } else if (keyG === keyG9) {
       x = 30;
       y = 0;
-    } else if (keyG == keyG10) {
+    } else if (keyG === keyG10) {
       x = 30;
       y = -15;
-    } else if (keyG == keyG11) {
+    } else if (keyG === keyG11) {
       x = 20;
       y = -30;
-    } else if (keyG == keyG12) {
+    } else if (keyG === keyG12) {
       x = 0;
       y = -30;
     }
 
     dispatch(actions.storeAxis({ status: true, angle }));
-    dispatch(actions.storeActiveKey({ x, y, group: keyG, field: value }));
+    dispatch(actions.storeActiveKey({
+      x, y, group: keyG, field: value,
+    }));
 
     handleScales(value, selectedScale);
-    callReview(global.unlocked, global.reviewDelay);
-  };
-
-  const handleScreenAnimation = (to) => {
-    Animated.timing(screenOpacity, {
-      toValue: to,
-      duration: 500,
-      useNativeDriver: true,
-      easing: Easing.linear,
-    }).start();
+    reviewApp();
   };
 
   useEffect(() => {
+    const handleScreenAnimation = (to) => {
+      Animated.timing(screenOpacity, {
+        toValue: to,
+        duration: 500,
+        useNativeDriver: true,
+        easing: Easing.linear,
+      }).start();
+    };
+
     handleScreenAnimation(1);
 
     return () => handleScreenAnimation(0);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
     <Animated.View
-      style={[scales_chords_style.wrapper, { opacity: screenOpacity }]}
+      style={[scalesChordsStyle.wrapper, { opacity: screenOpacity }]}
     >
-      <View style={scales_chords_style.selectWrapper}>
-        {props.legend ? (
-          <Legend style={scales_chords_style.legend} />
+      <View style={scalesChordsStyle.selectWrapper}>
+        {global.showLegend ? (
+          <Legend style={scalesChordsStyle.legend} />
         ) : (
           <>
-            <Text style={scales_chords_style.selectTextExp}>
-              {t("select.scales")}
+            <Text style={scalesChordsStyle.selectTextExp}>
+              {t('select.scales')}
             </Text>
 
             <TouchableOpacity
-              style={scales_chords_style.selectInput}
+              activeOpacity={0.6}
+              style={scalesChordsStyle.selectInput}
               onPress={() => setOpenSelect(true)}
             >
-              <Text style={scales_chords_style.selectInputText}>
-                {selectedScale.name}
-              </Text>
-              <ListArrow style={scales_chords_style.selectListArrow} />
+              <View>
+                <Text style={scalesChordsStyle.selectInputText}>
+                  {selectedScale.name}
+                </Text>
+                <Arrow style={scalesChordsStyle.selectListArrow} />
+              </View>
             </TouchableOpacity>
           </>
         )}
       </View>
 
-      <View style={scales_chords_style.circleWrapper}>
+      <View style={scalesChordsStyle.circleWrapper}>
         <Svg
           viewBox="-30 -30 690 690"
-          style={scales_chords_style.circleKeys}
-          height={"90%"}
-          width={"90%"}
+          style={scalesChordsStyle.circleKeys}
+          height="90%"
+          width="90%"
         >
           <G>
             <G>
               <G
-                x={global.activeKey.group == keyG1 ? global.activeKey.x : 0}
-                y={global.activeKey.group == keyG1 ? global.activeKey.y : 0}
+                x={global.activeKey.group === keyG1 ? global.activeKey.x : 0}
+                y={global.activeKey.group === keyG1 ? global.activeKey.y : 0}
                 onPress={() => handleKey(keyG1, 9, 0)}
               >
                 <Path
                   fill={
-                    global.activeKey.group == keyG1 &&
-                    global.activeKey.field == 9
+                    global.activeKey.group === keyG1
+                    && global.activeKey.field === 9
                       ? activeKeyColorBG
                       : keyColorBG
                   }
@@ -203,8 +210,8 @@ export const Scales = (props) => {
                 />
                 <Path
                   fill={
-                    global.activeKey.group == keyG1 &&
-                    global.activeKey.field == 9
+                    global.activeKey.group === keyG1
+                    && global.activeKey.field === 9
                       ? activeKeyColorBG
                       : keyColorBG
                   }
@@ -213,8 +220,8 @@ export const Scales = (props) => {
                 />
                 <Path
                   fill={
-                    global.activeKey.group == keyG1 &&
-                    global.activeKey.field == 9
+                    global.activeKey.group === keyG1
+                    && global.activeKey.field === 9
                       ? activeKeyColorText
                       : keyColorText
                   }
@@ -223,14 +230,14 @@ export const Scales = (props) => {
                 />
               </G>
               <G
-                x={global.activeKey.group == keyG2 ? global.activeKey.x : 0}
-                y={global.activeKey.group == keyG2 ? global.activeKey.y : 0}
+                x={global.activeKey.group === keyG2 ? global.activeKey.x : 0}
+                y={global.activeKey.group === keyG2 ? global.activeKey.y : 0}
                 onPress={() => handleKey(keyG2, 2, 330)}
               >
                 <Path
                   fill={
-                    global.activeKey.group == keyG2 &&
-                    global.activeKey.field == 2
+                    global.activeKey.group === keyG2
+                    && global.activeKey.field === 2
                       ? activeKeyColorBG
                       : keyColorBG
                   }
@@ -239,8 +246,8 @@ export const Scales = (props) => {
                 />
                 <Path
                   fill={
-                    global.activeKey.group == keyG2 &&
-                    global.activeKey.field == 2
+                    global.activeKey.group === keyG2
+                    && global.activeKey.field === 2
                       ? activeKeyColorBG
                       : keyColorBG
                   }
@@ -249,8 +256,8 @@ export const Scales = (props) => {
                 />
                 <Path
                   fill={
-                    global.activeKey.group == keyG2 &&
-                    global.activeKey.field == 2
+                    global.activeKey.group === keyG2
+                    && global.activeKey.field === 2
                       ? activeKeyColorText
                       : keyColorText
                   }
@@ -259,14 +266,14 @@ export const Scales = (props) => {
                 />
               </G>
               <G
-                x={global.activeKey.group == keyG3 ? global.activeKey.x : 0}
-                y={global.activeKey.group == keyG3 ? global.activeKey.y : 0}
+                x={global.activeKey.group === keyG3 ? global.activeKey.x : 0}
+                y={global.activeKey.group === keyG3 ? global.activeKey.y : 0}
                 onPress={() => handleKey(keyG3, 7, 300)}
               >
                 <Path
                   fill={
-                    global.activeKey.group == keyG3 &&
-                    global.activeKey.field == 7
+                    global.activeKey.group === keyG3
+                    && global.activeKey.field === 7
                       ? activeKeyColorBG
                       : keyColorBG
                   }
@@ -275,8 +282,8 @@ export const Scales = (props) => {
                 />
                 <Path
                   fill={
-                    global.activeKey.group == keyG3 &&
-                    global.activeKey.field == 7
+                    global.activeKey.group === keyG3
+                    && global.activeKey.field === 7
                       ? activeKeyColorBG
                       : keyColorBG
                   }
@@ -285,8 +292,8 @@ export const Scales = (props) => {
                 />
                 <Path
                   fill={
-                    global.activeKey.group == keyG3 &&
-                    global.activeKey.field == 7
+                    global.activeKey.group === keyG3
+                    && global.activeKey.field === 7
                       ? activeKeyColorText
                       : keyColorText
                   }
@@ -295,14 +302,14 @@ export const Scales = (props) => {
                 />
               </G>
               <G
-                x={global.activeKey.group == keyG4 ? global.activeKey.x : 0}
-                y={global.activeKey.group == keyG4 ? global.activeKey.y : 0}
+                x={global.activeKey.group === keyG4 ? global.activeKey.x : 0}
+                y={global.activeKey.group === keyG4 ? global.activeKey.y : 0}
                 onPress={() => handleKey(keyG4, 0, 270)}
               >
                 <Path
                   fill={
-                    global.activeKey.group == keyG4 &&
-                    global.activeKey.field == 0
+                    global.activeKey.group === keyG4
+                    && global.activeKey.field === 0
                       ? activeKeyColorBG
                       : keyColorBG
                   }
@@ -311,8 +318,8 @@ export const Scales = (props) => {
                 />
                 <Path
                   fill={
-                    global.activeKey.group == keyG4 &&
-                    global.activeKey.field == 0
+                    global.activeKey.group === keyG4
+                    && global.activeKey.field === 0
                       ? activeKeyColorText
                       : keyColorText
                   }
@@ -321,14 +328,14 @@ export const Scales = (props) => {
                 />
               </G>
               <G
-                x={global.activeKey.group == keyG5 ? global.activeKey.x : 0}
-                y={global.activeKey.group == keyG5 ? global.activeKey.y : 0}
+                x={global.activeKey.group === keyG5 ? global.activeKey.x : 0}
+                y={global.activeKey.group === keyG5 ? global.activeKey.y : 0}
                 onPress={() => handleKey(keyG5, 5, 240)}
               >
                 <Path
                   fill={
-                    global.activeKey.group == keyG5 &&
-                    global.activeKey.field == 5
+                    global.activeKey.group === keyG5
+                    && global.activeKey.field === 5
                       ? activeKeyColorBG
                       : keyColorBG
                   }
@@ -337,8 +344,8 @@ export const Scales = (props) => {
                 />
                 <Path
                   fill={
-                    global.activeKey.group == keyG5 &&
-                    global.activeKey.field == 5
+                    global.activeKey.group === keyG5
+                    && global.activeKey.field === 5
                       ? activeKeyColorText
                       : keyColorText
                   }
@@ -347,14 +354,14 @@ export const Scales = (props) => {
                 />
               </G>
               <G
-                x={global.activeKey.group == keyG6 ? global.activeKey.x : 0}
-                y={global.activeKey.group == keyG6 ? global.activeKey.y : 0}
+                x={global.activeKey.group === keyG6 ? global.activeKey.x : 0}
+                y={global.activeKey.group === keyG6 ? global.activeKey.y : 0}
                 onPress={() => handleKey(keyG6, 10, 210)}
               >
                 <Path
                   fill={
-                    global.activeKey.group == keyG6 &&
-                    global.activeKey.field == 10
+                    global.activeKey.group === keyG6
+                    && global.activeKey.field === 10
                       ? activeKeyColorBG
                       : keyColorBG
                   }
@@ -363,8 +370,8 @@ export const Scales = (props) => {
                 />
                 <Path
                   fill={
-                    global.activeKey.group == keyG6 &&
-                    global.activeKey.field == 10
+                    global.activeKey.group === keyG6
+                    && global.activeKey.field === 10
                       ? activeKeyColorBG
                       : keyColorBG
                   }
@@ -373,8 +380,8 @@ export const Scales = (props) => {
                 />
                 <Path
                   fill={
-                    global.activeKey.group == keyG6 &&
-                    global.activeKey.field == 10
+                    global.activeKey.group === keyG6
+                    && global.activeKey.field === 10
                       ? activeKeyColorBG
                       : keyColorBG
                   }
@@ -383,8 +390,8 @@ export const Scales = (props) => {
                 />
                 <Path
                   fill={
-                    global.activeKey.group == keyG6 &&
-                    global.activeKey.field == 10
+                    global.activeKey.group === keyG6
+                    && global.activeKey.field === 10
                       ? activeKeyColorBG
                       : keyColorBG
                   }
@@ -393,8 +400,8 @@ export const Scales = (props) => {
                 />
                 <Path
                   fill={
-                    global.activeKey.group == keyG6 &&
-                    global.activeKey.field == 10
+                    global.activeKey.group === keyG6
+                    && global.activeKey.field === 10
                       ? activeKeyColorBG
                       : keyColorBG
                   }
@@ -403,8 +410,8 @@ export const Scales = (props) => {
                 />
                 <Path
                   fill={
-                    global.activeKey.group == keyG6 &&
-                    global.activeKey.field == 10
+                    global.activeKey.group === keyG6
+                    && global.activeKey.field === 10
                       ? activeKeyColorSymbol
                       : keyColorSymbol
                   }
@@ -413,8 +420,8 @@ export const Scales = (props) => {
                 />
                 <Path
                   fill={
-                    global.activeKey.group == keyG6 &&
-                    global.activeKey.field == 10
+                    global.activeKey.group === keyG6
+                    && global.activeKey.field === 10
                       ? activeKeyColorSymbol
                       : keyColorSymbol
                   }
@@ -423,8 +430,8 @@ export const Scales = (props) => {
                 />
                 <Path
                   fill={
-                    global.activeKey.group == keyG6 &&
-                    global.activeKey.field == 10
+                    global.activeKey.group === keyG6
+                    && global.activeKey.field === 10
                       ? activeKeyColorText
                       : keyColorText
                   }
@@ -433,8 +440,8 @@ export const Scales = (props) => {
                 />
                 <Path
                   fill={
-                    global.activeKey.group == keyG6 &&
-                    global.activeKey.field == 10
+                    global.activeKey.group === keyG6
+                    && global.activeKey.field === 10
                       ? activeKeyColorText
                       : keyColorText
                   }
@@ -443,14 +450,14 @@ export const Scales = (props) => {
                 />
               </G>
               <G
-                x={global.activeKey.group == keyG7 ? global.activeKey.x : 0}
-                y={global.activeKey.group == keyG7 ? global.activeKey.y : 0}
+                x={global.activeKey.group === keyG7 ? global.activeKey.x : 0}
+                y={global.activeKey.group === keyG7 ? global.activeKey.y : 0}
                 onPress={() => handleKey(keyG7, 3, 180)}
               >
                 <Path
                   fill={
-                    global.activeKey.group == keyG7 &&
-                    global.activeKey.field == 3
+                    global.activeKey.group === keyG7
+                    && global.activeKey.field === 3
                       ? activeKeyColorBG
                       : keyColorBG
                   }
@@ -459,8 +466,8 @@ export const Scales = (props) => {
                 />
                 <Path
                   fill={
-                    global.activeKey.group == keyG7 &&
-                    global.activeKey.field == 3
+                    global.activeKey.group === keyG7
+                    && global.activeKey.field === 3
                       ? activeKeyColorBG
                       : keyColorBG
                   }
@@ -469,8 +476,8 @@ export const Scales = (props) => {
                 />
                 <Path
                   fill={
-                    global.activeKey.group == keyG7 &&
-                    global.activeKey.field == 3
+                    global.activeKey.group === keyG7
+                    && global.activeKey.field === 3
                       ? activeKeyColorBG
                       : keyColorBG
                   }
@@ -479,8 +486,8 @@ export const Scales = (props) => {
                 />
                 <Path
                   fill={
-                    global.activeKey.group == keyG7 &&
-                    global.activeKey.field == 3
+                    global.activeKey.group === keyG7
+                    && global.activeKey.field === 3
                       ? activeKeyColorBG
                       : keyColorBG
                   }
@@ -489,8 +496,8 @@ export const Scales = (props) => {
                 />
                 <Path
                   fill={
-                    global.activeKey.group == keyG7 &&
-                    global.activeKey.field == 3
+                    global.activeKey.group === keyG7
+                    && global.activeKey.field === 3
                       ? activeKeyColorBG
                       : keyColorBG
                   }
@@ -499,8 +506,8 @@ export const Scales = (props) => {
                 />
                 <Path
                   fill={
-                    global.activeKey.group == keyG7 &&
-                    global.activeKey.field == 3
+                    global.activeKey.group === keyG7
+                    && global.activeKey.field === 3
                       ? activeKeyColorSymbol
                       : keyColorSymbol
                   }
@@ -509,8 +516,8 @@ export const Scales = (props) => {
                 />
                 <Path
                   fill={
-                    global.activeKey.group == keyG7 &&
-                    global.activeKey.field == 3
+                    global.activeKey.group === keyG7
+                    && global.activeKey.field === 3
                       ? activeKeyColorSymbol
                       : keyColorSymbol
                   }
@@ -519,8 +526,8 @@ export const Scales = (props) => {
                 />
                 <Path
                   fill={
-                    global.activeKey.group == keyG7 &&
-                    global.activeKey.field == 3
+                    global.activeKey.group === keyG7
+                    && global.activeKey.field === 3
                       ? activeKeyColorText
                       : keyColorText
                   }
@@ -529,8 +536,8 @@ export const Scales = (props) => {
                 />
                 <Path
                   fill={
-                    global.activeKey.group == keyG7 &&
-                    global.activeKey.field == 3
+                    global.activeKey.group === keyG7
+                    && global.activeKey.field === 3
                       ? activeKeyColorText
                       : keyColorText
                   }
@@ -539,14 +546,14 @@ export const Scales = (props) => {
                 />
               </G>
               <G
-                x={global.activeKey.group == keyG8 ? global.activeKey.x : 0}
-                y={global.activeKey.group == keyG8 ? global.activeKey.y : 0}
+                x={global.activeKey.group === keyG8 ? global.activeKey.x : 0}
+                y={global.activeKey.group === keyG8 ? global.activeKey.y : 0}
                 onPress={() => handleKey(keyG8, 8, 150)}
               >
                 <Path
                   fill={
-                    global.activeKey.group == keyG8 &&
-                    global.activeKey.field == 8
+                    global.activeKey.group === keyG8
+                    && global.activeKey.field === 8
                       ? activeKeyColorBG
                       : keyColorBG
                   }
@@ -555,8 +562,8 @@ export const Scales = (props) => {
                 />
                 <Path
                   fill={
-                    global.activeKey.group == keyG8 &&
-                    global.activeKey.field == 8
+                    global.activeKey.group === keyG8
+                    && global.activeKey.field === 8
                       ? activeKeyColorBG
                       : keyColorBG
                   }
@@ -565,8 +572,8 @@ export const Scales = (props) => {
                 />
                 <Path
                   fill={
-                    global.activeKey.group == keyG8 &&
-                    global.activeKey.field == 8
+                    global.activeKey.group === keyG8
+                    && global.activeKey.field === 8
                       ? activeKeyColorBG
                       : keyColorBG
                   }
@@ -575,8 +582,8 @@ export const Scales = (props) => {
                 />
                 <Path
                   fill={
-                    global.activeKey.group == keyG8 &&
-                    global.activeKey.field == 8
+                    global.activeKey.group === keyG8
+                    && global.activeKey.field === 8
                       ? activeKeyColorBG
                       : keyColorBG
                   }
@@ -585,8 +592,8 @@ export const Scales = (props) => {
                 />
                 <Path
                   fill={
-                    global.activeKey.group == keyG8 &&
-                    global.activeKey.field == 8
+                    global.activeKey.group === keyG8
+                    && global.activeKey.field === 8
                       ? activeKeyColorBG
                       : keyColorBG
                   }
@@ -595,8 +602,8 @@ export const Scales = (props) => {
                 />
                 <Path
                   fill={
-                    global.activeKey.group == keyG8 &&
-                    global.activeKey.field == 8
+                    global.activeKey.group === keyG8
+                    && global.activeKey.field === 8
                       ? activeKeyColorSymbol
                       : keyColorSymbol
                   }
@@ -605,8 +612,8 @@ export const Scales = (props) => {
                 />
                 <Path
                   fill={
-                    global.activeKey.group == keyG8 &&
-                    global.activeKey.field == 8
+                    global.activeKey.group === keyG8
+                    && global.activeKey.field === 8
                       ? activeKeyColorSymbol
                       : keyColorSymbol
                   }
@@ -615,8 +622,8 @@ export const Scales = (props) => {
                 />
                 <Path
                   fill={
-                    global.activeKey.group == keyG8 &&
-                    global.activeKey.field == 8
+                    global.activeKey.group === keyG8
+                    && global.activeKey.field === 8
                       ? activeKeyColorText
                       : keyColorText
                   }
@@ -625,8 +632,8 @@ export const Scales = (props) => {
                 />
                 <Path
                   fill={
-                    global.activeKey.group == keyG8 &&
-                    global.activeKey.field == 8
+                    global.activeKey.group === keyG8
+                    && global.activeKey.field === 8
                       ? activeKeyColorText
                       : keyColorText
                   }
@@ -635,14 +642,14 @@ export const Scales = (props) => {
                 />
               </G>
               <G
-                x={global.activeKey.group == keyG9 ? global.activeKey.x : 0}
-                y={global.activeKey.group == keyG9 ? global.activeKey.y : 0}
+                x={global.activeKey.group === keyG9 ? global.activeKey.x : 0}
+                y={global.activeKey.group === keyG9 ? global.activeKey.y : 0}
                 onPress={() => handleKey(keyG9, 1, 120)}
               >
                 <Path
                   fill={
-                    global.activeKey.group == keyG9 &&
-                    global.activeKey.field == 1
+                    global.activeKey.group === keyG9
+                    && global.activeKey.field === 1
                       ? activeKeyColorBG
                       : keyColorBG
                   }
@@ -651,8 +658,8 @@ export const Scales = (props) => {
                 />
                 <Path
                   fill={
-                    global.activeKey.group == keyG9 &&
-                    global.activeKey.field == 1
+                    global.activeKey.group === keyG9
+                    && global.activeKey.field === 1
                       ? activeKeyColorBG
                       : keyColorBG
                   }
@@ -661,8 +668,8 @@ export const Scales = (props) => {
                 />
                 <Path
                   fill={
-                    global.activeKey.group == keyG9 &&
-                    global.activeKey.field == 1
+                    global.activeKey.group === keyG9
+                    && global.activeKey.field === 1
                       ? activeKeyColorBG
                       : keyColorBG
                   }
@@ -671,8 +678,8 @@ export const Scales = (props) => {
                 />
                 <Path
                   fill={
-                    global.activeKey.group == keyG9 &&
-                    global.activeKey.field == 1
+                    global.activeKey.group === keyG9
+                    && global.activeKey.field === 1
                       ? activeKeyColorBG
                       : keyColorBG
                   }
@@ -681,8 +688,8 @@ export const Scales = (props) => {
                 />
                 <Path
                   fill={
-                    global.activeKey.group == keyG9 &&
-                    global.activeKey.field == 1
+                    global.activeKey.group === keyG9
+                    && global.activeKey.field === 1
                       ? activeKeyColorSymbol
                       : keyColorSymbol
                   }
@@ -691,8 +698,8 @@ export const Scales = (props) => {
                 />
                 <Path
                   fill={
-                    global.activeKey.group == keyG9 &&
-                    global.activeKey.field == 1
+                    global.activeKey.group === keyG9
+                    && global.activeKey.field === 1
                       ? activeKeyColorSymbol
                       : keyColorSymbol
                   }
@@ -701,8 +708,8 @@ export const Scales = (props) => {
                 />
                 <Path
                   fill={
-                    global.activeKey.group == keyG9 &&
-                    global.activeKey.field == 1
+                    global.activeKey.group === keyG9
+                    && global.activeKey.field === 1
                       ? activeKeyColorText
                       : keyColorText
                   }
@@ -711,8 +718,8 @@ export const Scales = (props) => {
                 />
                 <Path
                   fill={
-                    global.activeKey.group == keyG9 &&
-                    global.activeKey.field == 1
+                    global.activeKey.group === keyG9
+                    && global.activeKey.field === 1
                       ? activeKeyColorText
                       : keyColorText
                   }
@@ -721,14 +728,14 @@ export const Scales = (props) => {
                 />
               </G>
               <G
-                x={global.activeKey.group == keyG10 ? global.activeKey.x : 0}
-                y={global.activeKey.group == keyG10 ? global.activeKey.y : 0}
+                x={global.activeKey.group === keyG10 ? global.activeKey.x : 0}
+                y={global.activeKey.group === keyG10 ? global.activeKey.y : 0}
                 onPress={() => handleKey(keyG10, 6, 90)}
               >
                 <Path
                   fill={
-                    global.activeKey.group == keyG10 &&
-                    global.activeKey.field == 6
+                    global.activeKey.group === keyG10
+                    && global.activeKey.field === 6
                       ? activeKeyColorBG
                       : keyColorBG
                   }
@@ -737,8 +744,8 @@ export const Scales = (props) => {
                 />
                 <Path
                   fill={
-                    global.activeKey.group == keyG10 &&
-                    global.activeKey.field == 6
+                    global.activeKey.group === keyG10
+                    && global.activeKey.field === 6
                       ? activeKeyColorBG
                       : keyColorBG
                   }
@@ -747,8 +754,8 @@ export const Scales = (props) => {
                 />
                 <Path
                   fill={
-                    global.activeKey.group == keyG10 &&
-                    global.activeKey.field == 6
+                    global.activeKey.group === keyG10
+                    && global.activeKey.field === 6
                       ? activeKeyColorBG
                       : keyColorBG
                   }
@@ -757,8 +764,8 @@ export const Scales = (props) => {
                 />
                 <Path
                   fill={
-                    global.activeKey.group == keyG10 &&
-                    global.activeKey.field == 6
+                    global.activeKey.group === keyG10
+                    && global.activeKey.field === 6
                       ? activeKeyColorBG
                       : keyColorBG
                   }
@@ -767,8 +774,8 @@ export const Scales = (props) => {
                 />
                 <Path
                   fill={
-                    global.activeKey.group == keyG10 &&
-                    global.activeKey.field == 6
+                    global.activeKey.group === keyG10
+                    && global.activeKey.field === 6
                       ? activeKeyColorSymbol
                       : keyColorSymbol
                   }
@@ -777,8 +784,8 @@ export const Scales = (props) => {
                 />
                 <Path
                   fill={
-                    global.activeKey.group == keyG10 &&
-                    global.activeKey.field == 6
+                    global.activeKey.group === keyG10
+                    && global.activeKey.field === 6
                       ? activeKeyColorSymbol
                       : keyColorSymbol
                   }
@@ -787,8 +794,8 @@ export const Scales = (props) => {
                 />
                 <Path
                   fill={
-                    global.activeKey.group == keyG10 &&
-                    global.activeKey.field == 6
+                    global.activeKey.group === keyG10
+                    && global.activeKey.field === 6
                       ? activeKeyColorText
                       : keyColorText
                   }
@@ -797,8 +804,8 @@ export const Scales = (props) => {
                 />
                 <Path
                   fill={
-                    global.activeKey.group == keyG10 &&
-                    global.activeKey.field == 6
+                    global.activeKey.group === keyG10
+                    && global.activeKey.field === 6
                       ? activeKeyColorText
                       : keyColorText
                   }
@@ -807,14 +814,14 @@ export const Scales = (props) => {
                 />
               </G>
               <G
-                x={global.activeKey.group == keyG11 ? global.activeKey.x : 0}
-                y={global.activeKey.group == keyG11 ? global.activeKey.y : 0}
+                x={global.activeKey.group === keyG11 ? global.activeKey.x : 0}
+                y={global.activeKey.group === keyG11 ? global.activeKey.y : 0}
                 onPress={() => handleKey(keyG11, 11, 60)}
               >
                 <Path
                   fill={
-                    global.activeKey.group == keyG11 &&
-                    global.activeKey.field == 11
+                    global.activeKey.group === keyG11
+                    && global.activeKey.field === 11
                       ? activeKeyColorBG
                       : keyColorBG
                   }
@@ -823,8 +830,8 @@ export const Scales = (props) => {
                 />
                 <Path
                   fill={
-                    global.activeKey.group == keyG11 &&
-                    global.activeKey.field == 11
+                    global.activeKey.group === keyG11
+                    && global.activeKey.field === 11
                       ? activeKeyColorBG
                       : keyColorBG
                   }
@@ -833,8 +840,8 @@ export const Scales = (props) => {
                 />
                 <Path
                   fill={
-                    global.activeKey.group == keyG11 &&
-                    global.activeKey.field == 11
+                    global.activeKey.group === keyG11
+                    && global.activeKey.field === 11
                       ? activeKeyColorText
                       : keyColorText
                   }
@@ -843,14 +850,14 @@ export const Scales = (props) => {
                 />
               </G>
               <G
-                x={global.activeKey.group == keyG12 ? global.activeKey.x : 0}
-                y={global.activeKey.group == keyG12 ? global.activeKey.y : 0}
+                x={global.activeKey.group === keyG12 ? global.activeKey.x : 0}
+                y={global.activeKey.group === keyG12 ? global.activeKey.y : 0}
                 onPress={() => handleKey(keyG12, 4, 30)}
               >
                 <Path
                   fill={
-                    global.activeKey.group == keyG12 &&
-                    global.activeKey.field == 4
+                    global.activeKey.group === keyG12
+                    && global.activeKey.field === 4
                       ? activeKeyColorBG
                       : keyColorBG
                   }
@@ -859,8 +866,8 @@ export const Scales = (props) => {
                 />
                 <Path
                   fill={
-                    global.activeKey.group == keyG12 &&
-                    global.activeKey.field == 4
+                    global.activeKey.group === keyG12
+                    && global.activeKey.field === 4
                       ? activeKeyColorBG
                       : keyColorBG
                   }
@@ -869,8 +876,8 @@ export const Scales = (props) => {
                 />
                 <Path
                   fill={
-                    global.activeKey.group == keyG12 &&
-                    global.activeKey.field == 4
+                    global.activeKey.group === keyG12
+                    && global.activeKey.field === 4
                       ? activeKeyColorText
                       : keyColorText
                   }
@@ -879,14 +886,14 @@ export const Scales = (props) => {
                 />
               </G>
               <G
-                x={global.activeKey.group == keyG1 ? global.activeKey.x : 0}
-                y={global.activeKey.group == keyG1 ? global.activeKey.y : 0}
+                x={global.activeKey.group === keyG1 ? global.activeKey.x : 0}
+                y={global.activeKey.group === keyG1 ? global.activeKey.y : 0}
                 onPress={() => handleKey(keyG1, 0, 0)}
               >
                 <Path
                   fill={
-                    global.activeKey.group == keyG1 &&
-                    global.activeKey.field == 0
+                    global.activeKey.group === keyG1
+                    && global.activeKey.field === 0
                       ? activeKeyColorBG
                       : keyColorBG
                   }
@@ -895,8 +902,8 @@ export const Scales = (props) => {
                 />
                 <Path
                   fill={
-                    global.activeKey.group == keyG1 &&
-                    global.activeKey.field == 0
+                    global.activeKey.group === keyG1
+                    && global.activeKey.field === 0
                       ? activeKeyColorText
                       : keyColorText
                   }
@@ -905,14 +912,14 @@ export const Scales = (props) => {
                 />
               </G>
               <G
-                x={global.activeKey.group == keyG2 ? global.activeKey.x : 0}
-                y={global.activeKey.group == keyG2 ? global.activeKey.y : 0}
+                x={global.activeKey.group === keyG2 ? global.activeKey.x : 0}
+                y={global.activeKey.group === keyG2 ? global.activeKey.y : 0}
                 onPress={() => handleKey(keyG2, 5, 330)}
               >
                 <Path
                   fill={
-                    global.activeKey.group == keyG2 &&
-                    global.activeKey.field == 5
+                    global.activeKey.group === keyG2
+                    && global.activeKey.field === 5
                       ? activeKeyColorBG
                       : keyColorBG
                   }
@@ -921,8 +928,8 @@ export const Scales = (props) => {
                 />
                 <Polygon
                   fill={
-                    global.activeKey.group == keyG2 &&
-                    global.activeKey.field == 5
+                    global.activeKey.group === keyG2
+                    && global.activeKey.field === 5
                       ? activeKeyColorText
                       : keyColorText
                   }
@@ -930,14 +937,14 @@ export const Scales = (props) => {
                 />
               </G>
               <G
-                x={global.activeKey.group == keyG3 ? global.activeKey.x : 0}
-                y={global.activeKey.group == keyG3 ? global.activeKey.y : 0}
+                x={global.activeKey.group === keyG3 ? global.activeKey.x : 0}
+                y={global.activeKey.group === keyG3 ? global.activeKey.y : 0}
                 onPress={() => handleKey(keyG3, 10, 300)}
               >
                 <Polygon
                   fill={
-                    global.activeKey.group == keyG3 &&
-                    global.activeKey.field == 10
+                    global.activeKey.group === keyG3
+                    && global.activeKey.field === 10
                       ? activeKeyColorBG
                       : keyColorBG
                   }
@@ -945,8 +952,8 @@ export const Scales = (props) => {
                 />
                 <Path
                   fill={
-                    global.activeKey.group == keyG3 &&
-                    global.activeKey.field == 10
+                    global.activeKey.group === keyG3
+                    && global.activeKey.field === 10
                       ? activeKeyColorBG
                       : keyColorBG
                   }
@@ -955,8 +962,8 @@ export const Scales = (props) => {
                 />
                 <Path
                   fill={
-                    global.activeKey.group == keyG3 &&
-                    global.activeKey.field == 10
+                    global.activeKey.group === keyG3
+                    && global.activeKey.field === 10
                       ? activeKeyColorBG
                       : keyColorBG
                   }
@@ -965,8 +972,8 @@ export const Scales = (props) => {
                 />
                 <Path
                   fill={
-                    global.activeKey.group == keyG3 &&
-                    global.activeKey.field == 10
+                    global.activeKey.group === keyG3
+                    && global.activeKey.field === 10
                       ? activeKeyColorBG
                       : keyColorBG
                   }
@@ -975,8 +982,8 @@ export const Scales = (props) => {
                 />
                 <Path
                   fill={
-                    global.activeKey.group == keyG3 &&
-                    global.activeKey.field == 10
+                    global.activeKey.group === keyG3
+                    && global.activeKey.field === 10
                       ? activeKeyColorBG
                       : keyColorBG
                   }
@@ -985,8 +992,8 @@ export const Scales = (props) => {
                 />
                 <Path
                   fill={
-                    global.activeKey.group == keyG3 &&
-                    global.activeKey.field == 10
+                    global.activeKey.group === keyG3
+                    && global.activeKey.field === 10
                       ? activeKeyColorBG
                       : keyColorBG
                   }
@@ -995,8 +1002,8 @@ export const Scales = (props) => {
                 />
                 <Path
                   fill={
-                    global.activeKey.group == keyG3 &&
-                    global.activeKey.field == 10
+                    global.activeKey.group === keyG3
+                    && global.activeKey.field === 10
                       ? activeKeyColorSymbol
                       : keyColorSymbol
                   }
@@ -1005,8 +1012,8 @@ export const Scales = (props) => {
                 />
                 <Path
                   fill={
-                    global.activeKey.group == keyG3 &&
-                    global.activeKey.field == 10
+                    global.activeKey.group === keyG3
+                    && global.activeKey.field === 10
                       ? activeKeyColorSymbol
                       : keyColorSymbol
                   }
@@ -1015,8 +1022,8 @@ export const Scales = (props) => {
                 />
                 <Path
                   fill={
-                    global.activeKey.group == keyG3 &&
-                    global.activeKey.field == 10
+                    global.activeKey.group === keyG3
+                    && global.activeKey.field === 10
                       ? activeKeyColorText
                       : keyColorText
                   }
@@ -1025,8 +1032,8 @@ export const Scales = (props) => {
                 />
                 <Path
                   fill={
-                    global.activeKey.group == keyG3 &&
-                    global.activeKey.field == 10
+                    global.activeKey.group === keyG3
+                    && global.activeKey.field === 10
                       ? activeKeyColorText
                       : keyColorText
                   }
@@ -1035,14 +1042,14 @@ export const Scales = (props) => {
                 />
               </G>
               <G
-                x={global.activeKey.group == keyG4 ? global.activeKey.x : 0}
-                y={global.activeKey.group == keyG4 ? global.activeKey.y : 0}
+                x={global.activeKey.group === keyG4 ? global.activeKey.x : 0}
+                y={global.activeKey.group === keyG4 ? global.activeKey.y : 0}
                 onPress={() => handleKey(keyG4, 3, 270)}
               >
                 <Path
                   fill={
-                    global.activeKey.group == keyG4 &&
-                    global.activeKey.field == 3
+                    global.activeKey.group === keyG4
+                    && global.activeKey.field === 3
                       ? activeKeyColorBG
                       : keyColorBG
                   }
@@ -1051,8 +1058,8 @@ export const Scales = (props) => {
                 />
                 <Path
                   fill={
-                    global.activeKey.group == keyG4 &&
-                    global.activeKey.field == 3
+                    global.activeKey.group === keyG4
+                    && global.activeKey.field === 3
                       ? activeKeyColorBG
                       : keyColorBG
                   }
@@ -1061,8 +1068,8 @@ export const Scales = (props) => {
                 />
                 <Path
                   fill={
-                    global.activeKey.group == keyG4 &&
-                    global.activeKey.field == 3
+                    global.activeKey.group === keyG4
+                    && global.activeKey.field === 3
                       ? activeKeyColorBG
                       : keyColorBG
                   }
@@ -1071,8 +1078,8 @@ export const Scales = (props) => {
                 />
                 <Path
                   fill={
-                    global.activeKey.group == keyG4 &&
-                    global.activeKey.field == 3
+                    global.activeKey.group === keyG4
+                    && global.activeKey.field === 3
                       ? activeKeyColorBG
                       : keyColorBG
                   }
@@ -1081,8 +1088,8 @@ export const Scales = (props) => {
                 />
                 <Path
                   fill={
-                    global.activeKey.group == keyG4 &&
-                    global.activeKey.field == 3
+                    global.activeKey.group === keyG4
+                    && global.activeKey.field === 3
                       ? activeKeyColorSymbol
                       : keyColorSymbol
                   }
@@ -1091,8 +1098,8 @@ export const Scales = (props) => {
                 />
                 <Path
                   fill={
-                    global.activeKey.group == keyG4 &&
-                    global.activeKey.field == 3
+                    global.activeKey.group === keyG4
+                    && global.activeKey.field === 3
                       ? activeKeyColorSymbol
                       : keyColorSymbol
                   }
@@ -1101,8 +1108,8 @@ export const Scales = (props) => {
                 />
                 <Polygon
                   fill={
-                    global.activeKey.group == keyG4 &&
-                    global.activeKey.field == 3
+                    global.activeKey.group === keyG4
+                    && global.activeKey.field === 3
                       ? activeKeyColorText
                       : keyColorText
                   }
@@ -1110,8 +1117,8 @@ export const Scales = (props) => {
                 />
                 <Path
                   fill={
-                    global.activeKey.group == keyG4 &&
-                    global.activeKey.field == 3
+                    global.activeKey.group === keyG4
+                    && global.activeKey.field === 3
                       ? activeKeyColorText
                       : keyColorText
                   }
@@ -1120,14 +1127,14 @@ export const Scales = (props) => {
                 />
               </G>
               <G
-                x={global.activeKey.group == keyG5 ? global.activeKey.x : 0}
-                y={global.activeKey.group == keyG5 ? global.activeKey.y : 0}
+                x={global.activeKey.group === keyG5 ? global.activeKey.x : 0}
+                y={global.activeKey.group === keyG5 ? global.activeKey.y : 0}
                 onPress={() => handleKey(keyG5, 8, 240)}
               >
                 <Path
                   fill={
-                    global.activeKey.group == keyG5 &&
-                    global.activeKey.field == 8
+                    global.activeKey.group === keyG5
+                    && global.activeKey.field === 8
                       ? activeKeyColorBG
                       : keyColorBG
                   }
@@ -1136,8 +1143,8 @@ export const Scales = (props) => {
                 />
                 <Polygon
                   fill={
-                    global.activeKey.group == keyG5 &&
-                    global.activeKey.field == 8
+                    global.activeKey.group === keyG5
+                    && global.activeKey.field === 8
                       ? activeKeyColorBG
                       : keyColorBG
                   }
@@ -1145,8 +1152,8 @@ export const Scales = (props) => {
                 />
                 <Path
                   fill={
-                    global.activeKey.group == keyG5 &&
-                    global.activeKey.field == 8
+                    global.activeKey.group === keyG5
+                    && global.activeKey.field === 8
                       ? activeKeyColorBG
                       : keyColorBG
                   }
@@ -1155,8 +1162,8 @@ export const Scales = (props) => {
                 />
                 <Path
                   fill={
-                    global.activeKey.group == keyG5 &&
-                    global.activeKey.field == 8
+                    global.activeKey.group === keyG5
+                    && global.activeKey.field === 8
                       ? activeKeyColorBG
                       : keyColorBG
                   }
@@ -1165,8 +1172,8 @@ export const Scales = (props) => {
                 />
                 <Path
                   fill={
-                    global.activeKey.group == keyG5 &&
-                    global.activeKey.field == 8
+                    global.activeKey.group === keyG5
+                    && global.activeKey.field === 8
                       ? activeKeyColorSymbol
                       : keyColorSymbol
                   }
@@ -1175,8 +1182,8 @@ export const Scales = (props) => {
                 />
                 <Path
                   fill={
-                    global.activeKey.group == keyG5 &&
-                    global.activeKey.field == 8
+                    global.activeKey.group === keyG5
+                    && global.activeKey.field === 8
                       ? activeKeyColorSymbol
                       : keyColorSymbol
                   }
@@ -1185,8 +1192,8 @@ export const Scales = (props) => {
                 />
                 <Path
                   fill={
-                    global.activeKey.group == keyG5 &&
-                    global.activeKey.field == 8
+                    global.activeKey.group === keyG5
+                    && global.activeKey.field === 8
                       ? activeKeyColorText
                       : keyColorText
                   }
@@ -1195,8 +1202,8 @@ export const Scales = (props) => {
                 />
                 <Path
                   fill={
-                    global.activeKey.group == keyG5 &&
-                    global.activeKey.field == 8
+                    global.activeKey.group === keyG5
+                    && global.activeKey.field === 8
                       ? activeKeyColorText
                       : keyColorText
                   }
@@ -1205,14 +1212,14 @@ export const Scales = (props) => {
                 />
               </G>
               <G
-                x={global.activeKey.group == keyG6 ? global.activeKey.x : 0}
-                y={global.activeKey.group == keyG6 ? global.activeKey.y : 0}
+                x={global.activeKey.group === keyG6 ? global.activeKey.x : 0}
+                y={global.activeKey.group === keyG6 ? global.activeKey.y : 0}
                 onPress={() => handleKey(keyG6, 1, 210)}
               >
                 <Path
                   fill={
-                    global.activeKey.group == keyG6 &&
-                    global.activeKey.field == 1
+                    global.activeKey.group === keyG6
+                    && global.activeKey.field === 1
                       ? activeKeyColorBG
                       : keyColorBG
                   }
@@ -1221,8 +1228,8 @@ export const Scales = (props) => {
                 />
                 <Path
                   fill={
-                    global.activeKey.group == keyG6 &&
-                    global.activeKey.field == 1
+                    global.activeKey.group === keyG6
+                    && global.activeKey.field === 1
                       ? activeKeyColorBG
                       : keyColorBG
                   }
@@ -1231,8 +1238,8 @@ export const Scales = (props) => {
                 />
                 <Path
                   fill={
-                    global.activeKey.group == keyG6 &&
-                    global.activeKey.field == 1
+                    global.activeKey.group === keyG6
+                    && global.activeKey.field === 1
                       ? activeKeyColorBG
                       : keyColorBG
                   }
@@ -1241,8 +1248,8 @@ export const Scales = (props) => {
                 />
                 <Path
                   fill={
-                    global.activeKey.group == keyG6 &&
-                    global.activeKey.field == 1
+                    global.activeKey.group === keyG6
+                    && global.activeKey.field === 1
                       ? activeKeyColorBG
                       : keyColorBG
                   }
@@ -1251,8 +1258,8 @@ export const Scales = (props) => {
                 />
                 <Path
                   fill={
-                    global.activeKey.group == keyG6 &&
-                    global.activeKey.field == 1
+                    global.activeKey.group === keyG6
+                    && global.activeKey.field === 1
                       ? activeKeyColorSymbol
                       : keyColorSymbol
                   }
@@ -1261,8 +1268,8 @@ export const Scales = (props) => {
                 />
                 <Path
                   fill={
-                    global.activeKey.group == keyG6 &&
-                    global.activeKey.field == 1
+                    global.activeKey.group === keyG6
+                    && global.activeKey.field === 1
                       ? activeKeyColorSymbol
                       : keyColorSymbol
                   }
@@ -1271,8 +1278,8 @@ export const Scales = (props) => {
                 />
                 <Path
                   fill={
-                    global.activeKey.group == keyG6 &&
-                    global.activeKey.field == 1
+                    global.activeKey.group === keyG6
+                    && global.activeKey.field === 1
                       ? activeKeyColorText
                       : keyColorText
                   }
@@ -1281,8 +1288,8 @@ export const Scales = (props) => {
                 />
                 <Path
                   fill={
-                    global.activeKey.group == keyG6 &&
-                    global.activeKey.field == 1
+                    global.activeKey.group === keyG6
+                    && global.activeKey.field === 1
                       ? activeKeyColorText
                       : keyColorText
                   }
@@ -1291,14 +1298,14 @@ export const Scales = (props) => {
                 />
               </G>
               <G
-                x={global.activeKey.group == keyG7 ? global.activeKey.x : 0}
-                y={global.activeKey.group == keyG7 ? global.activeKey.y : 0}
+                x={global.activeKey.group === keyG7 ? global.activeKey.x : 0}
+                y={global.activeKey.group === keyG7 ? global.activeKey.y : 0}
                 onPress={() => handleKey(keyG7, 6, 180)}
               >
                 <Path
                   fill={
-                    global.activeKey.group == keyG7 &&
-                    global.activeKey.field == 6
+                    global.activeKey.group === keyG7
+                    && global.activeKey.field === 6
                       ? activeKeyColorBG
                       : keyColorBG
                   }
@@ -1307,8 +1314,8 @@ export const Scales = (props) => {
                 />
                 <Path
                   fill={
-                    global.activeKey.group == keyG7 &&
-                    global.activeKey.field == 6
+                    global.activeKey.group === keyG7
+                    && global.activeKey.field === 6
                       ? activeKeyColorBG
                       : keyColorBG
                   }
@@ -1317,8 +1324,8 @@ export const Scales = (props) => {
                 />
                 <Path
                   fill={
-                    global.activeKey.group == keyG7 &&
-                    global.activeKey.field == 6
+                    global.activeKey.group === keyG7
+                    && global.activeKey.field === 6
                       ? activeKeyColorBG
                       : keyColorBG
                   }
@@ -1327,8 +1334,8 @@ export const Scales = (props) => {
                 />
                 <Path
                   fill={
-                    global.activeKey.group == keyG7 &&
-                    global.activeKey.field == 6
+                    global.activeKey.group === keyG7
+                    && global.activeKey.field === 6
                       ? activeKeyColorSymbol
                       : keyColorSymbol
                   }
@@ -1337,8 +1344,8 @@ export const Scales = (props) => {
                 />
                 <Path
                   fill={
-                    global.activeKey.group == keyG7 &&
-                    global.activeKey.field == 6
+                    global.activeKey.group === keyG7
+                    && global.activeKey.field === 6
                       ? activeKeyColorSymbol
                       : keyColorSymbol
                   }
@@ -1347,8 +1354,8 @@ export const Scales = (props) => {
                 />
                 <Path
                   fill={
-                    global.activeKey.group == keyG7 &&
-                    global.activeKey.field == 6
+                    global.activeKey.group === keyG7
+                    && global.activeKey.field === 6
                       ? activeKeyColorText
                       : keyColorText
                   }
@@ -1357,8 +1364,8 @@ export const Scales = (props) => {
                 />
                 <Polygon
                   fill={
-                    global.activeKey.group == keyG7 &&
-                    global.activeKey.field == 6
+                    global.activeKey.group === keyG7
+                    && global.activeKey.field === 6
                       ? activeKeyColorText
                       : keyColorText
                   }
@@ -1366,14 +1373,14 @@ export const Scales = (props) => {
                 />
               </G>
               <G
-                x={global.activeKey.group == keyG8 ? global.activeKey.x : 0}
-                y={global.activeKey.group == keyG8 ? global.activeKey.y : 0}
+                x={global.activeKey.group === keyG8 ? global.activeKey.x : 0}
+                y={global.activeKey.group === keyG8 ? global.activeKey.y : 0}
                 onPress={() => handleKey(keyG8, 11, 150)}
               >
                 <Path
                   fill={
-                    global.activeKey.group == keyG8 &&
-                    global.activeKey.field == 11
+                    global.activeKey.group === keyG8
+                    && global.activeKey.field === 11
                       ? activeKeyColorBG
                       : keyColorBG
                   }
@@ -1382,8 +1389,8 @@ export const Scales = (props) => {
                 />
                 <Path
                   fill={
-                    global.activeKey.group == keyG8 &&
-                    global.activeKey.field == 11
+                    global.activeKey.group === keyG8
+                    && global.activeKey.field === 11
                       ? activeKeyColorBG
                       : keyColorBG
                   }
@@ -1392,8 +1399,8 @@ export const Scales = (props) => {
                 />
                 <Path
                   fill={
-                    global.activeKey.group == keyG8 &&
-                    global.activeKey.field == 11
+                    global.activeKey.group === keyG8
+                    && global.activeKey.field === 11
                       ? activeKeyColorBG
                       : keyColorBG
                   }
@@ -1402,8 +1409,8 @@ export const Scales = (props) => {
                 />
                 <Path
                   fill={
-                    global.activeKey.group == keyG8 &&
-                    global.activeKey.field == 11
+                    global.activeKey.group === keyG8
+                    && global.activeKey.field === 11
                       ? activeKeyColorText
                       : keyColorText
                   }
@@ -1412,14 +1419,14 @@ export const Scales = (props) => {
                 />
               </G>
               <G
-                x={global.activeKey.group == keyG9 ? global.activeKey.x : 0}
-                y={global.activeKey.group == keyG9 ? global.activeKey.y : 0}
+                x={global.activeKey.group === keyG9 ? global.activeKey.x : 0}
+                y={global.activeKey.group === keyG9 ? global.activeKey.y : 0}
                 onPress={() => handleKey(keyG9, 4, 120)}
               >
                 <Path
                   fill={
-                    global.activeKey.group == keyG9 &&
-                    global.activeKey.field == 4
+                    global.activeKey.group === keyG9
+                    && global.activeKey.field === 4
                       ? activeKeyColorBG
                       : keyColorBG
                   }
@@ -1428,8 +1435,8 @@ export const Scales = (props) => {
                 />
                 <Polygon
                   fill={
-                    global.activeKey.group == keyG9 &&
-                    global.activeKey.field == 4
+                    global.activeKey.group === keyG9
+                    && global.activeKey.field === 4
                       ? activeKeyColorText
                       : keyColorText
                   }
@@ -1437,14 +1444,14 @@ export const Scales = (props) => {
                 />
               </G>
               <G
-                x={global.activeKey.group == keyG10 ? global.activeKey.x : 0}
-                y={global.activeKey.group == keyG10 ? global.activeKey.y : 0}
+                x={global.activeKey.group === keyG10 ? global.activeKey.x : 0}
+                y={global.activeKey.group === keyG10 ? global.activeKey.y : 0}
                 onPress={() => handleKey(keyG10, 9, 90)}
               >
                 <Path
                   fill={
-                    global.activeKey.group == keyG10 &&
-                    global.activeKey.field == 9
+                    global.activeKey.group === keyG10
+                    && global.activeKey.field === 9
                       ? activeKeyColorBG
                       : keyColorBG
                   }
@@ -1453,8 +1460,8 @@ export const Scales = (props) => {
                 />
                 <Polygon
                   fill={
-                    global.activeKey.group == keyG10 &&
-                    global.activeKey.field == 9
+                    global.activeKey.group === keyG10
+                    && global.activeKey.field === 9
                       ? activeKeyColorBG
                       : keyColorBG
                   }
@@ -1462,8 +1469,8 @@ export const Scales = (props) => {
                 />
                 <Path
                   fill={
-                    global.activeKey.group == keyG10 &&
-                    global.activeKey.field == 9
+                    global.activeKey.group === keyG10
+                    && global.activeKey.field === 9
                       ? activeKeyColorText
                       : keyColorText
                   }
@@ -1472,14 +1479,14 @@ export const Scales = (props) => {
                 />
               </G>
               <G
-                x={global.activeKey.group == keyG11 ? global.activeKey.x : 0}
-                y={global.activeKey.group == keyG11 ? global.activeKey.y : 0}
+                x={global.activeKey.group === keyG11 ? global.activeKey.x : 0}
+                y={global.activeKey.group === keyG11 ? global.activeKey.y : 0}
                 onPress={() => handleKey(keyG11, 2, 60)}
               >
                 <Path
                   fill={
-                    global.activeKey.group == keyG11 &&
-                    global.activeKey.field == 2
+                    global.activeKey.group === keyG11
+                    && global.activeKey.field === 2
                       ? activeKeyColorBG
                       : keyColorBG
                   }
@@ -1488,8 +1495,8 @@ export const Scales = (props) => {
                 />
                 <Path
                   fill={
-                    global.activeKey.group == keyG11 &&
-                    global.activeKey.field == 2
+                    global.activeKey.group === keyG11
+                    && global.activeKey.field === 2
                       ? activeKeyColorBG
                       : keyColorBG
                   }
@@ -1498,8 +1505,8 @@ export const Scales = (props) => {
                 />
                 <Path
                   fill={
-                    global.activeKey.group == keyG11 &&
-                    global.activeKey.field == 2
+                    global.activeKey.group === keyG11
+                    && global.activeKey.field === 2
                       ? activeKeyColorText
                       : keyColorText
                   }
@@ -1508,14 +1515,14 @@ export const Scales = (props) => {
                 />
               </G>
               <G
-                x={global.activeKey.group == keyG12 ? global.activeKey.x : 0}
-                y={global.activeKey.group == keyG12 ? global.activeKey.y : 0}
+                x={global.activeKey.group === keyG12 ? global.activeKey.x : 0}
+                y={global.activeKey.group === keyG12 ? global.activeKey.y : 0}
                 onPress={() => handleKey(keyG12, 7, 30)}
               >
                 <Path
                   fill={
-                    global.activeKey.group == keyG12 &&
-                    global.activeKey.field == 7
+                    global.activeKey.group === keyG12
+                    && global.activeKey.field === 7
                       ? activeKeyColorBG
                       : keyColorBG
                   }
@@ -1524,8 +1531,8 @@ export const Scales = (props) => {
                 />
                 <Path
                   fill={
-                    global.activeKey.group == keyG12 &&
-                    global.activeKey.field == 7
+                    global.activeKey.group === keyG12
+                    && global.activeKey.field === 7
                       ? activeKeyColorText
                       : keyColorText
                   }
@@ -1559,25 +1566,25 @@ export const Scales = (props) => {
 
       <Bottom data={global.scales} />
 
-      <Modal animationType="fade" transparent={true} visible={openSelect}>
-        <View style={scales_chords_style.selectListWrapper}>
+      <Modal animationType="fade" transparent visible={openSelect}>
+        <View style={scalesChordsStyle.selectListWrapper}>
           <ScrollView
             showsVerticalScrollIndicator={false}
-            style={scales_chords_style.selectList}
+            style={scalesChordsStyle.selectList}
           >
             {scaleList.map((scale, index) => (
               <TouchableOpacity
                 key={scale.name}
                 style={
                   index === scaleList.length - 1
-                    ? scales_chords_style.selectItemNoBorder
-                    : scales_chords_style.selectItem
+                    ? scalesChordsStyle.selectItemNoBorder
+                    : scalesChordsStyle.selectItem
                 }
                 onPress={() => handleSelect(scale)}
               >
                 <Text
                   style={[
-                    scales_chords_style.selectText,
+                    scalesChordsStyle.selectText,
                     {
                       color:
                         selectedScale.name === scale.name
@@ -1595,6 +1602,6 @@ export const Scales = (props) => {
       </Modal>
     </Animated.View>
   );
-};
+}
 
 export default Scales;

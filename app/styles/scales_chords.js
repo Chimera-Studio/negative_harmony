@@ -1,0 +1,256 @@
+// @flow
+import { StyleSheet } from 'react-native';
+import { deviceHeight, isApple } from '../utils';
+import colors from './colors';
+
+type ScalesChordsStyle = {
+  ...Object
+};
+
+const smallScreenHeight = deviceHeight <= 700;
+
+const scalesChordsStyle: ScalesChordsStyle = StyleSheet.create({
+  legendContainer: {
+    display: 'flex',
+    justifyContent: 'space-evenly',
+    alignItems: 'center',
+    flex: 1,
+  },
+  legend: {
+    width: '80%',
+    aspectRatio: 5 / 1,
+    marginBottom: 5,
+  },
+  legendExtra: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '80%',
+    height: '32%',
+    backgroundColor: colors.whiteTransparent,
+    borderRadius: 15,
+  },
+  disclamerBtn: {
+    width: '42%',
+  },
+  disclamer: {
+    height: '100%',
+    aspectRatio: 2.4 / 1,
+  },
+  wrapper: {
+    flex: 1,
+    position: 'relative',
+  },
+  selectWrapper: {
+    display: 'flex',
+    justifyContent: 'flex-end',
+    height: '12%',
+    marginTop: '5%',
+    marginBottom: smallScreenHeight ? '2%' : '5%',
+    alignItems: 'center',
+  },
+  selectChordsWrapper: {
+    display: 'flex',
+    justifyContent: 'flex-end',
+    height: '20%',
+    marginTop: '5%',
+    marginBottom: smallScreenHeight ? '2%' : '5%',
+  },
+  selectTextExp: {
+    color: colors.black,
+    fontFamily: 'NegativeHarmonyRegular',
+    textAlign: 'center',
+    fontSize: 14,
+    marginVertical: 10,
+  },
+  selectInput: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '60%',
+    height: 30,
+    marginVertical: 10,
+    marginHorizontal: '20%',
+    backgroundColor: colors.whiteTransparent,
+    borderWidth: 0,
+    borderRadius: 30,
+  },
+  selectInputText: {
+    fontFamily: 'NegativeHarmonyRegular',
+    color: colors.black,
+    textAlign: 'center',
+    fontSize: 14,
+  },
+  selectListWrapper: {
+    borderRadius: 30,
+    marginBottom: '30%',
+    marginLeft: 'auto',
+    marginRight: 'auto',
+    marginTop: '15%',
+    maxWidth: 500,
+    overflow: isApple ? 'scroll' : 'hidden',
+    width: '90%',
+  },
+  selectList: {
+    backgroundColor: colors.white,
+    borderColor: colors.blue,
+    borderRadius: 30,
+    borderWidth: 2,
+    flexGrow: 1,
+    width: '100%',
+  },
+  selectItem: {
+    width: '100%',
+    borderBottomColor: colors.blueTransparent,
+    borderBottomWidth: 1,
+  },
+  selectItemNoBorder: {
+    borderBottomWidth: 0,
+  },
+  selectDisabledText: {
+    fontFamily: 'NegativeHarmonyRegular',
+    textAlign: 'center',
+    fontSize: 18,
+    marginVertical: 10,
+  },
+  selectText: {
+    fontFamily: 'NegativeHarmonyRegular',
+    textAlign: 'center',
+    fontSize: 18,
+    marginVertical: 10,
+  },
+  selectListArrow: {
+    position: 'absolute',
+    right: 14,
+    width: 10,
+    aspectRatio: 1 / 1,
+  },
+  circleWrapper: {
+    alignItems: 'center',
+    display: 'flex',
+    flex: 1,
+    justifyContent: 'center',
+    position: 'relative',
+  },
+  icon: {
+    aspectRatio: 1 / 1,
+    position: 'absolute',
+    width: '20%',
+    zIndex: 4,
+    marginTop: '40%',
+    marginBottom: '40%',
+    marginLeft: '40%',
+    marginRight: '40%',
+  },
+  circleKeys: {
+    aspectRatio: 1 / 1,
+    marginLeft: 'auto',
+    marginRight: 'auto',
+    width: '100%',
+    zIndex: 3,
+  },
+  selectedScaleNameWrapper: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'baseline',
+    paddingVertical: 10,
+  },
+  selectedScaleKey: {
+    fontFamily: 'NegativeHarmonyBold',
+    color: colors.white,
+    fontSize: 32,
+    marginRight: 3,
+  },
+  selectedScaleName: {
+    fontFamily: 'NegativeHarmonyBold',
+    color: colors.black,
+    fontSize: 16,
+    textTransform: 'lowercase',
+    marginLeft: 3,
+  },
+  chordsWrapper: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  rewardedOpen: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: colors.blue,
+    width: '75%',
+    height: 70,
+    borderRadius: 35,
+  },
+  rewardedOpenText: {
+    color: colors.white,
+    textAlign: 'center',
+    fontFamily: 'NegativeHarmonyBold',
+    fontSize: 18,
+  },
+  scrollChords: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '100%',
+    borderRadius: 30,
+    backgroundColor: colors.white,
+  },
+  scrollChordsExpText: {
+    fontFamily: 'NegativeHarmonyRegular',
+    fontSize: 14,
+    textAlign: 'center',
+    color: colors.black,
+    marginVertical: 10,
+  },
+  scrollChordsWrapper: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 24,
+  },
+  scrollChordsSpace: {
+    height: 90,
+    backgroundColor: colors.black,
+  },
+  scrollChordsNoteSelected: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: 90,
+    aspectRatio: 1 / 1,
+    marginHorizontal: 10,
+    borderRadius: 90,
+    backgroundColor: colors.blue,
+  },
+  scrollChordsNote: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: 90,
+    aspectRatio: 1 / 1,
+    marginHorizontal: 10,
+    borderRadius: 90,
+    borderWidth: 4,
+    borderColor: colors.blue,
+    backgroundColor: colors.white,
+  },
+  scrollChordsNoteTextSelected: {
+    fontFamily: 'NegativeHarmonyBold',
+    fontSize: 22,
+    width: 44,
+    textAlign: 'center',
+    color: colors.white,
+  },
+  scrollChordsNoteText: {
+    fontFamily: 'NegativeHarmonyBold',
+    fontSize: 22,
+    width: 44,
+    textAlign: 'center',
+    color: colors.blue,
+  },
+});
+
+export default scalesChordsStyle;

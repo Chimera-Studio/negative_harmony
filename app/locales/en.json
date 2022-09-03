@@ -4,7 +4,7 @@
     "chords": "Chords"
   },
   "alert": {
-    "noKey": "You need to tap on a field!"
+    "no_key": "You need to tap on a field!"
   },
   "select": {
     "scales": "Select a scale and tap on a field:",
