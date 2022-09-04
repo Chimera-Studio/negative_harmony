@@ -343,6 +343,8 @@ PODS:
     - glog
   - react-native-in-app-review (4.1.1):
     - React
+  - react-native-restart (0.0.24):
+    - React-Core
   - react-native-splash-screen (3.3.0):
     - React-Core
   - React-perflogger (0.69.5)
@@ -476,6 +478,7 @@ DEPENDENCIES:
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
   - React-logger (from `../node_modules/react-native/ReactCommon/logger`)
   - react-native-in-app-review (from `../node_modules/react-native-in-app-review`)
+  - react-native-restart (from `../node_modules/react-native-restart`)
   - react-native-splash-screen (from `../node_modules/react-native-splash-screen`)
   - React-perflogger (from `../node_modules/react-native/ReactCommon/reactperflogger`)
   - React-RCTActionSheet (from `../node_modules/react-native/Libraries/ActionSheetIOS`)
@@ -568,6 +571,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/logger"
   react-native-in-app-review:
     :path: "../node_modules/react-native-in-app-review"
+  react-native-restart:
+    :path: "../node_modules/react-native-restart"
   react-native-splash-screen:
     :path: "../node_modules/react-native-splash-screen"
   React-perflogger:
@@ -651,6 +656,7 @@ SPEC CHECKSUMS:
   React-jsinspector: e385fb7a1440ae3f3b2cd1a139ca5aadaab43c10
   React-logger: 15c734997c06fe9c9b88e528fb7757601e7a56df
   react-native-in-app-review: c5ba75cc2c91238f42bd2de44fa0e65e93b7c9ea
+  react-native-restart: 45c8dca02491980f2958595333cbccd6877cb57e
   react-native-splash-screen: 4312f786b13a81b5169ef346d76d33bc0c6dc457
   React-perflogger: 367418425c5e4a9f0f80385ee1eaacd2a7348f8e
   React-RCTActionSheet: e4885e7136f98ded1137cd3daccc05eaed97d5a6

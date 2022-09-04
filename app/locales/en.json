@@ -1,10 +1,17 @@
 {
+  "loading": "Loading...",
   "links": {
     "scales": "Scales",
     "chords": "Chords"
   },
   "alert": {
-    "no_key": "You need to tap on a field!"
+    "no_key": "You need to tap on a field!",
+    "codepush_syncing": {
+      "text_1": "Switching to ",
+      "text_2": ", this could take a while...",
+      "Production": "Staging",
+      "Staging": "Production"
+    }
   },
   "select": {
     "scales": "Select a scale and tap on a field:",

@@ -1,22 +1,29 @@
 // @flow
-import React from 'react';
+import React, { useState } from 'react';
 import type { Node } from 'react';
-import { Text, TouchableOpacity, View } from 'react-native';
-import { Link } from 'react-router-native';
+import {
+  Modal, Text, TouchableOpacity, View,
+} from 'react-native';
+import { Link, useNavigate } from 'react-router-native';
 import { useDispatch, useSelector } from 'react-redux';
+import CodePush from 'react-native-code-push';
 import { secondsToMilliseconds } from 'date-fns';
 import { isEmpty, isEqual } from 'lodash';
 import useLocale from '../../../locales';
-import { useLocationInfo, useTeleport } from '../../../utils/hooks';
 import Alert from '../../elements/misc/Alert';
 import Info from '../../../assets/icons/Info';
+import { deviceInfo } from '../../../utils';
+import { useLocationInfo, useTeleport } from '../../../utils/hooks';
+import { codepush } from '../../../tokens';
 import { actions, selectors } from '../../../store/globalStore';
 import navigationStyle from '../../../styles/navigation';
+import mainStyle from '../../../styles/main';
 import colors from '../../../styles/colors';
 import type { ReduxState } from '../../../types';
 
 function Navigation(): Node {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { t } = useLocale();
   const { teleport } = useTeleport();
   const locationInfo = useLocationInfo();
@@ -24,25 +31,48 @@ function Navigation(): Node {
     scales: selectors.getScales(state),
     showLegend: state.global.showLegend,
   }), isEqual);
-  const path = locationInfo.isScales ? '/chords' : '/';
+  const codepushEnvironment = useSelector(selectors.getCodepushEnvironment);
+  const [codepushSyncing, setCodepushSyncing] = useState(false);
+  const isProduction = codepushEnvironment === 'Production';
 
   const handleAlert = (e) => {
     if (isEmpty(scales)) {
       e.preventDefault();
       teleport(
         <Alert clearDelayMS={secondsToMilliseconds(5)}>
-          {t('alert.no_key')}
+          <Text style={mainStyle.alertText}>{t('alert.no_key')}</Text>
         </Alert>,
       );
     }
   };
 
-  if (locationInfo.isInfo || locationInfo.isRewarded) return null;
+  const handleAppEnvironment = () => {
+    const key = isProduction ? codepush[deviceInfo.isApple ? 'ios' : 'android'].staging : codepush[deviceInfo.isApple ? 'ios' : 'android'].production;
+
+    setCodepushSyncing(true);
+    CodePush.clearUpdates();
+    CodePush.sync({
+      deploymentKey: key,
+      installMode: CodePush.InstallMode.IMMEDIATE,
+    });
+  };
+
+  const handleAdminRedirect = () => {
+    if (deviceInfo.showAdminActions) {
+      navigate('/state-tree');
+
+      return;
+    }
+
+    dispatch(actions.showLegend(!showLegend));
+  };
+
+  if (!locationInfo.isScales && !locationInfo.isChords) return null;
 
   return (
     <View style={navigationStyle.navigation}>
       <Link
-        to={path}
+        to={locationInfo.isScales ? '/chords' : '/'}
         onPress={(e) => handleAlert(e)}
         underlayColor={colors.lightBlue}
         style={navigationStyle.switch}
@@ -51,9 +81,24 @@ function Navigation(): Node {
           {t(locationInfo.isScales ? 'links.scales' : 'links.chords')}
         </Text>
       </Link>
-      <TouchableOpacity onPress={() => dispatch(actions.showLegend(!showLegend))}>
+      {deviceInfo.showAdminActions && (
+        <TouchableOpacity style={navigationStyle.appEnvironment} activeOpacity={0.8} onPress={handleAppEnvironment}>
+          <Text style={navigationStyle.appEnvironmentText}>{codepushEnvironment}</Text>
+        </TouchableOpacity>
+      )}
+      <TouchableOpacity onPress={() => dispatch(actions.showLegend(!showLegend))} onLongPress={handleAdminRedirect}>
         <Info style={navigationStyle.info} />
       </TouchableOpacity>
+
+      <Modal animationType="fade" visible={codepushSyncing} transparent>
+        <Alert>
+          <Text style={[mainStyle.alertText, { fontSize: 14 }]}>
+            {t('alert.codepush_syncing.text_1')}
+            {t('alert.codepush_syncing.' + codepushEnvironment)}
+            {t('alert.codepush_syncing.text_2')}
+          </Text>
+        </Alert>
+      </Modal>
     </View>
   );
 }

@@ -2,6 +2,7 @@
 import React from 'react';
 import type { Node } from 'react';
 import { Svg, Path } from 'react-native-svg';
+import colors from '../../styles/colors';
 
 type Props = {
   style?: Object,
@@ -9,7 +10,7 @@ type Props = {
 
 function Icon(props: Props): Node {
   return (
-    <Svg viewBox="0 0 108.71 66.5" style={props.style}>
+    <Svg viewBox="0 0 108.71 66.5" style={props.style} fill={colors.white}>
       <Path
         d="M428.75,822.18c-.12.59-.25,1.19-.37,1.78s-.25,1.2-.37,1.79l-27.9-.17a1.79,1.79,0,0,1-1.78-1.8h0a1.79,1.79,0,0,1,1.8-1.78Z"
         transform="translate(-398.33 -790.86)"

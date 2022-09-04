@@ -1,6 +1,6 @@
 // @flow
 import { StyleSheet } from 'react-native';
-import { deviceHeight, isApple } from '../utils';
+import { deviceHeight, deviceWidth, isApple } from '../utils';
 import colors from './colors';
 
 type ScalesChordsStyle = {
@@ -90,6 +90,16 @@ const scalesChordsStyle: ScalesChordsStyle = StyleSheet.create({
     maxWidth: 500,
     overflow: isApple ? 'scroll' : 'hidden',
     width: '90%',
+    zIndex: 2,
+  },
+  selectListOverlay: {
+    backgroundColor: colors.blackTransparent,
+    height: deviceHeight,
+    left: 0,
+    position: 'absolute',
+    top: 0,
+    width: deviceWidth,
+    zIndex: 1,
   },
   selectList: {
     backgroundColor: colors.white,

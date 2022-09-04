@@ -12,6 +12,7 @@ import { deviceHeight } from '../../../utils';
 import { useLocationInfo } from '../../../utils/hooks';
 import bottomStyle from '../../../styles/bottom';
 import colors from '../../../styles/colors';
+import mainStyle from '../../../styles/main';
 
 type Props = {
   data: any,
@@ -176,6 +177,7 @@ function Bottom(props: Props): Node {
                 </Text>
               ))}
             </View>
+            <View style={mainStyle.adSpace} />
           </Animated.View>
         )}
         {locationInfo.isChords && data && (
@@ -252,6 +254,7 @@ function Bottom(props: Props): Node {
                 ))}
               </View>
             </View>
+            <View style={mainStyle.adSpace} />
           </View>
         )}
       </View>

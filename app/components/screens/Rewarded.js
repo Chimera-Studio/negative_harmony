@@ -83,7 +83,7 @@ function Rewarded(): Node {
         underlayColor={colors.transparent}
         style={mainStyle.exit}
       >
-        <Exit color={adLoading ? colors.disabled : colors.blue} />
+        <Exit color={colors.blue} />
       </Link>
       <View style={rewardedStyle.paragraph}>
         <Text style={rewardedStyle.paragraphText}>

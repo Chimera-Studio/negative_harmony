@@ -14,10 +14,6 @@ const infoStyle: InfoStyle = StyleSheet.create({
     flex: 1,
     marginTop: isiPhone ? 0 : 10,
   },
-  content: {
-    width: '90%',
-    height: '75%',
-  },
   title: {
     color: colors.black,
     fontFamily: 'NegativeHarmony-Bold',

@@ -30,7 +30,7 @@ function GradientBackground(): Node {
     <View style={styles.background}>
       <LinearGradient
         style={styles.gradient}
-        colors={[colors.gradientBlue, colors.gradientGreen]}
+        colors={[colors.gradientGreen, colors.gradientBlue]}
         start={{ x: 0, y: 0 }}
         end={{ x: 0, y: 1 }}
       />

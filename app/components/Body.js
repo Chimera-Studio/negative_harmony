@@ -13,6 +13,7 @@ import Scales from './screens/Scales';
 import Chords from './screens/Chords';
 import Rewarded from './screens/Rewarded';
 import Info from './screens/Info';
+import StateTree from './screens/StateTree';
 import Announcement from './screens/Announcement';
 import Loading from './screens/Loading';
 import Navigation from './containers/navigation/Navigation';
@@ -107,10 +108,11 @@ function Body(): Node {
         <SafeAreaView style={mainStyle.safe}>
           <Navigation />
           <Routes>
-            <Route exact path="/" element={<Scales />} />
+            <Route index element={<Scales />} />
             <Route path="/chords" element={<Chords />} />
             <Route path="/rewarded" element={<Rewarded />} />
             <Route path="/info" element={<Info />} />
+            <Route path="/state-tree" element={<StateTree />} />
           </Routes>
         </SafeAreaView>
         <AdmobBanner showAd={adsReady} />

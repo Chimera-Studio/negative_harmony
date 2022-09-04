@@ -2,17 +2,23 @@
 import React, { useEffect, useRef } from 'react';
 import type { Node } from 'react';
 import { Animated, Easing } from 'react-native';
+import { secondsToMilliseconds } from 'date-fns';
 import Icon from '../../../assets/icons/Icon';
 import scalesChordsStyles from '../../../styles/scales_chords';
 
-function Logo(): Node {
+type Props = {
+  animationSpeed?: number,
+  style?: Object,
+};
+
+function Logo(props: Props): Node {
   const rotate = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
     const startAnimation = () => {
       Animated.timing(rotate, {
         toValue: 1,
-        duration: 24000,
+        duration: props.animationSpeed || secondsToMilliseconds(24),
         useNativeDriver: true,
         easing: Easing.linear,
       }).start(() => {
@@ -29,6 +35,7 @@ function Logo(): Node {
     <Animated.View
       style={[
         scalesChordsStyles.icon,
+        { ...props.style },
         {
           transform: [
             {

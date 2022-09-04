@@ -3,8 +3,9 @@ import React, { useEffect, useState } from 'react';
 import CodePush from 'react-native-code-push';
 import { Provider } from 'react-redux';
 import SplashScreen from 'react-native-splash-screen';
-import Body from './app/components/Body';
+import ErrorBoundary from './app/components/containers/errors/ErrorBoundary';
 import PortalProvider from './app/components/containers/portal/PortalProvider';
+import Body from './app/components/Body';
 import { getDeviceInfo } from './app/utils';
 import { configureStore } from './app/store';
 import type { ReduxState } from './app/types';
@@ -41,11 +42,13 @@ function App() {
   if (setupPending) return null;
 
   return (
-    <Provider store={store}>
-      <PortalProvider>
-        <Body />
-      </PortalProvider>
-    </Provider>
+    <ErrorBoundary store={store}>
+      <Provider store={store}>
+        <PortalProvider>
+          <Body />
+        </PortalProvider>
+      </Provider>
+    </ErrorBoundary>
   );
 }
 

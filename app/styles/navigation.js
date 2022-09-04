@@ -1,6 +1,6 @@
 // @flow
 import { StyleSheet } from 'react-native';
-import { isiPhone } from '../utils';
+import { isTablet, isiPhone } from '../utils';
 import colors from './colors';
 
 type NavigationStyle = {
@@ -8,6 +8,8 @@ type NavigationStyle = {
   switch: Object,
   switchText: Object,
   info: Object,
+  appEnvironment: Object,
+  appEnvironmentText: Object,
 };
 
 const navigationStyle: NavigationStyle = StyleSheet.create({
@@ -17,6 +19,7 @@ const navigationStyle: NavigationStyle = StyleSheet.create({
     height: 40,
     justifyContent: 'space-between',
     marginTop: isiPhone ? 0 : 10,
+    position: 'relative',
     width: '100%',
   },
   switch: {
@@ -37,6 +40,22 @@ const navigationStyle: NavigationStyle = StyleSheet.create({
   info: {
     width: 30,
     height: 30,
+  },
+  appEnvironment: {
+    alignItems: 'center',
+    backgroundColor: colors.white,
+    borderRadius: 15,
+    display: 'flex',
+    height: 30,
+    justifyContent: 'center',
+    left: '50%',
+    position: 'absolute',
+    transform: [{ translateX: -50 }],
+    width: 100,
+  },
+  appEnvironmentText: {
+    fontFamily: 'NegativeHarmony',
+    fontSize: isTablet ? 14 : 12,
   },
 });
 

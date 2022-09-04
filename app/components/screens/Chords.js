@@ -4,10 +4,6 @@ import type { Node } from 'react';
 import {
   Text,
   View,
-  ScrollView,
-  TouchableOpacity,
-  TouchableHighlight,
-  Modal,
   Animated,
   Easing,
 } from 'react-native';
@@ -15,13 +11,13 @@ import { useSelector } from 'react-redux';
 import { Link } from 'react-router-native';
 import {
   indexOf, times, includes, forEach, isEqual, sortBy,
-  map,
 } from 'lodash';
-import Bottom from '../containers/bottom/Bottom';
 import Legend from '../elements/misc/Legend';
 import LegendExtra from '../elements/misc/LegendExtra';
 import Disclamer from '../../assets/icons/Disclamer';
-import Arrow from '../../assets/icons/Arrow';
+import Select from '../elements/inputs/Select';
+import TonicSlider from '../containers/tonic-slider/TonicSlider';
+import Bottom from '../containers/bottom/Bottom';
 import useLocale from '../../locales';
 import { useReview } from '../../utils/hooks';
 import { selectors } from '../../store/globalStore';
@@ -31,7 +27,6 @@ import colors from '../../styles/colors';
 function Chords(): Node {
   const { t } = useLocale();
   const reviewApp = useReview();
-  const scrollChords = useRef(null);
   const global = useSelector(selectors.getGlobal, isEqual);
   const lists = useSelector((state) => ({
     scales: state.cms.scales,
@@ -40,17 +35,11 @@ function Chords(): Node {
   const [selectedChord, setSelectedChord] = useState(lists.chords[0]);
   const [chords, setChords] = useState(null);
   const [tonic, setTonic] = useState(0);
-  const [tonicSpacer, setTonicSpacer] = useState(0);
   const [openSelect, setOpenSelect] = useState(false);
   const screenOpacity = useRef(new Animated.Value(0)).current;
   const selectedScale = global.selectedScale || lists.scales[0];
 
-  const getDimentions = (event) => {
-    const { width } = event.nativeEvent.layout;
-    setTonicSpacer(width / 2 - 55);
-  };
-
-  const handleChords = (selected, tonicIndex) => {
+  const handleChords = (selected: Object, tonicIndex: number) => {
     const positiveChord = [];
     const negativeChord = [];
 
@@ -142,23 +131,6 @@ function Chords(): Node {
     });
   };
 
-  const handleSelect = (val) => {
-    setSelectedChord(val);
-    handleChords(val, tonic);
-    setOpenSelect(false);
-  };
-
-  const handleTonic = (index) => {
-    setTonic(index);
-    scrollChords.current?.scrollTo({
-      x: 110 * index,
-      animated: false,
-    });
-
-    handleChords(selectedChord, index);
-    reviewApp();
-  };
-
   useEffect(() => {
     const handleScreenAnimation = (to) => {
       Animated.timing(screenOpacity, {
@@ -175,6 +147,18 @@ function Chords(): Node {
     return () => handleScreenAnimation(0);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const handleSelect = (val: Object) => {
+    setSelectedChord(val);
+    handleChords(val, tonic);
+    setOpenSelect(false);
+  };
+
+  const handleTonic = (index: number) => {
+    setTonic(index);
+    handleChords(selectedChord, index);
+    reviewApp();
+  };
 
   return (
     <Animated.View
@@ -197,11 +181,16 @@ function Chords(): Node {
             </View>
           </View>
         ) : (
-          <>
-            <Text style={scalesChordsStyle.selectTextExp}>
-              {t('select.chords')}
-            </Text>
-
+          <Select
+            title={t('select.chords')}
+            value={selectedChord}
+            options={lists.chords}
+            isOpen={openSelect}
+            unlocked={global.unlocked}
+            onSelect={handleSelect}
+            onOpen={() => setOpenSelect(true)}
+            onClose={() => setOpenSelect(false)}
+          >
             <View style={scalesChordsStyle.selectedScaleNameWrapper}>
               <Text style={scalesChordsStyle.selectedScaleKey}>
                 {global.scales.positive[0]}
@@ -210,125 +199,17 @@ function Chords(): Node {
                 {selectedScale.name}
               </Text>
             </View>
-
-            <TouchableOpacity
-              style={scalesChordsStyle.selectInput}
-              onPress={() => setOpenSelect(true)}
-            >
-              <View>
-                <Text style={scalesChordsStyle.selectInputText}>
-                  {selectedChord.name}
-                </Text>
-                <Arrow style={scalesChordsStyle.selectListArrow} />
-              </View>
-            </TouchableOpacity>
-          </>
+          </Select>
         )}
       </View>
 
-      <View style={scalesChordsStyle.chordsWrapper} onLayout={getDimentions}>
-        {global.unlocked ? (
-          <View style={scalesChordsStyle.scrollChords}>
-            <Text style={scalesChordsStyle.scrollChordsExpText}>
-              {t('select.tonics')}
-            </Text>
-
-            <ScrollView
-              ref={scrollChords}
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              contentContainerStyle={scalesChordsStyle.scrollChordsWrapper}
-            >
-              <View
-                style={
-                  (scalesChordsStyle.scrollChordsSpace,
-                  { width: tonicSpacer })
-                }
-              />
-              {map(global.scales.positive, (note: string, index: number) => (
-                <React.Fragment key={note + index}>
-                  {global.scales.positive.length - 1 !== index && (
-                    <TouchableHighlight
-                      activeOpacity={1}
-                      underlayColor={colors.lightBlue}
-                      style={
-                        index === tonic
-                          ? scalesChordsStyle.scrollChordsNoteSelected
-                          : scalesChordsStyle.scrollChordsNote
-                      }
-                      key={index}
-                      onPress={() => handleTonic(index)}
-                    >
-                      <Text
-                        style={
-                          index === tonic
-                            ? scalesChordsStyle.scrollChordsNoteTextSelected
-                            : scalesChordsStyle.scrollChordsNoteText
-                        }
-                      >
-                        {note}
-                      </Text>
-                    </TouchableHighlight>
-                  )}
-                </React.Fragment>
-              ))}
-              <View
-                style={
-                  (scalesChordsStyle.scrollChordsSpace,
-                  { width: tonicSpacer })
-                }
-              />
-            </ScrollView>
-          </View>
-        ) : (
-          <Link
-            to="/rewarded"
-            underlayColor={colors.blueTransparent}
-            style={scalesChordsStyle.rewardedOpen}
-          >
-            <Text style={scalesChordsStyle.rewardedOpenText}>
-              {t('cta.chords')}
-            </Text>
-          </Link>
-        )}
-      </View>
-
+      <TonicSlider
+        scales={global.scales}
+        unlocked={global.unlocked}
+        value={tonic}
+        onPress={handleTonic}
+      />
       <Bottom data={chords} />
-
-      <Modal animationType="fade" transparent visible={openSelect}>
-        <View style={scalesChordsStyle.selectListWrapper}>
-          <ScrollView
-            showsVerticalScrollIndicator={false}
-            style={scalesChordsStyle.selectList}
-            centerContent
-          >
-            {map(lists.chords, (item: Object, index: number) => (
-              <TouchableOpacity
-                key={item.name}
-                style={
-                  index === lists.chords.length - 1
-                    ? scalesChordsStyle.selectItemNoBorder
-                    : scalesChordsStyle.selectItem
-                }
-                onPress={() => handleSelect(item)}
-                disabled={!global.unlocked && index !== 0}
-              >
-                <Text
-                  style={[global.unlocked || index === 0 ? scalesChordsStyle.selectText : scalesChordsStyle.selectDisabledText,
-                    {
-                      color: colors.whiteGray,
-                      ...(global.unlocked && { color: colors.black }),
-                      ...(selectedChord.name === item.name && { color: colors.blue }),
-                    },
-                  ]}
-                >
-                  {item.name}
-                </Text>
-              </TouchableOpacity>
-            ))}
-          </ScrollView>
-        </View>
-      </Modal>
     </Animated.View>
   );
 }
