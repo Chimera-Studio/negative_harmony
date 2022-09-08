@@ -4,6 +4,7 @@ import type { Node } from 'react';
 import {
   Modal, ScrollView, Text, TouchableOpacity, TouchableWithoutFeedback, View,
 } from 'react-native';
+import { useNavigate } from 'react-router';
 import { map } from 'lodash';
 import Arrow from '../../../assets/icons/Arrow';
 import scalesChordsStyle from '../../../styles/scales_chords';
@@ -27,7 +28,15 @@ type Props = {
 };
 
 function Select(props: Props): Node {
-  const handleSelect = (option: Option) => {
+  const navigate = useNavigate();
+
+  const handleSelect = (option: Option, index: number) => {
+    if (!props.unlocked && index !== 0) {
+      navigate('/rewarded');
+
+      return;
+    }
+
     props.onSelect(option);
   };
 
@@ -55,6 +64,7 @@ function Select(props: Props): Node {
         animationType="fade"
         visible={props.isOpen}
         onRequestClose={props.onClose}
+        statusBarTranslucent
         transparent
       >
         <TouchableWithoutFeedback onPress={props.onClose}>
@@ -73,8 +83,7 @@ function Select(props: Props): Node {
                     ? scalesChordsStyle.selectItemNoBorder
                     : scalesChordsStyle.selectItem
                 }
-                onPress={() => handleSelect(option)}
-                disabled={!props.unlocked && index !== 0}
+                onPress={() => handleSelect(option, index)}
               >
                 <Text
                   style={[props.unlocked || index === 0 ? scalesChordsStyle.selectText : scalesChordsStyle.selectDisabledText,

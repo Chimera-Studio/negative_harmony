@@ -29,6 +29,8 @@ target 'NegativeHarmony' do
 
   pod 'RNDeviceInfo', :path => '../node_modules/react-native-device-info'
 
+  pod 'RNSound', :path => '../node_modules/react-native-sound'
+
   pod 'react-native-in-app-review', :path => '../node_modules/react-native-in-app-review'
   
   pod 'BVLinearGradient', :path => '../node_modules/react-native-linear-gradient'

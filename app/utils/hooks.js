@@ -6,17 +6,20 @@ import { useLocation } from 'react-router-dom';
 import InAppReview from 'react-native-in-app-review';
 import { RewardedAd } from 'react-native-google-mobile-ads';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Sound from 'react-native-sound';
 import {
   addMonths, minutesToMilliseconds, secondsToMilliseconds,
 } from 'date-fns';
 import { useSelector } from 'react-redux';
-import { isEqual } from 'lodash';
+import { isEqual, keys } from 'lodash';
 import { localStorageKeys } from '../tokens';
 import { rewardedKeywords } from '../tokens/keywords';
+import { symbolFlat, symbolSharp } from './patterns';
 import { PortalContext } from '../context';
 import { isPromise } from '.';
 import type { PortalProps } from '../context';
 import type { ReduxState } from '../types';
+import type { ChordPlaying } from '../components/containers/bottom/BottomChords';
 
 export const getItem = async (key: string): any => {
   try {
@@ -166,4 +169,51 @@ export const useCountdown = (onTimeEnd: Function, countdownFrom: ?number) => {
     return () => clearInterval(timerId);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+};
+
+export type Note = { diatonic: boolean, note: string };
+export type UseSoundChords = {
+  chordsPause: Function,
+  chordsPlay: Function,
+};
+
+export const useSoundChords = (): UseSoundChords => {
+  Sound.setCategory('Playback');
+  const playbackRef = useRef<{[string]: any}>({});
+
+  const chordsPause = () => {
+    const notes = keys(playbackRef.current);
+    for (let index = 0; index < notes.length; index++) {
+      const note = notes[index];
+      playbackRef.current[note].stop();
+      playbackRef.current[note].release();
+    }
+
+    playbackRef.current = {};
+  };
+
+  const chordsPlay = (notes: Note[], type: ChordPlaying) => {
+    const isNegative = type === 'negative';
+    const chord = [...notes];
+
+    for (let index = 0; index < chord.length; index++) {
+      const { note } = chord[index];
+      const soundPath = (note.includes(symbolSharp) || note.includes(symbolFlat)) ? note.charAt(0) + '_sharp' : note;
+      const soundKey = (isNegative ? 'low_' : '') + soundPath.toLowerCase();
+
+      const sound = new Sound(`${soundKey}.mp3`, Sound.MAIN_BUNDLE, (error) => {
+        if (error) return;
+
+        sound.setVolume(0.8);
+        sound.play();
+      });
+
+      playbackRef.current[soundKey] = sound;
+    }
+  };
+
+  return {
+    chordsPause: () => chordsPause(),
+    chordsPlay: (notes: Note[], type: ChordPlaying) => chordsPlay(notes, type),
+  };
 };

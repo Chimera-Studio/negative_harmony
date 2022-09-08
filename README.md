@@ -8,6 +8,7 @@
 
 - [Google Play Store](https://play.google.com/store/apps/details?id=com.chimerastudio.negativeharmony)
 - [App Store](https://apps.apple.com/us/app/negative-harmony-simplified/id1561674380)
+- [Amazon Store](https://www.amazon.com/gp/product/B09QBMPTBJ)
 
 ### Negative Harmony is an app made to make the musical theory of negative harmony easier to understand and visualise.
 
@@ -28,8 +29,8 @@ The second-page "Chords" is made available after selecting the key and scale on 
 
 - [x] CMS integration
 - [x] More chords
+- [x] Play sound examples
 - [ ] Guitar chord diagrams
-- [ ] Play sound examples
 - [ ] Chord sequences
 - [ ] Save favourite configurations
 - [ ] Import and export MIDI
@@ -43,7 +44,7 @@ The second-page "Chords" is made available after selecting the key and scale on 
 
 [More by Chimera Studio](https://linktr.ee/chimerastudiotm)
 
-[Privacy Policy](https://sites.google.com/view/chimerastudio/home)
+[Privacy Policy](https://chimerastudio.co.uk/privacy-policy)
 
 ###### Copyright
 

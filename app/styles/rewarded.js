@@ -4,7 +4,13 @@ import { isiPhone } from '../utils';
 import colors from './colors';
 
 type RewardedStyle = {
-  ...Object
+  wrapper: Object,
+  paragraph: Object,
+  paragraphText: Object,
+  start: Object,
+  disabled: Object,
+  startText: Object,
+  disclamer: Object,
 };
 
 const rewardedStyle: RewardedStyle = StyleSheet.create({

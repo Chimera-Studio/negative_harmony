@@ -37,7 +37,7 @@ const contentfulToReactNative = (): any => ({
     [BLOCKS.HEADING_1]: (_node, children) => (
       <Text
         style={[
-          announcementStyle.heading,
+          announcementStyle.title,
           { fontFamily: 'NegativeHarmony-Bold', fontSize: 26 },
         ]}
       >
@@ -47,7 +47,7 @@ const contentfulToReactNative = (): any => ({
     [BLOCKS.HEADING_2]: (_node, children) => (
       <Text
         style={[
-          announcementStyle.heading,
+          announcementStyle.title,
           { fontFamily: 'NegativeHarmony-Bold', fontSize: 24 },
         ]}
       >
@@ -57,7 +57,7 @@ const contentfulToReactNative = (): any => ({
     [BLOCKS.HEADING_3]: (_node, children) => (
       <Text
         style={[
-          announcementStyle.heading,
+          announcementStyle.title,
           { fontFamily: 'NegativeHarmony-Bold', fontSize: 22 },
         ]}
       >
@@ -67,7 +67,7 @@ const contentfulToReactNative = (): any => ({
     [BLOCKS.HEADING_4]: (_node, children) => (
       <Text
         style={[
-          announcementStyle.heading,
+          announcementStyle.title,
           { fontFamily: 'NegativeHarmony-Bold', fontSize: 20 },
         ]}
       >
@@ -77,7 +77,7 @@ const contentfulToReactNative = (): any => ({
     [BLOCKS.HEADING_5]: (_node, children) => (
       <Text
         style={[
-          announcementStyle.heading,
+          announcementStyle.title,
           { fontFamily: 'NegativeHarmony-Bold', fontSize: 18 },
         ]}
       >
@@ -87,7 +87,7 @@ const contentfulToReactNative = (): any => ({
     [BLOCKS.HEADING_6]: (_node, children) => (
       <Text
         style={[
-          announcementStyle.heading,
+          announcementStyle.title,
           { fontFamily: 'NegativeHarmony-Bold', fontSize: 15 },
         ]}
       >

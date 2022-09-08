@@ -54,6 +54,7 @@ const navigationStyle: NavigationStyle = StyleSheet.create({
     width: 100,
   },
   appEnvironmentText: {
+    color: colors.black,
     fontFamily: 'NegativeHarmony',
     fontSize: isTablet ? 14 : 12,
   },

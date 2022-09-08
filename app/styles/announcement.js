@@ -3,7 +3,14 @@ import { StyleSheet } from 'react-native';
 import colors from './colors';
 
 type AnnouncementStyle = {
-  ...Object
+  title: Object,
+  text: Object,
+  list: Object,
+  listItem: Object,
+  listCount: Object,
+  listBullet: Object,
+  button: Object,
+  buttonText: Object,
 };
 
 const announcementStyle: AnnouncementStyle = StyleSheet.create({
@@ -15,24 +22,20 @@ const announcementStyle: AnnouncementStyle = StyleSheet.create({
     marginTop: 40,
     textAlign: 'center',
   },
-
   text: {
     color: colors.black,
     fontFamily: 'NegativeHarmony',
     fontSize: 16,
   },
-
   list: {
     flexDirection: 'column',
   },
-
   listItem: {
     alignItems: 'flex-start',
     flexDirection: 'row',
     justifyContent: 'flex-start',
     marginBottom: 10,
   },
-
   listCount: {
     alignSelf: 'center',
     color: colors.blue,
@@ -40,7 +43,6 @@ const announcementStyle: AnnouncementStyle = StyleSheet.create({
     fontSize: 15,
     marginRight: 6,
   },
-
   listBullet: {
     backgroundColor: colors.blue,
     borderRadius: 4,
@@ -49,7 +51,6 @@ const announcementStyle: AnnouncementStyle = StyleSheet.create({
     marginRight: 6,
     width: 8,
   },
-
   button: {
     backgroundColor: colors.blue,
     borderRadius: 30,
@@ -58,7 +59,6 @@ const announcementStyle: AnnouncementStyle = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 15,
   },
-
   buttonText: {
     color: colors.white,
     fontFamily: 'NegativeHarmony-Bold',

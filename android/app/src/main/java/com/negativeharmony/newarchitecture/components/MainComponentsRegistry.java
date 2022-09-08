@@ -1,4 +1,4 @@
-package com.negativeharmony.newarchitecture.components;
+package com.chimerastudio.negativeharmony.newarchitecture.components;
 
 import com.facebook.jni.HybridData;
 import com.facebook.proguard.annotations.DoNotStrip;

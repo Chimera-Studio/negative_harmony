@@ -1,4 +1,4 @@
-package com.negativeharmony.newarchitecture.modules;
+package com.chimerastudio.negativeharmony.newarchitecture.modules;
 
 import com.facebook.jni.HybridData;
 import com.facebook.react.ReactPackage;

@@ -6,7 +6,16 @@ import {
 import colors from './colors';
 
 type MainStyle = {
-  ...Object
+  container: Object,
+  safe: Object,
+  scrollContainer: Object,
+  scrollDeviceContainer: Object,
+  alert: Object,
+  alertText: Object,
+  exit: Object,
+  exitDisabled: Object,
+  ads: Object,
+  adSpace: Object,
 };
 
 const mainStyle: MainStyle = StyleSheet.create({
@@ -61,14 +70,14 @@ const mainStyle: MainStyle = StyleSheet.create({
     aspectRatio: 1 / 1,
     position: 'absolute',
     right: 0,
-    top: 0,
+    top: isiPhone ? 0 : 10,
     width: 25,
   },
   exitDisabled: {
     aspectRatio: 1 / 1,
     position: 'absolute',
     right: 0,
-    top: 0,
+    top: isiPhone ? 0 : 10,
     width: 25,
   },
   ads: {

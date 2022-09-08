@@ -4,7 +4,11 @@ import { isiPhone } from '../utils';
 import colors from './colors';
 
 type InfoStyle = {
-  ...Object
+  wrapper: Object,
+  title: Object,
+  subTitle: Object,
+  contactTitle: Object,
+  text: Object,
 };
 
 const infoStyle: InfoStyle = StyleSheet.create({

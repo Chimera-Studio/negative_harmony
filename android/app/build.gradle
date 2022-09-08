@@ -135,11 +135,11 @@ android {
     compileSdkVersion rootProject.ext.compileSdkVersion
 
     defaultConfig {
-        applicationId "com.negativeharmony"
+        applicationId "com.chimerastudio.negativeharmony"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 3
-        versionName "2.5"
+        versionCode 2
+        versionName "2.0"
         buildConfigField "boolean", "IS_NEW_ARCHITECTURE_ENABLED", isNewArchitectureEnabled().toString()
 
         if (isNewArchitectureEnabled()) {
@@ -225,16 +225,21 @@ android {
             keyAlias 'androiddebugkey'
             keyPassword 'android'
         }
+        release {
+            storeFile file('release.keystore')
+            storePassword System.getenv('RELEASE_KEYSTORE_PASSWORD')
+            keyAlias System.getenv('RELEASE_KEYSTORE_KEY_ALIAS')
+            keyPassword System.getenv('RELEASE_KEYSTORE_KEY_PASSWORD')
+        }
     }
     buildTypes {
         debug {
             signingConfig signingConfigs.debug
         }
         release {
-            storeFile file('release.keystore')
-            storePassword System.getenv('RELEASE_KEYSTORE_PASSWORD')
-            keyAlias System.getenv('RELEASE_KEYSTORE_KEY_ALIAS')
-            keyPassword System.getenv('RELEASE_KEYSTORE_KEY_PASSWORD')
+            signingConfig signingConfigs.release
+            minifyEnabled enableProguardInReleaseBuilds
+            proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
         }
     }
 
@@ -262,6 +267,8 @@ dependencies {
     implementation "com.facebook.react:react-native:+"  // From node_modules
 
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
+
+    implementation project(':react-native-splash-screen')
 
     debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}") {
         exclude group:'com.facebook.fbjni'

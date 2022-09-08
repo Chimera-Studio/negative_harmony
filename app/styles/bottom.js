@@ -4,7 +4,17 @@ import { deviceHeight } from '../utils';
 import colors from './colors';
 
 type BottomStyle = {
-  ...Object
+  space: Object,
+  wrapper: Object,
+  scale: Object,
+  scaleText: Object,
+  axis: Object,
+  chord: Object,
+  chordName: Object,
+  tonic: Object,
+  name: Object,
+  notes: Object,
+  notesText: Object,
 };
 
 const smallScreenHeight = deviceHeight <= 700;

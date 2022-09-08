@@ -17,7 +17,7 @@ import LegendExtra from '../elements/misc/LegendExtra';
 import Disclamer from '../../assets/icons/Disclamer';
 import Select from '../elements/inputs/Select';
 import TonicSlider from '../containers/tonic-slider/TonicSlider';
-import Bottom from '../containers/bottom/Bottom';
+import BottomChords from '../containers/bottom/BottomChords';
 import useLocale from '../../locales';
 import { useReview } from '../../utils/hooks';
 import { selectors } from '../../store/globalStore';
@@ -87,14 +87,14 @@ function Chords(): Node {
     pattern.reverse();
 
     const handleFindChordMatch = () => {
-      let chordName = t('chords.noMatch');
+      let chordName = t('chords.no_match');
       forEach(lists.chords, (c) => {
         if (isEqual(c.value, pattern)) {
           chordName = c.display;
         }
       });
 
-      if (chordName === t('chords.noMatch')) {
+      if (chordName === t('chords.no_match')) {
         times(11, (i) => {
           forEach(lists.chords, (c) => {
             const checkPattern = c.value.map((value) => {
@@ -209,7 +209,7 @@ function Chords(): Node {
         value={tonic}
         onPress={handleTonic}
       />
-      <Bottom data={chords} />
+      <BottomChords data={chords} />
     </Animated.View>
   );
 }

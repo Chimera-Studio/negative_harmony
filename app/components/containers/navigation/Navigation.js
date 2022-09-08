@@ -90,7 +90,7 @@ function Navigation(): Node {
         <Info style={navigationStyle.info} />
       </TouchableOpacity>
 
-      <Modal animationType="fade" visible={codepushSyncing} transparent>
+      <Modal animationType="fade" visible={codepushSyncing} statusBarTranslucent transparent>
         <Alert>
           <Text style={[mainStyle.alertText, { fontSize: 14 }]}>
             {t('alert.codepush_syncing.text_1')}

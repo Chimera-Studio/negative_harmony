@@ -11,7 +11,7 @@ import { isEqual, times } from 'lodash';
 import Legend from '../elements/misc/Legend';
 import Select from '../elements/inputs/Select';
 import Circle from '../containers/circle/Circle';
-import Bottom from '../containers/bottom/Bottom';
+import BottomScales from '../containers/bottom/BottomScales';
 import useLocale from '../../locales';
 import { useReview, useTeleport } from '../../utils/hooks';
 import { musicScale } from '../../utils/patterns';
@@ -170,7 +170,7 @@ export function Scales(): Node {
         keys={keys}
         handleKey={handleKey}
       />
-      <Bottom data={global.scales} />
+      <BottomScales data={global.scales} />
     </Animated.View>
   );
 }

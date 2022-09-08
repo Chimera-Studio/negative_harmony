@@ -423,6 +423,11 @@ PODS:
     - Google-Mobile-Ads-SDK (= 9.6.0)
     - GoogleUserMessagingPlatform (= 2.0.0)
     - React-Core
+  - RNSound (0.11.2):
+    - React-Core
+    - RNSound/Core (= 0.11.2)
+  - RNSound/Core (0.11.2):
+    - React-Core
   - RNSVG (13.1.0):
     - React-Core
   - SocketRocket (0.6.0)
@@ -496,6 +501,7 @@ DEPENDENCIES:
   - "RNCClipboard (from `../node_modules/@react-native-clipboard/clipboard`)"
   - RNDeviceInfo (from `../node_modules/react-native-device-info`)
   - RNGoogleMobileAds (from `../node_modules/react-native-google-mobile-ads`)
+  - RNSound (from `../node_modules/react-native-sound`)
   - RNSVG (from `../node_modules/react-native-svg`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
@@ -607,6 +613,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-device-info"
   RNGoogleMobileAds:
     :path: "../node_modules/react-native-google-mobile-ads"
+  RNSound:
+    :path: "../node_modules/react-native-sound"
   RNSVG:
     :path: "../node_modules/react-native-svg"
   Yoga:
@@ -674,12 +682,13 @@ SPEC CHECKSUMS:
   RNCClipboard: 4b8bec7c195e27bcec746f52dff7601161683249
   RNDeviceInfo: 0a7c1d2532aa7691f9b9925a27e43af006db4dae
   RNGoogleMobileAds: ad5ed70608dd943e5d2954ebd24c390aca8d1b28
+  RNSound: 6c156f925295bdc83e8e422e7d8b38d33bc71852
   RNSVG: 1153e8eeb34c788841016c517dba9f57f20b762f
   SocketRocket: fccef3f9c5cedea1353a9ef6ada904fde10d6608
   SSZipArchive: 62d4947b08730e4cda640473b0066d209ff033c9
   Yoga: c2b1f2494060865ac1f27e49639e72371b1205fa
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
-PODFILE CHECKSUM: 3972de6af9fda3976262f507269906abadf7b4e8
+PODFILE CHECKSUM: 22fb7e39c270611621f8d5f4e3b7e8c26cd2622b
 
 COCOAPODS: 1.11.3

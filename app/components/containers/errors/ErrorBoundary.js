@@ -7,13 +7,21 @@ import {
 // import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import RNRestart from 'react-native-restart';
-import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-import { faGrinBeamSweat } from '@fortawesome/free-solid-svg-icons';
 import WhiteBackground from '../../elements/backgrounds/WhiteBackground';
+import Emoji from '../../../assets/icons/Emoji';
 import colors from '../../../styles/colors';
 import type { ReduxState } from '../../../types';
 
-const styles: Object = StyleSheet.create({
+type Styles = {
+  safe: Object,
+  title: Object,
+  text: Object,
+  emoji: Object,
+  button: Object,
+  buttonText: Object,
+};
+
+const styles: Styles = StyleSheet.create({
   safe: {
     backgroundColor: colors.white,
     flex: 1,
@@ -38,6 +46,10 @@ const styles: Object = StyleSheet.create({
     fontSize: 16,
     marginVertical: 16,
     textAlign: 'left',
+  },
+  emoji: {
+    height: 14,
+    width: 14,
   },
   button: {
     alignItems: 'center',
@@ -101,10 +113,7 @@ class ErrorBoundary extends React.Component<Props, State> {
           <Text style={styles.title}>Oops...</Text>
           <Text style={styles.text}>
             It seems you encountered an error while using the app. Sorry about that.{' '}
-            <FontAwesomeIcon
-              icon={faGrinBeamSweat}
-              color={colors.blue}
-            />
+            <Emoji style={styles.emoji} fill={colors.blue} />
           </Text>
           <Text style={styles.text}>
             We are working hard to fix it and we ask for your patients, but if it happens again you can contact the team directly at:

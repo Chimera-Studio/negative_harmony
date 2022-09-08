@@ -1,16 +1,18 @@
 // @flow
+export const symbolSharp = '♯';
+export const symbolFlat = '♭';
 export const musicScale = [
   'C',
-  'C♯ D♭',
+  `C${symbolSharp} D${symbolFlat}`,
   'D',
-  'D♯ E♭',
+  `D${symbolSharp} E${symbolFlat}`,
   'E',
   'F',
-  'F♯ G♭',
+  `F${symbolSharp} G${symbolFlat}`,
   'G',
-  'G♯ A♭',
+  `G${symbolSharp} A${symbolFlat}`,
   'A',
-  'A♯ B♭',
+  `A${symbolSharp} B${symbolFlat}`,
   'B',
 ];
 

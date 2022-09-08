@@ -48,6 +48,14 @@ jest.mock('react-native-code-push', () => {
   return cp;
 });
 
+jest.mock('react-native-sound', () => ({
+  setVolume: jest.fn(),
+  setNumberOfLoops: jest.fn(),
+  play: jest.fn(),
+  stop: jest.fn(),
+  setCategory: jest.fn(),
+}));
+
 jest.mock('react-native-json-tree', () => 'JSONTree');
 
 jest.mock('axios', () => {
