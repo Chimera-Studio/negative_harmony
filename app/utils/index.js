@@ -1,11 +1,10 @@
 // @flow
-/* eslint-disable no-undef */
 import { Dimensions, Platform } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
 import { AdsConsent, AdsConsentStatus } from 'react-native-google-mobile-ads';
 import { includes } from 'lodash';
 // $FlowFixMe[cannot-resolve-module] (Git Ignored)
-import ENV from '../../env.json';
+import ENV from '../../env.json'; /* eslint-disable-line import/no-unresolved */
 
 type DeviceInfoType = {
   isApple: boolean,
