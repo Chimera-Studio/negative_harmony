@@ -1,115 +1,154 @@
-import { get, groupBy, merge } from "lodash";
-import * as API from "../api";
-import { PRODUCTION_QUERY, STAGING_QUERY } from "../api/cms";
-import { isProduction, storeDataToLocal } from "../utils";
-import { appKeys, localStorageKeys } from "../tokens";
+// @flow
+import { get, groupBy } from 'lodash';
+import * as API from '../api';
+import { deviceInfo } from '../utils';
+import { setItem } from '../utils/hooks';
+import { admob, localStorageKeys } from '../tokens';
+import type { InitialCMSResponse } from '../api';
+import type { ReduxAction, ReduxActionWithPayload, ReduxState } from '../types';
 
-const MASTER_QUERY = isProduction ? PRODUCTION_QUERY : STAGING_QUERY;
+type Timestamps = {
+  local: any,
+  online: any,
+  announcement: any,
+};
+
+type Master = {
+  adIds: {
+    banner: {
+      android: string,
+      ios: string,
+    },
+    rewarded: {
+      android: string,
+      ios: string,
+    },
+  },
+  ads: boolean,
+  resetRewards: number,
+  keepRewards: number,
+};
+
+export type State = {
+  timestamps: Timestamps,
+  master: Master,
+  scales: Object[],
+  chords: Object[],
+  announcement?: Object,
+  isLocal: boolean,
+};
 
 export const types = {
-  CMS_CHECK_TIMESTAMPS: "CMS/CMS_CHECK_TIMESTAMPS",
-  CMS_FETCH_APP: "CMS/FETCH_APP",
-  CMS_STORE_APP: "CMS/STORE_APP",
+  CMS_FETCH_APP: 'CMS/FETCH_APP',
+  CMS_FETCH_APP_PENDING: 'CMS/FETCH_APP_PENDING',
+  CMS_FETCH_APP_REJECTED: 'CMS/FETCH_APP_REJECTED',
+  CMS_FETCH_APP_FULFILLED: 'CMS/FETCH_APP_FULFILLED',
+};
+
+type AdmobIds = {
+  banner: string|null,
+  rewarded: string|null,
+}
+
+export const getAdmobIds = (adIds: ?{
+  banner: {
+    android: string,
+    ios: string,
+  },
+  rewarded: {
+    android: string,
+    ios: string,
+  }
+}): AdmobIds => {
+  let adId = null;
+
+  const getBannerID = (): string|null => {
+    if (!adIds) return null;
+
+    if (deviceInfo.isApple) {
+      adId = deviceInfo.isRealDevice ? adIds.banner.ios : admob.banner.ios_test;
+    } else {
+      adId = deviceInfo.isRealDevice ? adIds.banner.android : admob.banner.android_test;
+    }
+
+    return adId;
+  };
+
+  const getRewardedID = (): string|null => {
+    if (!adIds) return null;
+
+    if (deviceInfo.isApple) {
+      adId = deviceInfo.isRealDevice ? adIds.rewarded.ios : admob.rewarded.ios_test;
+    } else {
+      adId = deviceInfo.isRealDevice ? adIds.rewarded.android : admob.rewarded.android_test;
+    }
+
+    return adId;
+  };
+
+  return {
+    banner: getBannerID(),
+    rewarded: getRewardedID(),
+  };
 };
 
 export const selectors = {
-  getTimestamps: (state) => state.cms.timestamps,
-  getCMS: (state) => state.cms,
+  getCMS: (state: ReduxState): ?State => state.cms,
+  getTimestamps: (state: ReduxState): ?Timestamps => state.cms?.timestamps,
+  getAdmobIds: (state: ReduxState): AdmobIds => getAdmobIds(get(state.cms, 'master.adIds')),
 };
 
-const storeTimestamps = (localData, online) => ({
-  type: types.CMS_CHECK_TIMESTAMPS,
-  payload: {
-    local: localData.local,
-    announcement: localData.announcement,
-    online,
-  },
-});
-
-const storeCMS = (res, timestamps) => ({
-  type: types.CMS_FETCH_APP,
-  payload: { data: res, timestamps },
-});
-
 export const actions = {
-  checkTimestamps: () => {
-    return async function (dispatch) {
-      return API.fetchLocalTimestamps().then((local) =>
-        API.fetchCMSTimestamps().then((online) =>
-          dispatch(storeTimestamps(local, online))
-        )
-      );
-    };
-  },
-  fetchCMS: (timestamps) => {
-    return async function (dispatch) {
-      return API.cmsFetch(MASTER_QUERY).then((res) =>
-        dispatch(storeCMS(res, timestamps))
-      );
-    };
-  },
-  storeLocalCMS: (data) => ({
-    type: types.CMS_STORE_APP,
-    payload: data,
+  fetchCMS: (deploymentEnvironment: 'Production'|'Staging'): ReduxAction => ({
+    type: types.CMS_FETCH_APP,
+    payload: API.fetchCMS(deploymentEnvironment),
   }),
 };
 
-const _storeCMS = (state, payload, local) => {
-  const newState = {};
-  if (local) {
-    return merge(newState, state, payload);
+const buildStore = (state: State, payload: InitialCMSResponse): State => {
+  if (payload.isLocal) {
+    return {
+      ...state,
+      master: payload.data.master,
+      scales: payload.data.scales,
+      chords: payload.data.chords,
+      isLocal: payload.isLocal,
+      timestamps: payload.timestamps,
+    };
   }
 
-  const types = groupBy(payload.data.negativeHarmonyCollection.items, "type");
-
-  merge(newState, state, {
-    master: payload.data.appCollection.items[0],
-    announcement: payload.data.announcementCollection.items[0],
-    scales: get(types, "Scales[0].list", []),
-    chords: get(types, "Chords[0].list", []),
-  });
+  const listTypes = groupBy(get(payload.data, 'negativeHarmonyCollection.items'), 'type');
 
   const storeState = {
-    master: payload.data.appCollection.items[0],
-    scales: get(types, "Scales[0].list", []),
-    chords: get(types, "Chords[0].list", []),
+    master: get(payload.data, 'appCollection.items[0]', null),
+    scales: get(listTypes, 'Scales[0].list', []),
+    chords: get(listTypes, 'Chords[0].list', []),
   };
 
-  storeDataToLocal(
-    localStorageKeys.contentTimestamps,
-    JSON.stringify(payload.timestamps)
+  setItem(
+    localStorageKeys.appContent,
+    JSON.stringify(storeState),
   );
-  storeDataToLocal(localStorageKeys.appContent, JSON.stringify(storeState));
+  setItem(
+    localStorageKeys.contentTimestamps,
+    JSON.stringify(payload.timestamps.online),
+  );
 
-  return newState;
+  return {
+    ...state,
+    ...{
+      ...storeState,
+      isLocal: payload.isLocal || false,
+      timestamps: payload.timestamps,
+      announcement: get(payload.data, 'announcementCollection.items[0]', null),
+    },
+  };
 };
 
-const _storeTimestamps = (state, payload) => {
-  const newState = {};
-  if (!payload.local) {
-    merge(newState, state, {
-      timestamps: {
-        local: appKeys.noLocalData,
-        online: payload.online,
-      },
-    });
-
-    return newState;
-  }
-
-  merge(newState, state, { timestamps: payload });
-
-  return newState;
-};
-
-export const reducer = (state, action) => {
+export const reducer = (state: State, action: ReduxActionWithPayload): State => {
   switch (action.type) {
-    case types.CMS_CHECK_TIMESTAMPS:
-      return _storeTimestamps(state, action.payload);
-    case types.CMS_FETCH_APP:
-      return _storeCMS(state, action.payload, false);
-    case types.CMS_STORE_APP:
-      return _storeCMS(state, action.payload, true);
+    case types.CMS_FETCH_APP_FULFILLED:
+      return buildStore(state, action.payload);
 
     default:
       return state || {};

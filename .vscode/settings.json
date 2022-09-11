@@ -1,4 +1,5 @@
 {
-  "prettier.eslintIntegration": true,
-  "editor.formatOnSave": true
+  "typescript.validate.enable": false,
+  "javascript.validate.enable": false,
+  "eslint.enable": true
 }

@@ -1,0 +1,37 @@
+name: Test Integration
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches:
+      - main
+
+env:
+  NODE_VERSION: 16.10.0
+
+jobs:
+  run_tests:
+    if: github.event_name == 'push' || (github.event_name == 'pull_request')
+    name: Run Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: yarn
+
+      - name: Install dependencies
+        if: steps.yarn-cache.outputs.cache-hit != true
+        run: yarn install --frozen-lockfile
+
+      # Run tests
+      - run: yarn test
+      - run: yarn lint
+      - run: yarn flow
