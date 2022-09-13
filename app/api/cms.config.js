@@ -1,13 +1,12 @@
 // @flow
 import axios from 'axios';
+import { secondsToMilliseconds } from 'date-fns';
 // $FlowFixMe[cannot-resolve-module] (Git Ignored)
 import ENV from '../../env.json'; /* eslint-disable-line import/no-unresolved */
 
-export const requestTimeoutMs: number = 120000;
-
 const cmsClient: any = axios.create({
   baseURL: ENV.CMS.GRAPHQL_URL + ENV.CMS.SPACE,
-  timeout: requestTimeoutMs,
+  timeout: secondsToMilliseconds(6),
   headers: {
     'Content-Type': 'application/vnd.contentful.delivery.v1+json',
     'X-Contentful-User-Agent':
@@ -17,5 +16,8 @@ const cmsClient: any = axios.create({
     Authorization: `Bearer ${ENV.CMS.AUTHORIZATION}`,
   },
 });
+
+cmsClient.interceptors.request.use((config: any) => config, () => null);
+cmsClient.interceptors.response.use((response: any) => response, () => null);
 
 export default cmsClient;

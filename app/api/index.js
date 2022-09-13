@@ -37,9 +37,11 @@ export type InitialCMSResponse = {
 export const fetchData = async (query: string): Promise<any> => {
   const response = await cmsClient.post('', { query });
 
-  if (response.status === 200) {
+  if (response && response.status === 200) {
     return response.data.data;
   }
+
+  return null;
 };
 
 export const fetchLocalTimestamps = async (): Promise<{ announcement: Object|string, local: Object|string }> => {
@@ -57,7 +59,7 @@ export const fetchLocalTimestamps = async (): Promise<{ announcement: Object|str
 export const fetchCMSTimestamps = async (query: string): Promise<{ master: ?number, announcement: ?number } | string> => {
   const response = await cmsClient.post('', { query });
 
-  if (response.status === 200) {
+  if (response && response.status === 200) {
     const master = get(response.data, 'data.appCollection.items[0].sys.publishedAt');
     const announcement = get(response.data, 'data.announcementCollection.items[0].sys.publishedAt');
 
