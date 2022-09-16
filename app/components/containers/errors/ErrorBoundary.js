@@ -5,8 +5,8 @@ import {
   SafeAreaView, StyleSheet, Text, TouchableOpacity,
 } from 'react-native';
 // import axios from 'axios';
+import CodePush from 'react-native-code-push';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import RNRestart from 'react-native-restart';
 import WhiteBackground from '../../elements/backgrounds/WhiteBackground';
 import Emoji from '../../../assets/icons/Emoji';
 import colors from '../../../styles/colors';
@@ -102,7 +102,7 @@ class ErrorBoundary extends React.Component<Props, State> {
 
   handleRestart = async () => {
     await AsyncStorage.clear();
-    RNRestart.Restart();
+    CodePush.restartApp();
   };
 
   render(): Node {
