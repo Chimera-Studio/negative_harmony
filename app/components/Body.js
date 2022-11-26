@@ -4,7 +4,7 @@ import type { Node } from 'react';
 import { SafeAreaView, StatusBar, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { NativeRouter, Routes, Route } from 'react-router-native';
-import Admob from 'react-native-google-mobile-ads';
+import Admob, { MaxAdContentRating } from 'react-native-google-mobile-ads';
 import {
   get, isEmpty, isEqual, some, has,
 } from 'lodash';
@@ -44,8 +44,13 @@ function Body(): Node {
   const isLoading = some(['master', 'scales', 'chords', 'timestamps'], (key) => !has(cms, key));
 
   const startAds = () => {
-    Admob().initialize().then(() => {
-      setAdsReady(true);
+    Admob().setRequestConfiguration({
+      maxAdContentRating: MaxAdContentRating.G,
+      tagForUnderAgeOfConsent: true,
+    }).then(() => {
+      Admob().initialize().then(() => {
+        setAdsReady(true);
+      });
     });
   };
 

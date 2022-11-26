@@ -1,5 +1,6 @@
 {
   "typescript.validate.enable": false,
   "javascript.validate.enable": false,
-  "eslint.enable": true
+  "eslint.enable": true,
+  "java.configuration.updateBuildConfiguration": "disabled"
 }

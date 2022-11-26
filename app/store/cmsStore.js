@@ -1,6 +1,7 @@
 // @flow
 import { get, groupBy } from 'lodash';
 import * as API from '../api';
+import { selectors as globalSelectors } from './globalStore';
 import { deviceInfo } from '../utils';
 import { setItem } from '../utils/hooks';
 import { admob, localStorageKeys } from '../tokens';
@@ -50,40 +51,29 @@ type AdmobIds = {
   rewarded: string|null,
 }
 
-export const getAdmobIds = (adIds: ?{
-  banner: {
-    android: string,
-    ios: string,
-  },
-  rewarded: {
-    android: string,
-    ios: string,
-  }
-}): AdmobIds => {
-  let adId = null;
+export const getAdmobIds = (state: ReduxState): AdmobIds => {
+  const codepushEnvironment = globalSelectors.getCodepushEnvironment(state);
+  const isProduction = codepushEnvironment === 'Production';
+  const adIds = get(state.cms, 'master.adIds');
 
   const getBannerID = (): string|null => {
     if (!adIds) return null;
 
     if (deviceInfo.isApple) {
-      adId = deviceInfo.isRealDevice ? adIds.banner.ios : admob.banner.ios_test;
+      return deviceInfo.isRealDevice && isProduction ? adIds.banner.ios : admob.banner.ios_test;
     } else {
-      adId = deviceInfo.isRealDevice ? adIds.banner.android : admob.banner.android_test;
+      return deviceInfo.isRealDevice && isProduction ? adIds.banner.android : admob.banner.android_test;
     }
-
-    return adId;
   };
 
   const getRewardedID = (): string|null => {
     if (!adIds) return null;
 
     if (deviceInfo.isApple) {
-      adId = deviceInfo.isRealDevice ? adIds.rewarded.ios : admob.rewarded.ios_test;
+      return deviceInfo.isRealDevice && isProduction ? adIds.rewarded.ios : admob.rewarded.ios_test;
     } else {
-      adId = deviceInfo.isRealDevice ? adIds.rewarded.android : admob.rewarded.android_test;
+      return deviceInfo.isRealDevice && isProduction ? adIds.rewarded.android : admob.rewarded.android_test;
     }
-
-    return adId;
   };
 
   return {
@@ -95,7 +85,7 @@ export const getAdmobIds = (adIds: ?{
 export const selectors = {
   getCMS: (state: ReduxState): ?State => state.cms,
   getTimestamps: (state: ReduxState): ?Timestamps => state.cms?.timestamps,
-  getAdmobIds: (state: ReduxState): AdmobIds => getAdmobIds(get(state.cms, 'master.adIds')),
+  getAdmobIds: (state: ReduxState): AdmobIds => getAdmobIds(state),
 };
 
 export const actions = {
