@@ -59,10 +59,6 @@ Add `env.json` file to root directory
         "SPACE": "<secret>",
         "AUTHORIZATION": "<secret>"
       },
-      "ADMIN_DEVICE_IDS": {
-        "DEVICE_ID_1": "<secret>",
-        "DEVICE_ID_2": "<secret>"
-      },
       "RELEASE_SECRETS": {
         "RELEASE_KEYSTORE_PASSWORD": "<secret>",
         "RELEASE_KEYSTORE_KEY_PASSWORD": "<secret>",

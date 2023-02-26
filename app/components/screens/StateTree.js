@@ -5,17 +5,15 @@ import { SafeAreaView, ScrollView, View } from 'react-native';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-native';
 import JSONTree from 'react-native-json-tree';
-import { includes } from 'lodash';
+import { includes, isEqual } from 'lodash';
 import Exit from '../../assets/icons/Exit';
 import * as utils from '../../utils';
 import mainStyle from '../../styles/main';
 import colors from '../../styles/colors';
-// $FlowFixMe[cannot-resolve-module] (Git Ignored)
-import ENV from '../../../env.json'; /* eslint-disable-line import/no-unresolved */
 import type { ReduxState } from '../../types';
 
 function StateTree(): Node {
-  const store = useSelector((state: ReduxState) => state);
+  const store = useSelector((state: ReduxState) => state, isEqual);
 
   const theme = {
     base00: colors.transparent, // BACKGROUND
@@ -56,7 +54,6 @@ function StateTree(): Node {
           data={{
             utils: {
               ...utils.deviceInfo,
-              adminDevices: ENV.ADMIN_DEVICE_IDS,
               deviceHeight: utils.deviceHeight,
               deviceWidth: utils.deviceWidth,
             },

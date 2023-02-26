@@ -1,6 +1,6 @@
 {
   "name": "negativeharmony",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "private": true,
   "scripts": {
     "android": "react-native run-android",
@@ -18,7 +18,6 @@
     "@contentful/rich-text-react-renderer": "^15.12.1",
     "@contentful/rich-text-types": "^15.12.1",
     "@react-native-async-storage/async-storage": "^1.17.10",
-    "@react-native-clipboard/clipboard": "^1.11.0",
     "axios": "^0.27.2",
     "date-fns": "^2.29.1",
     "flow-bin": "^0.185.2",

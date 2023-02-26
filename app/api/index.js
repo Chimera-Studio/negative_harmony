@@ -73,7 +73,7 @@ export const fetchCMSTimestamps = async (query: string): Promise<{ master: ?numb
 };
 
 export const fetchCMS = async (deploymentEnvironment: 'Production'|'Staging'): Promise<InitialCMSResponse> => {
-  const isProduction = deviceInfo.isRealDevice && deploymentEnvironment === 'Production';
+  const isProduction = deploymentEnvironment === 'Production';
 
   const cmsTimestampsResponse = await fetchCMSTimestamps(isProduction ? VALID_PRODUCTION_QUERY : VALID_STAGING_QUERY);
   const localTimestampsResponse = await fetchLocalTimestamps();

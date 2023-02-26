@@ -9,7 +9,7 @@ import {
 import { reducer as staticStoreReducer } from './staticStore';
 import { reducer as globalStoreReducer } from './globalStore';
 import { reducer as cmsStoreReducer } from './cmsStore';
-import { isPromise, deviceInfo } from '../utils';
+import { isPromise } from '../utils';
 // $FlowFixMe[cannot-resolve-module] (Git Ignored)
 import ENV from '../../env.json'; /* eslint-disable-line import/no-unresolved */
 import type {
@@ -42,17 +42,6 @@ function promiseMiddleware({ dispatch }: ReduxMiddlewareArgument): any {
     if (action.payload && isPromise(action.payload)) {
       action.payload
         .then((payload) => {
-          if (!deviceInfo.isRealDevice) {
-            const isObject: boolean = typeof action.payload === 'object';
-            const payloadString: string = isObject
-              ? JSON.stringify(action.payload)
-              : String(action.payload);
-            console.debug(`REDUX: ${action.type}_FULFILLED: payload = `, payloadString);
-            console.log(
-              `REDUX: ${action.type}_FULFILLED: payload: `,
-              isObject ? '{...}' : payloadString,
-            );
-          }
           dispatch({
             type: `${action.type}_FULFILLED`,
             payload,

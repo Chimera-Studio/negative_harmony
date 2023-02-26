@@ -21,7 +21,8 @@ const smallScreenHeight = deviceHeight <= 700;
 
 const bottomStyle: BottomStyle = StyleSheet.create({
   space: {
-    height: smallScreenHeight ? '37%' : '32%',
+    height: smallScreenHeight ? '40%' : '35%',
+    marginBottom: '-5%',
     position: 'relative',
     width: '100%',
   },
@@ -29,14 +30,13 @@ const bottomStyle: BottomStyle = StyleSheet.create({
     backgroundColor: colors.white,
     borderTopLeftRadius: 40,
     borderTopRightRadius: 40,
-    bottom: '-15%',
+    bottom: '-10%',
     elevation: 0,
     height: '100%',
     justifyContent: 'flex-start',
     left: '-5%',
     paddingLeft: 20,
     paddingRight: 20,
-    paddingTop: 5,
     position: 'absolute',
     width: '110%',
     zIndex: 1,

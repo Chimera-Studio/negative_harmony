@@ -11,7 +11,8 @@
       "text_2": ", this could take a while...",
       "Production": "Staging",
       "Staging": "Production"
-    }
+    },
+    "developer": "Developer mode turned on!"
   },
   "select": {
     "scales": "Select a scale and tap on a field:",

@@ -8,6 +8,7 @@ import PortalProvider from './app/components/containers/portal/PortalProvider';
 import Body from './app/components/Body';
 import { getDeviceInfo } from './app/utils';
 import { configureStore } from './app/store';
+import { actions } from './app/store/globalStore';
 import type { ReduxState } from './app/types';
 
 const initialState: ReduxState = {
@@ -16,6 +17,7 @@ const initialState: ReduxState = {
     loadTime: Date.now(),
   },
   global: {
+    developerMode: false,
     axis: { status: false, angle: 0 },
     activeKey: {
       x: 0, y: 0, group: null, field: null,
@@ -30,25 +32,24 @@ function App() {
   const [setupPending, setSetupPending] = useState(true);
 
   useEffect(() => {
-    const handleDeviceSetup = async () => {
-      await getDeviceInfo();
+    getDeviceInfo().then((res) => {
+      store.dispatch(actions.toggleDeveloperMode(!res.isRealDevice));
+    }).finally(() => {
       setSetupPending(false);
       SplashScreen.hide();
-    };
-
-    handleDeviceSetup();
+    });
   }, []);
 
   if (setupPending) return null;
 
   return (
-    <ErrorBoundary store={store}>
-      <Provider store={store}>
+    <Provider store={store}>
+      <ErrorBoundary store={store}>
         <PortalProvider>
           <Body />
         </PortalProvider>
-      </Provider>
-    </ErrorBoundary>
+      </ErrorBoundary>
+    </Provider>
   );
 }
 

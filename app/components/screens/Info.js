@@ -5,22 +5,32 @@ import {
   Text, View, ScrollView, Animated, Easing, TouchableOpacity,
 } from 'react-native';
 import { Link } from 'react-router-native';
-import Clipboard from '@react-native-clipboard/clipboard';
+import { useDispatch } from 'react-redux';
+import { secondsToMilliseconds } from 'date-fns';
+import Alert from '../elements/misc/Alert';
 import Exit from '../../assets/icons/Exit';
 import useLocale from '../../locales';
-import { deviceInfo } from '../../utils';
+import { useTeleport } from '../../utils/hooks';
+import { actions } from '../../store/globalStore';
 import mainStyle from '../../styles/main';
 import infoStyle from '../../styles/info';
 import colors from '../../styles/colors';
 
 function Info(): Node {
   const { t } = useLocale();
+  const dispatch = useDispatch();
+  const { teleport } = useTeleport();
   const [secretDeviceIdTap, setSecretDeviceIdTap] = useState(0);
   const screenOpacity = useRef(new Animated.Value(0)).current;
 
-  const handleSecretDeviceId = () => {
+  const handleDeveloperModeToggle = () => {
     if (secretDeviceIdTap === 7) {
-      Clipboard.setString(deviceInfo.deviceId);
+      dispatch(actions.toggleDeveloperMode(true));
+      teleport(
+        <Alert clearDelayMS={secondsToMilliseconds(5)}>
+          <Text style={mainStyle.alertText}>{t('alert.developer')}</Text>
+        </Alert>,
+      );
 
       return;
     }
@@ -71,7 +81,7 @@ function Info(): Node {
         <Text style={infoStyle.text}>{t('info.paragraph_2')}</Text>
         <TouchableOpacity
           activeOpacity={0.6}
-          onPress={handleSecretDeviceId}
+          onPress={handleDeveloperModeToggle}
         >
           <Text style={infoStyle.contactTitle}>{t('info.sub_title_2')}</Text>
         </TouchableOpacity>

@@ -18,6 +18,7 @@ export type ActiveKey = {
 };
 
 export type State = {
+  developerMode: boolean,
   codepushData?: {
     environment: 'Production'|'Staging',
     deploymentKey: string,
@@ -40,6 +41,7 @@ export const types = {
   GB_SHOW_PERSONALISED_ADS: 'GB/SHOW_PERSONALISED_ADS',
   GB_SHOW_ADS: 'GB/SHOW_ADS',
 
+  GB_TOGGLE_DEVELOPER_MODE: 'GB/TOGGLE_DEVELOPER_MODE',
   GP_STORE_SELECTED_SCALE: 'GP/STORE_SELECTED_SCALE',
   GP_STORE_SELECTED_CHORD: 'GP/STORE_SELECTED_CHORD',
   GP_STORE_SCALES: 'GP/STORE_SCALES',
@@ -108,6 +110,10 @@ export const actions = {
     type: types.GP_UNLOCK_CHORDS,
     payload: { unlocked: true },
   }),
+  toggleDeveloperMode: (bool: boolean): ReduxAction => ({
+    type: types.GB_TOGGLE_DEVELOPER_MODE,
+    payload: bool,
+  }),
 };
 
 const unlockChords = (state: State, payload: InitialCMSResponse) => {
@@ -136,6 +142,9 @@ export const reducer = (state: State, action: ReduxActionWithPayload): State => 
 
     case types.GB_GET_DEPLOYMENT_DATA_FULFILLED:
       return { ...state, codepushData: action.payload };
+
+    case types.GB_TOGGLE_DEVELOPER_MODE:
+      return { ...state, developerMode: action.payload };
 
     case cmsTypes.CMS_FETCH_APP:
       return unlockChords(state, action.payload);

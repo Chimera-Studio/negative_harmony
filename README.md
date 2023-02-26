@@ -48,4 +48,4 @@ The second-page "Chords" is made available after selecting the key and scale on 
 
 ###### Copyright
 
-© 2022 Chimera Studio
+© 2023 Chimera Studio

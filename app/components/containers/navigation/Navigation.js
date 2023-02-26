@@ -27,11 +27,12 @@ function Navigation(): Node {
   const { t } = useLocale();
   const { teleport } = useTeleport();
   const locationInfo = useLocationInfo();
+  const developerMode: boolean = useSelector((state: ReduxState) => state.global.developerMode, isEqual);
   const { scales, showLegend } = useSelector((state: ReduxState) => ({
     scales: selectors.getScales(state),
     showLegend: state.global.showLegend,
   }), isEqual);
-  const codepushEnvironment = useSelector(selectors.getCodepushEnvironment);
+  const codepushEnvironment = useSelector(selectors.getCodepushEnvironment, isEqual);
   const [codepushSyncing, setCodepushSyncing] = useState(false);
   const isProduction = codepushEnvironment === 'Production';
 
@@ -58,7 +59,7 @@ function Navigation(): Node {
   };
 
   const handleAdminRedirect = () => {
-    if (deviceInfo.showAdminActions) {
+    if (developerMode) {
       navigate('/state-tree');
 
       return;
@@ -81,7 +82,7 @@ function Navigation(): Node {
           {t(locationInfo.isScales ? 'links.scales' : 'links.chords')}
         </Text>
       </Link>
-      {deviceInfo.showAdminActions && (
+      {developerMode && (
         <TouchableOpacity style={navigationStyle.appEnvironment} activeOpacity={0.8} onPress={handleAppEnvironment}>
           <Text style={navigationStyle.appEnvironmentText}>{codepushEnvironment}</Text>
         </TouchableOpacity>

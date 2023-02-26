@@ -1,7 +1,6 @@
 // @flow
 import { get, groupBy } from 'lodash';
 import * as API from '../api';
-import { selectors as globalSelectors } from './globalStore';
 import { deviceInfo } from '../utils';
 import { setItem } from '../utils/hooks';
 import { admob, localStorageKeys } from '../tokens';
@@ -52,17 +51,25 @@ type AdmobIds = {
 }
 
 export const getAdmobIds = (state: ReduxState): AdmobIds => {
-  const codepushEnvironment = globalSelectors.getCodepushEnvironment(state);
-  const isProduction = codepushEnvironment === 'Production';
-  const adIds = get(state.cms, 'master.adIds');
+  const adIds: ?{
+    banner: {
+      android: string,
+      ios: string,
+    },
+    rewarded: {
+      android: string,
+      ios: string,
+    }
+  } = get(state.cms, 'master.adIds');
+  const showTestAds = state.global.developerMode;
 
   const getBannerID = (): string|null => {
     if (!adIds) return null;
 
     if (deviceInfo.isApple) {
-      return deviceInfo.isRealDevice && isProduction ? adIds.banner.ios : admob.banner.ios_test;
+      return showTestAds ? admob.banner.ios_test : adIds.banner.ios;
     } else {
-      return deviceInfo.isRealDevice && isProduction ? adIds.banner.android : admob.banner.android_test;
+      return showTestAds ? admob.banner.android_test : adIds.banner.android;
     }
   };
 
@@ -70,9 +77,9 @@ export const getAdmobIds = (state: ReduxState): AdmobIds => {
     if (!adIds) return null;
 
     if (deviceInfo.isApple) {
-      return deviceInfo.isRealDevice && isProduction ? adIds.rewarded.ios : admob.rewarded.ios_test;
+      return showTestAds ? admob.rewarded.ios_test : adIds.rewarded.ios;
     } else {
-      return deviceInfo.isRealDevice && isProduction ? adIds.rewarded.android : admob.rewarded.android_test;
+      return showTestAds ? admob.rewarded.android_test : adIds.rewarded.android;
     }
   };
 
