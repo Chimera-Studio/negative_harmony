@@ -1,7 +1,7 @@
 // @flow
 import { Dimensions, Platform } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
-import { AdsConsent, AdsConsentStatus } from 'react-native-google-mobile-ads';
+import Admob, { MaxAdContentRating, AdsConsent, AdsConsentStatus } from 'react-native-google-mobile-ads';
 
 type DeviceInfoType = {
   isApple: boolean,
@@ -31,47 +31,78 @@ export const getDeviceInfo = async (): Promise<DeviceInfoType> => {
 // $FlowFixMe
 export const isPromise = (p) => !!p && typeof p.then === 'function';
 
-export const checkAdsConsent = async (): Promise<{
+type AdsResponse = {
   showAds: boolean,
   personalisedAds: boolean,
-}> => {
-  const { selectPersonalisedAds, storeAndAccessInformationOnDevice } = await AdsConsent.getUserChoices();
+}
 
-  return {
-    showAds: storeAndAccessInformationOnDevice,
-    personalisedAds: selectPersonalisedAds,
-  };
+export const checkAdsConsent = async (): Promise<AdsResponse> => {
+  try {
+    const { selectPersonalisedAds, storeAndAccessInformationOnDevice } = await AdsConsent.getUserChoices();
+
+    return {
+      showAds: storeAndAccessInformationOnDevice,
+      personalisedAds: selectPersonalisedAds,
+    };
+  } catch {
+    return {
+      showAds: false,
+      personalisedAds: false,
+    };
+  }
 };
 
-export const handleAdsConsent = async (): Promise<{
-  showAds: boolean,
-  personalisedAds: boolean,
-}> => {
-  const consentInfo = await AdsConsent.requestInfoUpdate();
-  const consentObtained = consentInfo.status === AdsConsentStatus.OBTAINED;
-  const consentRequired = consentInfo.status === AdsConsentStatus.REQUIRED;
+export const handleAdsConsent = async (): Promise<AdsResponse> => {
+  try {
+    const consentInfo = await AdsConsent.requestInfoUpdate();
+    const consentObtained = consentInfo.status === AdsConsentStatus.OBTAINED;
+    const consentRequired = consentInfo.status === AdsConsentStatus.REQUIRED;
 
-  if (consentObtained) {
-    const { showAds, personalisedAds } = await checkAdsConsent();
+    if (consentObtained) {
+      const { showAds, personalisedAds } = await checkAdsConsent();
+
+      return {
+        showAds,
+        personalisedAds,
+      };
+    }
+
+    if (consentInfo.isConsentFormAvailable && consentRequired) {
+      await AdsConsent.showForm();
+      const { showAds, personalisedAds } = await checkAdsConsent();
+
+      return {
+        showAds,
+        personalisedAds,
+      };
+    }
 
     return {
-      showAds,
-      personalisedAds,
+      showAds: false,
+      personalisedAds: false,
     };
-  }
-
-  if (consentInfo.isConsentFormAvailable && consentRequired) {
-    await AdsConsent.showForm();
-    const { showAds, personalisedAds } = await checkAdsConsent();
-
+  } catch {
     return {
-      showAds,
-      personalisedAds,
+      showAds: false,
+      personalisedAds: false,
     };
   }
+};
 
-  return {
-    showAds: true,
-    personalisedAds: true,
-  };
+export const initializeAds = async (): Promise<AdsResponse> => {
+  try {
+    await Admob().setRequestConfiguration({
+      maxAdContentRating: MaxAdContentRating.G,
+      tagForUnderAgeOfConsent: true,
+    });
+    await Admob().initialize();
+    const response = await handleAdsConsent();
+
+    return response;
+  } catch {
+    return {
+      showAds: false,
+      personalisedAds: false,
+    };
+  }
 };

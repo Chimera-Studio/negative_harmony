@@ -22,7 +22,8 @@ const initialState: ReduxState = {
     activeKey: {
       x: 0, y: 0, group: null, field: null,
     },
-    showAds: true,
+    showAds: false,
+    personalisedAds: false,
     unlocked: false,
   },
 };

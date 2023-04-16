@@ -12,11 +12,7 @@ import { selectors as selectorsCMS } from '../../../store/cmsStore';
 import mainStyle from '../../../styles/main';
 import type { ReduxState } from '../../../types';
 
-type Props = {
-  showAd: boolean,
-};
-
-function AdmobBanner(props: Props): Node {
+function AdmobBanner(): Node {
   const { banner } = useSelector(selectorsCMS.getAdmobIds, isEqual);
   const redux = useSelector((state: ReduxState) => ({
     showAds: state.global.showAds,
@@ -34,7 +30,7 @@ function AdmobBanner(props: Props): Node {
 
   return (
     <View style={mainStyle.ads}>
-      {props.showAd && !isEmpty(banner) && redux.showAds && (
+      {!isEmpty(banner) && redux.showAds && (
         <ConditionalAd>
           <BannerAd
             unitId={banner}

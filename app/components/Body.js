@@ -4,7 +4,6 @@ import type { Node } from 'react';
 import { SafeAreaView, StatusBar, View } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { NativeRouter, Routes, Route } from 'react-router-native';
-import Admob, { MaxAdContentRating } from 'react-native-google-mobile-ads';
 import {
   get, isEmpty, isEqual, some, has,
 } from 'lodash';
@@ -20,8 +19,8 @@ import Navigation from './containers/navigation/Navigation';
 import Backgrounds from './elements/backgrounds/Backgrounds';
 import AdmobBanner from './elements/misc/AdmobBanner';
 import { actions as cmsActions, selectors } from '../store/cmsStore';
-import { actions as globalActions } from '../store/globalStore';
-import { handleAdsConsent } from '../utils';
+import { actions, actions as globalActions } from '../store/globalStore';
+import { initializeAds } from '../utils';
 import { appKeys } from '../tokens';
 import mainStyle from '../styles/main';
 import type { State as StateCMS } from '../store/cmsStore';
@@ -33,7 +32,6 @@ function Body(): Node {
   const cms: StateCMS = useSelector(selectors.getCMS, isEqual);
   const deploymentEnvironment = useSelector((state: ReduxState) => state.global.codepushData?.environment, isEqual);
   const [showAnnouncement, setShowAnnouncement] = useState(true);
-  const [adsReady, setAdsReady] = useState(false);
   const [loadingAnimationDone, setLoadingAnimationDone] = useState(false);
   const localTimestamps = get(cms, 'timestamps.local', 0);
   const onlineTimestamps = get(cms, 'timestamps.online', null);
@@ -43,38 +41,18 @@ function Body(): Node {
   const announcementSeen = get(cms, 'timestamps.local.announcement', 0) < get(cms, 'timestamps.announcement', 0);
   const isLoading = some(['master', 'scales', 'chords', 'timestamps'], (key) => !has(cms, key));
 
-  const startAds = () => {
-    Admob().setRequestConfiguration({
-      maxAdContentRating: MaxAdContentRating.G,
-      tagForUnderAgeOfConsent: true,
-    }).then(() => {
-      Admob().initialize().then(() => {
-        setAdsReady(true);
-      });
-    });
-  };
-
-  const askForPermission = async () => {
-    const { personalisedAds, showAds } = await handleAdsConsent();
-
-    if (!showAds) {
-      dispatch(globalActions.showAds(false));
-
-      return;
-    }
-
-    dispatch(globalActions.showPersonalisedAds(personalisedAds));
-    startAds();
-  };
-
   useEffect(() => {
     if (initLoad.current) {
       initLoad.current = false;
       dispatch(globalActions.getDeploymentData());
 
       setTimeout(() => {
-        askForPermission();
-        setLoadingAnimationDone(true);
+        initializeAds().then((response) => {
+          dispatch(actions.showAds(response.showAds));
+          dispatch(actions.showPersonalisedAds(response.personalisedAds));
+        }).finally(() => {
+          setLoadingAnimationDone(true);
+        });
       }, secondsToMilliseconds(3));
     }
 
@@ -120,7 +98,7 @@ function Body(): Node {
             <Route path="/state-tree" element={<StateTree />} />
           </Routes>
         </SafeAreaView>
-        <AdmobBanner showAd={adsReady} />
+        <AdmobBanner />
       </NativeRouter>
     </View>
   );
