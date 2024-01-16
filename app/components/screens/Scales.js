@@ -14,10 +14,9 @@ import Circle from '../containers/circle/Circle';
 import BottomScales from '../containers/bottom/BottomScales';
 import useLocale from '../../locales';
 import { useReview, useTeleport } from '../../utils/hooks';
-import { musicScale } from '../../utils/patterns';
+import { musicScale, scaleList } from '../../utils/patterns';
 import { actions, selectors } from '../../store/globalStore';
 import scalesChordsStyle from '../../styles/scales_chords';
-import type { ReduxState } from '../../types';
 
 export function Scales(): Node {
   const { t } = useLocale();
@@ -25,7 +24,6 @@ export function Scales(): Node {
   const { close } = useTeleport();
   const reviewApp = useReview();
   const global = useSelector(selectors.getGlobal, isEqual);
-  const scaleList: Object[] = useSelector((state: ReduxState) => state.cms?.scales, isEqual);
   const [openSelect, setOpenSelect] = useState(false);
   const screenOpacity = useRef(new Animated.Value(0)).current;
 

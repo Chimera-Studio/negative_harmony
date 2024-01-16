@@ -1,5 +1,4 @@
 // @flow
-/* eslint-disable no-console */
 import { createStore, combineReducers, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
 import { composeWithDevTools } from 'redux-devtools-extension';
@@ -8,10 +7,8 @@ import {
 } from 'lodash';
 import { reducer as staticStoreReducer } from './staticStore';
 import { reducer as globalStoreReducer } from './globalStore';
-import { reducer as cmsStoreReducer } from './cmsStore';
 import { isPromise } from '../utils';
-// $FlowFixMe[cannot-resolve-module] (Git Ignored)
-import ENV from '../../env.json'; /* eslint-disable-line import/no-unresolved */
+import ENV from '../../env.json';
 import type {
   ReduxState, ReduxAction, ReduxMiddlewareArgument, ActionChains,
 } from '../types';
@@ -29,7 +26,6 @@ const actionSanitizer = (action: ReduxAction): ReduxAction => {
 };
 
 const stateSanitizer = (state: ReduxState): any => {
-  if (get(ENV, 'REDUX.STATE_LOG')) console.log(state);
   if (!state) return state;
 
   return {
@@ -48,14 +44,6 @@ function promiseMiddleware({ dispatch }: ReduxMiddlewareArgument): any {
           });
         })
         .catch((e) => {
-          console.error(
-            `REDUX: ${action.type}_REJECTED: statusCode = `,
-            (e && e.status) || '',
-            'name = ',
-            (e && e.name) || '',
-            'message = ',
-            (e && e.message) || '',
-          );
           dispatch({
             type: `${action.type}_REJECTED`,
             payload: {
@@ -80,10 +68,8 @@ export function chainActionsMiddleware(chainedActions: ActionChains): any {
       nextActions = concat(nextActions);
       forEach(nextActions, (nextAction) => {
         if (isString(nextAction)) {
-          console.debug(`REDUX: dispatched chained action: ${nextAction}`);
           dispatch({ type: nextAction });
         } else {
-          console.debug(`REDUX: dispatched chained action: ${nextAction.type}`);
           dispatch(nextAction(action));
         }
       });
@@ -127,7 +113,6 @@ export const configureStore = (
   return createStore(
     combineReducers({
       static: staticStoreReducer,
-      cms: cmsStoreReducer,
       global: globalStoreReducer,
     }),
     initialState,

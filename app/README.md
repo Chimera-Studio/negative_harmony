@@ -54,11 +54,6 @@ Add `env.json` file to root directory
         "SANITIZER": true,
         "STATE_LOG": false
       },
-      "CMS": {
-        "GRAPHQL_URL": "<secret>",
-        "SPACE": "<secret>",
-        "AUTHORIZATION": "<secret>"
-      },
       "RELEASE_SECRETS": {
         "RELEASE_KEYSTORE_PASSWORD": "<secret>",
         "RELEASE_KEYSTORE_KEY_PASSWORD": "<secret>",

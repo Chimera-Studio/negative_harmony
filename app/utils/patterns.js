@@ -154,7 +154,7 @@ export const chordList = [
   { name: 'Minor', display: 'minor', value: chords.minor },
   { name: 'Major 7', display: 'major7', value: chords.major7 },
   { name: 'Minor 7', display: 'minor7', value: chords.minor7 },
-  { name: 'Minor 7♭ 5', display: 'm7♭5', value: chords.m7flat5 },
+  { name: `Minor 7${symbolFlat} 5`, display: `m7${symbolFlat}5`, value: chords.m7flat5 },
   { name: 'Major 9', display: 'maj9', value: chords.major9 },
   { name: 'Minor 9', display: 'm9', value: chords.minor9 },
   { name: 'Minor 6', display: 'm6', value: chords.minor6 },

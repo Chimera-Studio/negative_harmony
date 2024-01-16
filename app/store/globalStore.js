@@ -1,8 +1,6 @@
 // @flow
 import { get } from 'lodash';
 import * as API from '../api';
-import { types as cmsTypes } from './cmsStore';
-import type { InitialCMSResponse } from '../api';
 import type { ReduxAction, ReduxActionWithPayload, ReduxState } from '../types';
 
 export type Axis = {
@@ -17,13 +15,14 @@ export type ActiveKey = {
   field: ?number,
 };
 
+export type CodePushData = Object & {
+  environment: 'Production'|'Staging',
+  deploymentKey: string,
+}
+
 export type State = {
   developerMode: boolean,
-  codepushData?: {
-    environment: 'Production'|'Staging',
-    deploymentKey: string,
-    ...Object,
-  },
+  codepushData?: CodePushData,
   scales?: Object[],
   chords?: Object[],
   selectedScale?: Object,
@@ -116,13 +115,13 @@ export const actions = {
   }),
 };
 
-const unlockChords = (state: State, payload: InitialCMSResponse) => {
-  const payloadPath = payload.isLocal ? 'master.ads' : 'appCollection.items[0].ads';
-  const displayAds = get(payload.data, payloadPath, false);
+const setCodePushData = (state: State, payload: CodePushData) => {
+  const developerMode: boolean = state.developerMode || get(payload, 'environment', 'Production') === 'Staging';
 
   return {
     ...state,
-    unlocked: !displayAds,
+    developerMode,
+    codepushData: payload,
   };
 };
 
@@ -140,14 +139,11 @@ export const reducer = (state: State, action: ReduxActionWithPayload): State => 
     case types.GP_SHOW_LEGEND:
       return { ...state, ...action.payload };
 
-    case types.GB_GET_DEPLOYMENT_DATA_FULFILLED:
-      return { ...state, codepushData: action.payload };
-
     case types.GB_TOGGLE_DEVELOPER_MODE:
       return { ...state, developerMode: action.payload };
 
-    case cmsTypes.CMS_FETCH_APP:
-      return unlockChords(state, action.payload);
+    case types.GB_GET_DEPLOYMENT_DATA_FULFILLED:
+      return setCodePushData(state, action.payload);
 
     default:
       return state || {};

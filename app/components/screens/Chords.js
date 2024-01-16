@@ -23,15 +23,13 @@ import { useReview } from '../../utils/hooks';
 import { selectors } from '../../store/globalStore';
 import scalesChordsStyle from '../../styles/scales_chords';
 import colors from '../../styles/colors';
+import { chordList, scaleList } from '../../utils/patterns';
 
 function Chords(): Node {
   const { t } = useLocale();
   const reviewApp = useReview();
   const global = useSelector(selectors.getGlobal, isEqual);
-  const lists = useSelector((state) => ({
-    scales: state.cms.scales,
-    chords: state.cms.chords,
-  }), isEqual);
+  const lists = { scales: scaleList, chords: chordList };
   const [selectedChord, setSelectedChord] = useState(lists.chords[0]);
   const [chords, setChords] = useState(null);
   const [tonic, setTonic] = useState(0);

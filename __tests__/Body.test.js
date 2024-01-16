@@ -6,7 +6,6 @@ import renderer from 'react-test-renderer';
 import { Provider } from 'react-redux';
 import PortalProvider from '../app/components/containers/portal/PortalProvider';
 import Body from '../app/components/Body';
-import cmsClient from '../app/api/cms.config';
 import { configureStore } from '../app/store';
 import { types } from '../app/store/globalStore';
 
@@ -26,7 +25,6 @@ describe('Body tests', () => {
   });
 
   test('triggers API calls', () => {
-    jest.spyOn(cmsClient, 'get').mockResolvedValue();
     const storeSpy = jest.spyOn(store, 'dispatch');
 
     renderer.create(

@@ -8,17 +8,17 @@ import { isEmpty, isEqual } from 'lodash';
 import ConditionalAd from './ConditionalAd';
 import { isTablet } from '../../../utils';
 import { useLocationInfo } from '../../../utils/hooks';
-import { selectors as selectorsCMS } from '../../../store/cmsStore';
 import mainStyle from '../../../styles/main';
 import type { ReduxState } from '../../../types';
+import { selectors } from '../../../store/staticStore';
 
 function AdmobBanner(): Node {
-  const { banner } = useSelector(selectorsCMS.getAdmobIds, isEqual);
-  const redux = useSelector((state: ReduxState) => ({
+  const locationInfo = useLocationInfo();
+  const { banner, showAds, personalisedAds } = useSelector((state: ReduxState) => ({
+    banner: selectors.getAdmobIds(state).banner,
     showAds: state.global.showAds,
     personalisedAds: state.global.personalisedAds,
   }), isEqual);
-  const locationInfo = useLocationInfo();
 
   const handleBannerSize = (): string => {
     if (isTablet) return BannerAdSize.FULL_BANNER;
@@ -30,13 +30,13 @@ function AdmobBanner(): Node {
 
   return (
     <View style={mainStyle.ads}>
-      {!isEmpty(banner) && redux.showAds && (
+      {!isEmpty(banner) && showAds && (
         <ConditionalAd>
           <BannerAd
             unitId={banner}
             size={handleBannerSize()}
             requestOptions={{
-              requestNonPersonalizedAdsOnly: !redux.personalisedAds,
+              requestNonPersonalizedAdsOnly: !personalisedAds,
             }}
           />
         </ConditionalAd>

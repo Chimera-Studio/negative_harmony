@@ -31,6 +31,9 @@ jobs:
         if: steps.yarn-cache.outputs.cache-hit != true
         run: yarn install --frozen-lockfile
 
+      - name: Create mock ENV
+        run: cp __mocks__/env.json env.json
+
       # Run tests
       - run: yarn test
       - run: yarn lint

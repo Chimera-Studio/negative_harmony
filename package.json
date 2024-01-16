@@ -15,8 +15,6 @@
   },
   "dependencies": {
     "@babel/eslint-parser": "^7.18.9",
-    "@contentful/rich-text-react-renderer": "^15.12.1",
-    "@contentful/rich-text-types": "^15.12.1",
     "@react-native-async-storage/async-storage": "^1.17.10",
     "axios": "^0.27.2",
     "date-fns": "^2.29.1",

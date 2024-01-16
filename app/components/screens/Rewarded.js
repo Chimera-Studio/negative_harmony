@@ -17,18 +17,20 @@ import Exit from '../../assets/icons/Exit';
 import useLocale from '../../locales';
 import { useRewardedAd } from '../../utils/hooks';
 import { actions } from '../../store/globalStore';
-import { selectors as selectorsCMS } from '../../store/cmsStore';
 import rewardedStyle from '../../styles/rewarded';
 import mainStyle from '../../styles/main';
 import colors from '../../styles/colors';
+import { selectors } from '../../store/staticStore';
 import type { ReduxState } from '../../types';
 
 function Rewarded(): Node {
   const { t } = useLocale();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const personalisedAds = useSelector((state: ReduxState) => (state.global.personalisedAds), isEqual);
-  const { rewarded } = useSelector(selectorsCMS.getAdmobIds, isEqual);
+  const { personalisedAds, rewarded } = useSelector((state: ReduxState) => ({
+    personalisedAds: state.global.personalisedAds,
+    rewarded: selectors.getAdmobIds(state).rewarded,
+  }), isEqual);
   const [adLoading, setAdLoading] = useState(true);
   const rewardedAd = useRewardedAd(rewarded, personalisedAds);
   const screenOpacity = useRef(new Animated.Value(0)).current;

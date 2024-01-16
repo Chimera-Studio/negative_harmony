@@ -8,6 +8,7 @@ import PortalProvider from './app/components/containers/portal/PortalProvider';
 import Body from './app/components/Body';
 import { getDeviceInfo } from './app/utils';
 import { configureStore } from './app/store';
+import { config } from './app/tokens';
 import { actions } from './app/store/globalStore';
 import type { ReduxState } from './app/types';
 
@@ -24,7 +25,7 @@ const initialState: ReduxState = {
     },
     showAds: false,
     personalisedAds: false,
-    unlocked: false,
+    unlocked: !config.ads,
   },
 };
 const store = configureStore(initialState);
