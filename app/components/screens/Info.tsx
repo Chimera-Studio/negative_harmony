@@ -1,22 +1,20 @@
-// @flow
 import React, { useEffect, useRef, useState } from 'react';
-import type { Node } from 'react';
 import {
-  Text, View, ScrollView, Animated, Easing, TouchableOpacity,
+  Animated, Easing, ScrollView, Text, TouchableOpacity, View,
 } from 'react-native';
-import { Link } from 'react-router-native';
 import { useDispatch } from 'react-redux';
+import { Link } from 'react-router-native';
 import { secondsToMilliseconds } from 'date-fns';
-import Alert from '../elements/misc/Alert';
 import Exit from '../../assets/icons/Exit';
 import useLocale from '../../locales';
-import { useTeleport } from '../../utils/hooks';
 import { actions } from '../../store/globalStore';
-import mainStyle from '../../styles/main';
-import infoStyle from '../../styles/info';
 import colors from '../../styles/colors';
+import infoStyle from '../../styles/info';
+import mainStyle from '../../styles/main';
+import { useTeleport } from '../../utils/hooks';
+import Alert from '../elements/misc/Alert';
 
-function Info(): Node {
+function Info() {
   const { t } = useLocale();
   const dispatch = useDispatch();
   const { teleport } = useTeleport();
@@ -39,7 +37,7 @@ function Info(): Node {
   };
 
   useEffect(() => {
-    const handleScreenAnimation = (to) => {
+    const handleScreenAnimation = (to: any) => {
       Animated.timing(screenOpacity, {
         toValue: to,
         duration: 500,

@@ -41,7 +41,10 @@
     ],
     "jsx-a11y/label-has-for": 0,
     "jsx-a11y/no-static-element-interactions": 0,
-    "jsx-quotes": 0,
+    "jsx-quotes": [
+      "error",
+      "prefer-double"
+    ],
     "linebreak-style": 0,
     "max-len": 0,
     "no-case-declarations": 0,
@@ -99,17 +102,103 @@
     "react/state-in-constructor": 0,
     "react/static-property-placement": 0,
     "react/prefer-exact-props": 0,
+    "react-hooks/rules-of-hooks": 2,
+    "react-hooks/exhaustive-deps": 1,
     "space-before-function-paren": 0,
     "semi": 1,
-    "require-await": "error"
+    "require-await": "error",
+    "@typescript-eslint/consistent-type-imports": [
+      "error",
+      {
+        "prefer": "type-imports"
+      }
+    ],
+    "import/order": [
+      "error",
+      {
+        "groups": [
+          "builtin",
+          "external",
+          "internal",
+          [
+            "index",
+            "parent",
+            "sibling",
+            "object"
+          ],
+          "type",
+          "unknown"
+        ],
+        "pathGroups": [
+          {
+            "pattern": "react",
+            "group": "builtin",
+            "position": "before"
+          },
+          {
+            "pattern": "react*",
+            "group": "external",
+            "position": "before"
+          },
+          {
+            "pattern": "*react*",
+            "group": "external",
+            "position": "before"
+          }
+        ],
+        "pathGroupsExcludedImportTypes": [
+          "react"
+        ],
+        "newlines-between": "never",
+        "alphabetize": {
+          "order": "asc",
+          "caseInsensitive": true
+        }
+      }
+    ],
+    "sort-imports": [
+      "error",
+      {
+        "ignoreCase": false,
+        "ignoreDeclarationSort": true,
+        "ignoreMemberSort": false,
+        "memberSyntaxSortOrder": [
+          "single",
+          "multiple",
+          "all",
+          "none"
+        ],
+        "allowSeparatedGroups": false
+      }
+    ]
   },
   "overrides": [
     {
       "files": [
-        "*.test.ts"
+        "*.ts",
+        "*.tsx"
+      ],
+      "extends": [
+        "eslint-config-airbnb-typescript"
+      ],
+      "parserOptions": {
+        "project": [
+          "./tsconfig.json"
+        ]
+      }
+    },
+    {
+      "files": [
+        "*.test.js",
+        "*.test.jsx",
+        "*.test.ts",
+        "*.test.tsx"
       ],
       "env": {
         "jest": true
+      },
+      "rules": {
+        "react/react-in-jsx-scope": "off"
       }
     }
   ],

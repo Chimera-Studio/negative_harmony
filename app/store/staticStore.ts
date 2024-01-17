@@ -1,4 +1,3 @@
-// @flow
 import { admob } from '../tokens';
 import { deviceInfo } from '../utils';
 import type { ReduxActionWithPayload, ReduxState } from '../types';
@@ -9,14 +8,14 @@ export type State = {
 };
 
 type AdmobIds = {
-  banner: string|null,
-  rewarded: string|null,
-}
+  banner: string | null,
+  rewarded: string | null,
+};
 
 export const getAdmobIds = (state: ReduxState): AdmobIds => {
   const showTestAds = state.global.developerMode;
 
-  const getBannerID = (): string|null => {
+  const getBannerID = (): string | null => {
     if (deviceInfo.isApple) {
       return showTestAds ? admob.banner.ios_test : admob.banner.ios;
     } else {
@@ -24,7 +23,7 @@ export const getAdmobIds = (state: ReduxState): AdmobIds => {
     }
   };
 
-  const getRewardedID = (): string|null => {
+  const getRewardedID = (): string | null => {
     if (deviceInfo.isApple) {
       return showTestAds ? admob.rewarded.ios_test : admob.rewarded.ios;
     } else {

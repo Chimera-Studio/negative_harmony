@@ -1,27 +1,25 @@
-// @flow
 import {
   useContext, useEffect, useRef, useState,
 } from 'react';
-import { useLocation } from 'react-router-dom';
-import InAppReview from 'react-native-in-app-review';
 import { RewardedAd } from 'react-native-google-mobile-ads';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import InAppReview from 'react-native-in-app-review';
 import Sound from 'react-native-sound';
+import { useSelector } from 'react-redux';
+import { useLocation } from 'react-router-dom';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   addMonths, minutesToMilliseconds, secondsToMilliseconds,
 } from 'date-fns';
-import { useSelector } from 'react-redux';
 import { isEqual, keys } from 'lodash';
-import { localStorageKeys } from '../tokens';
-import { rewardedKeywords } from '../tokens/keywords';
+import { isPromise } from '.';
 import { symbolFlat, symbolSharp } from './patterns';
 import { PortalContext } from '../context';
-import { isPromise } from '.';
-import type { PortalProps } from '../context';
-import type { ReduxState } from '../types';
+import { localStorageKeys } from '../tokens';
+import { rewardedKeywords } from '../tokens/keywords';
 import type { ChordPlaying } from '../components/containers/bottom/BottomChords';
+import type { ReduxState } from '../types';
 
-export const getItem = async (key: string): any => {
+export const getItem = async (key: string) => {
   try {
     const response = await AsyncStorage.getItem(key);
 
@@ -29,6 +27,8 @@ export const getItem = async (key: string): any => {
   } catch (error) {
     Promise.reject(error);
   }
+
+  return null;
 };
 
 export const setItem = async (key: string, data: string) => {
@@ -47,17 +47,13 @@ export const removeItem = async (key: string) => {
   }
 };
 
-export const useLocalStorage = (): {
-  getItem: Function,
-  setItem: Function,
-  removeItem: Function,
-} => ({
+export const useLocalStorage = () => ({
   getItem,
   setItem,
   removeItem,
 });
 
-export const useReview = (): Function => {
+export const useReview = () => {
   const { loadTime, reviewMinutes, unlocked }: {
     loadTime: number,
     reviewMinutes: number,
@@ -93,15 +89,7 @@ export const useReview = (): Function => {
   return handleReview;
 };
 
-export type LocationInfo = {
-  current: string,
-  isScales: boolean,
-  isChords: boolean,
-  isRewarded: boolean,
-  isInfo: boolean,
-}
-
-export const useLocationInfo = (): LocationInfo => {
+export const useLocationInfo = () => {
   const location = useLocation();
   const isScales = location.pathname === '/';
   const isChords = location.pathname === '/chords';
@@ -117,17 +105,14 @@ export const useLocationInfo = (): LocationInfo => {
   };
 };
 
-export const useTeleport = (): PortalProps => useContext(PortalContext);
+export const useTeleport = () => useContext(PortalContext);
 
-export const useRewardedAd = (
-  rewardedId: string,
-  showPersonalisedAds: boolean,
-): Object|null => {
-  const [rewardedAd, setRewardedAd] = useState(null);
+export const useRewardedAd = (rewardedId: string, showPersonalisedAds: boolean) => {
+  const [rewardedAd, setRewardedAd] = useState<RewardedAd | null>(null);
 
   useEffect(() => {
-    const handleNewAd = async (): Object => {
-      const response = await RewardedAd.createForAdRequest(rewardedId, {
+    const handleNewAd = () => {
+      const response = RewardedAd.createForAdRequest(rewardedId, {
         requestNonPersonalizedAdsOnly: !showPersonalisedAds,
         keywords: rewardedKeywords,
       });
@@ -141,7 +126,7 @@ export const useRewardedAd = (
   return rewardedAd;
 };
 
-export const useCountdown = (onTimeEnd: Function, countdownFrom: ?number) => {
+export const useCountdown = (onTimeEnd: Function, countdownFrom: number | undefined) => {
   const [time, setTime] = useState(countdownFrom || 0);
   const timerRef = useRef(time);
 
@@ -179,12 +164,12 @@ export type UseSoundChords = {
 
 export const useSoundChords = (): UseSoundChords => {
   Sound.setCategory('Playback');
-  const playbackRef = useRef<{[string]: any}>({});
+  const playbackRef = useRef<{ [key: string]: any }>({});
 
   const chordsPause = () => {
     const notes = keys(playbackRef.current);
     for (let index = 0; index < notes.length; index++) {
-      const note = notes[index];
+      const note = notes[index] || '';
       playbackRef.current[note].stop();
       playbackRef.current[note].release();
     }
@@ -197,7 +182,7 @@ export const useSoundChords = (): UseSoundChords => {
     const chord = [...notes];
 
     for (let index = 0; index < chord.length; index++) {
-      const { note } = chord[index];
+      const { note } = chord[index] as Note;
       const soundPath = (note.includes(symbolSharp) || note.includes(symbolFlat)) ? note.charAt(0) + '_sharp' : note;
       const soundKey = (isNegative ? 'low_' : '') + soundPath.toLowerCase();
 

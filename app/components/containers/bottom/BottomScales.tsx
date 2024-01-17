@@ -1,6 +1,4 @@
-// @flow
 import React, { useEffect, useRef } from 'react';
-import type { Node } from 'react';
 import {
   Animated,
   Easing,
@@ -8,16 +6,16 @@ import {
   View,
 } from 'react-native';
 import { map } from 'lodash';
-import { deviceHeight } from '../../../utils';
 import bottomStyle from '../../../styles/bottom';
-import mainStyle from '../../../styles/main';
 import colors from '../../../styles/colors';
+import mainStyle from '../../../styles/main';
+import { deviceHeight } from '../../../utils';
 
 type Props = {
   data: any,
 };
 
-function BottomScales(props: Props): Node {
+function BottomScales(props: Props) {
   const slideUp = useRef(new Animated.Value(deviceHeight / 2)).current;
   const { data } = props;
   const animateBottom = {

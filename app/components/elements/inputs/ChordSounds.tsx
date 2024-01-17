@@ -1,21 +1,19 @@
-// @flow
-import React, { useEffect, useState } from 'react';
-import type { Node } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   Text,
   TouchableHighlight,
   View,
 } from 'react-native';
-import { includes } from 'lodash';
 import { secondsToMilliseconds } from 'date-fns';
+import { includes } from 'lodash';
 import Pause from '../../../assets/icons/Pause';
 import Play from '../../../assets/icons/Play';
 import useLocale from '../../../locales';
-import { useSoundChords } from '../../../utils/hooks';
 import chordsStyle from '../../../styles/chords';
 import colors from '../../../styles/colors';
+import { useSoundChords } from '../../../utils/hooks';
 
-export type ChordPlaying = 'positive'|'negative'|'both';
+export type ChordPlaying = 'positive' | 'negative' | 'both';
 
 type Props = {
   data: any,
@@ -23,17 +21,16 @@ type Props = {
   negativeChordNote: string,
 };
 
-function ChordSounds(props: Props): Node {
+function ChordSounds(props: Props) {
   const { t } = useLocale();
   const chords = useSoundChords();
-  const [chordPlaying, setChordPlaying] = useState<?ChordPlaying>(null);
+  const [chordPlaying, setChordPlaying] = useState<ChordPlaying | null>(null);
+  const timeoutRef = useRef<any>();
   const { data } = props;
 
   useEffect(() => {
-    let timeOutId;
-
     const resetPlay = () => {
-      timeOutId = setTimeout(() => {
+      timeoutRef.current = setTimeout(() => {
         chords.chordsPause();
         setChordPlaying(null);
       }, secondsToMilliseconds(5));
@@ -50,7 +47,7 @@ function ChordSounds(props: Props): Node {
       resetPlay();
     }
 
-    return () => clearTimeout(timeOutId);
+    return () => clearTimeout(timeoutRef.current);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [chordPlaying]);
 

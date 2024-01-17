@@ -1,18 +1,8 @@
-// @flow
 import { StyleSheet } from 'react-native';
-import { isTablet, isiPhone } from '../utils';
 import colors from './colors';
+import { isTablet, isiPhone } from '../utils';
 
-type NavigationStyle = {
-  navigation: Object,
-  switch: Object,
-  switchText: Object,
-  info: Object,
-  appEnvironment: Object,
-  appEnvironmentText: Object,
-};
-
-const navigationStyle: NavigationStyle = StyleSheet.create({
+const navigationStyle = StyleSheet.create({
   navigation: {
     alignItems: 'center',
     flexDirection: 'row',

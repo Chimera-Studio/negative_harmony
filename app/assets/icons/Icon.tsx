@@ -1,14 +1,12 @@
-// @flow
 import React from 'react';
-import type { Node } from 'react';
-import { Svg, Path } from 'react-native-svg';
+import { Path, Svg } from 'react-native-svg';
 import colors from '../../styles/colors';
 
 type Props = {
   style?: Object,
 };
 
-function Icon(props: Props): Node {
+function Icon(props: Props) {
   return (
     <Svg viewBox="0 0 108.71 66.5" style={props.style} fill={colors.white}>
       <Path

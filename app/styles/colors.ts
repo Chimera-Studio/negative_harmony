@@ -1,24 +1,4 @@
-// @flow
-type Colors = {
-  black: string,
-  blackTransparent: string,
-  blue: string,
-  blueTransparent: string,
-  disabled: string,
-  gradientBlue: string,
-  gradientGreen: string,
-  green: string,
-  lightBlue: string,
-  negativeText: string,
-  positiveText: string,
-  red: string,
-  transparent: string,
-  white: string,
-  whiteGray: string,
-  whiteTransparent: string,
-};
-
-const colors: Colors = {
+const colors = {
   black: '#000000',
   blackTransparent: '#000000cc',
   blue: '#3c5e99',

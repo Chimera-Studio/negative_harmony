@@ -1,7 +1,6 @@
-// @flow
 /* istanbul ignore file */
-import type { State as StaticState } from '../store/staticStore';
 import type { State as GlobalState } from '../store/globalStore';
+import type { State as StaticState } from '../store/staticStore';
 
 export type ReduxState = {
   static: StaticState,
@@ -33,9 +32,9 @@ export type ReduxMiddlewareArgument = {
 };
 
 export type ErrorContent = {
-  message: ?string,
-  statusCode?: ?(string | number),
-  name?: ?string,
+  message: string | undefined,
+  statusCode?: (string | number) | undefined,
+  name?: string | undefined,
 };
 
 export type ErrorAction = {
@@ -44,13 +43,12 @@ export type ErrorAction = {
   payload: ErrorContent,
 };
 
-type CauseActionType = string;
-type NextAction = (() => ReduxAction) | string;
+type NextAction = ((action: ReduxAction) => ReduxAction) | string;
 
 export type ActionChains = {
-  [CauseActionType]: Array<NextAction> | NextAction,
+  [CauseActionType: string]: NextAction[] | NextAction,
 };
 
-export type DispatchFn = (BaseReduxAction | PayloadReduxAction) => void;
+export type DispatchFn = (action: BaseReduxAction | PayloadReduxAction) => void;
 
-export type AsyncCallback = (...any) => void;
+export type AsyncCallback = () => void;

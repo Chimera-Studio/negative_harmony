@@ -1,13 +1,12 @@
-// @flow
 import { useState } from 'react';
 import get from 'lodash/get';
 import en from './en.json';
 
-type AvailabeLanguages = {
+type AvailableLanguages = {
   en: Object,
 };
 
-const availabeLanguages: AvailabeLanguages = {
+const availableLanguages: AvailableLanguages = {
   en,
 };
 
@@ -16,14 +15,14 @@ type Props = {
   setLanguage: Function,
 };
 
-export const t = (key: string, lng: string = 'en'): string => get(availabeLanguages[lng], key, key.toString());
+export const t = (key: string, lng: string = 'en'): string => get(availableLanguages, `${lng}.${key}`, String(key));
 
 const useLocale = (): Props => {
   const [lng, setLng] = useState('en');
 
   return {
     t: (key: string) => t(key, lng),
-    setLanguage: (key) => setLng(key),
+    setLanguage: (key: any) => setLng(key),
   };
 };
 

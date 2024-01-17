@@ -1,16 +1,15 @@
-// @flow
 import React, { useEffect, useState } from 'react';
-import type { Node } from 'react';
+import type { ReactNode } from 'react';
 import { Animated } from 'react-native';
-import { useTeleport } from '../../../utils/hooks';
 import mainStyle from '../../../styles/main';
+import { useTeleport } from '../../../utils/hooks';
 
 type Props = {
-  children: Node,
+  children: ReactNode,
   clearDelayMS?: number,
 };
 
-function Alert(props: Props): Node {
+function Alert(props: Props) {
   const { close } = useTeleport();
   const fadeAlert = useState(new Animated.Value(0))[0];
 

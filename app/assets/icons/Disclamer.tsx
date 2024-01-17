@@ -1,17 +1,15 @@
-// @flow
 import React from 'react';
-import type { Node } from 'react';
 import {
-  Svg, Path, Rect, G,
+  G, Path, Rect, Svg,
 } from 'react-native-svg';
 
 type Props = {
   style?: Object,
 };
 
-function Arrow(props: Props): Node {
+function Arrow(props: Props) {
   return (
-    <Svg version="1.1" x="0px" y="0px" viewBox="0 0 303 127.8" style={props.style}>
+    <Svg x="0px" y="0px" viewBox="0 0 303 127.8" style={props.style}>
       <Path
         fill="none"
         d="M137.1,87c0,0.6,0.3,1.3,0.8,1.6c0.7,0.4,1.4,0.6,2.2,0.6c0.8,0,1.6-0.2,2.3-0.6c0.7-0.4,1.2-1.1,1.4-1.8v-2h-3.7C138.1,84.8,137.1,85.6,137.1,87z"

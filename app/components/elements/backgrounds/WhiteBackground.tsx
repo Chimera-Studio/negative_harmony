@@ -1,9 +1,7 @@
-// @flow
 import React from 'react';
-import type { Node } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { isiPhone } from '../../../utils';
 import colors from '../../../styles/colors';
+import { isiPhone } from '../../../utils';
 
 const styles = StyleSheet.create({
   background: {
@@ -19,7 +17,7 @@ const styles = StyleSheet.create({
   },
 });
 
-function WhiteBackground(): Node {
+function WhiteBackground() {
   return <View style={styles.background} />;
 }
 

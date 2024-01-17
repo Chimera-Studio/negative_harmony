@@ -1,4 +1,3 @@
-// @flow
 export const symbolSharp = '♯';
 export const symbolFlat = '♭';
 export const musicScale = [

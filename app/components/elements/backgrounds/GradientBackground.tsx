@@ -1,10 +1,8 @@
-// @flow
 import React from 'react';
-import type { Node } from 'react';
 import { StyleSheet, View } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import { isiPhone } from '../../../utils';
 import colors from '../../../styles/colors';
+import { isiPhone } from '../../../utils';
 
 const styles = StyleSheet.create({
   background: {
@@ -25,7 +23,7 @@ const styles = StyleSheet.create({
   },
 });
 
-function GradientBackground(): Node {
+function GradientBackground() {
   return (
     <View style={styles.background}>
       <LinearGradient

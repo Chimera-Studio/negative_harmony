@@ -1,29 +1,27 @@
-// @flow
 import React, { useEffect, useRef, useState } from 'react';
-import type { Node } from 'react';
 import {
-  Text,
-  View,
-  TouchableOpacity,
   ActivityIndicator,
   Animated,
   Easing,
+  Text,
+  TouchableOpacity,
+  View,
 } from 'react-native';
-import { useDispatch, useSelector } from 'react-redux';
 import { RewardedAdEventType } from 'react-native-google-mobile-ads';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-native';
 import { isEqual } from 'lodash';
 import Exit from '../../assets/icons/Exit';
 import useLocale from '../../locales';
-import { useRewardedAd } from '../../utils/hooks';
 import { actions } from '../../store/globalStore';
-import rewardedStyle from '../../styles/rewarded';
-import mainStyle from '../../styles/main';
-import colors from '../../styles/colors';
 import { selectors } from '../../store/staticStore';
+import colors from '../../styles/colors';
+import mainStyle from '../../styles/main';
+import rewardedStyle from '../../styles/rewarded';
+import { useRewardedAd } from '../../utils/hooks';
 import type { ReduxState } from '../../types';
 
-function Rewarded(): Node {
+function Rewarded() {
   const { t } = useLocale();
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -32,7 +30,7 @@ function Rewarded(): Node {
     rewarded: selectors.getAdmobIds(state).rewarded,
   }), isEqual);
   const [adLoading, setAdLoading] = useState(true);
-  const rewardedAd = useRewardedAd(rewarded, personalisedAds);
+  const rewardedAd = useRewardedAd(rewarded || '', personalisedAds || false);
   const screenOpacity = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
@@ -59,7 +57,7 @@ function Rewarded(): Node {
   }, [rewardedAd]);
 
   useEffect(() => {
-    const handleScreenAnimation = (to) => {
+    const handleScreenAnimation = (to: any) => {
       Animated.timing(screenOpacity, {
         toValue: to,
         duration: 500,

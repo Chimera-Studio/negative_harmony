@@ -1,6 +1,4 @@
-// @flow
 import React, { useRef, useState } from 'react';
-import type { Node } from 'react';
 import {
   ScrollView,
   Text,
@@ -10,25 +8,25 @@ import {
 import { Link } from 'react-router-native';
 import { map } from 'lodash';
 import useLocale from '../../../locales';
-import scalesChordsStyle from '../../../styles/scales_chords';
 import colors from '../../../styles/colors';
+import scalesChordsStyle from '../../../styles/scales_chords';
 
 type Props = {
   scales: {
-    positive: Object[],
-    negative: Object[],
+    positive: string[],
+    negative: string[],
   },
   unlocked: boolean,
   value: number,
-  onPress: Function,
+  onPress: (index: number) => void,
 };
 
-function TonicSlider(props: Props): Node {
+function TonicSlider(props: Props) {
   const { t } = useLocale();
   const [tonicSpacer, setTonicSpacer] = useState(0);
-  const scrollChordsRef = useRef(null);
+  const scrollChordsRef = useRef<ScrollView | null>(null);
 
-  const getDimentions = (event) => {
+  const getDimentions = (event: any) => {
     const { width } = event.nativeEvent.layout;
     setTonicSpacer(width / 2 - 55);
   };

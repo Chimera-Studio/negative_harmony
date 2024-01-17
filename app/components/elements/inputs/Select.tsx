@@ -1,33 +1,30 @@
-// @flow
 import React from 'react';
-import type { Node } from 'react';
 import {
   Modal, ScrollView, Text, TouchableOpacity, TouchableWithoutFeedback, View,
 } from 'react-native';
 import { useNavigate } from 'react-router';
 import { map } from 'lodash';
 import Arrow from '../../../assets/icons/Arrow';
-import scalesChordsStyle from '../../../styles/scales_chords';
 import colors from '../../../styles/colors';
+import scalesChordsStyle from '../../../styles/scales_chords';
 
-export type Option = {
-  ...Object,
+export type Option = Object & {
   name: string,
 };
 
 type Props = {
   children?: any,
   title?: string,
-  value: Option,
+  value: Option | undefined,
   options: Option[],
   isOpen: boolean,
   unlocked: boolean,
-  onSelect: Function,
-  onOpen: Function,
-  onClose: Function,
+  onSelect: (option: Option) => void,
+  onOpen: () => void,
+  onClose: () => void,
 };
 
-function Select(props: Props): Node {
+function Select(props: Props) {
   const navigate = useNavigate();
 
   const handleSelect = (option: Option, index: number) => {
@@ -54,7 +51,7 @@ function Select(props: Props): Node {
           onPress={() => props.onOpen()}
         >
           <Text style={scalesChordsStyle.selectInputText}>
-            {props.value.name}
+            {props.value?.name}
           </Text>
           <Arrow style={scalesChordsStyle.selectListArrow} />
         </TouchableOpacity>
@@ -90,8 +87,7 @@ function Select(props: Props): Node {
                     {
                       color: colors.whiteGray,
                       ...(props.unlocked && { color: colors.black }),
-                      /* $FlowFixMe */
-                      ...(props.value.name === option.name && { color: colors.blue }),
+                      ...(props.value?.name === option.name && { color: colors.blue }),
                     },
                   ]}
                 >

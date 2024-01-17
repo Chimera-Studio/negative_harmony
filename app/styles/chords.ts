@@ -1,17 +1,7 @@
-// @flow
 import { StyleSheet } from 'react-native';
 import colors from './colors';
 
-type ChordsStyle = {
-  soundButtonWrapper: Object,
-  soundButtonSplitWrapper: Object,
-  soundButtonBoth: Object,
-  soundButton: Object,
-  soundButtonIcon: Object,
-  soundButtonText: Object,
-};
-
-const chordsStyle: ChordsStyle = StyleSheet.create({
+const chordsStyle = StyleSheet.create({
   soundButtonWrapper: {
     justifyContent: 'center',
     width: '100%',

@@ -1,31 +1,29 @@
-// @flow
 import React, { useEffect, useRef, useState } from 'react';
-import type { Node } from 'react';
 import {
-  Text,
-  View,
   Animated,
   Easing,
+  Text,
+  View,
 } from 'react-native';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-native';
 import {
-  indexOf, times, includes, forEach, isEqual, sortBy,
+  forEach, get, includes, indexOf, isEqual, sortBy, times,
 } from 'lodash';
+import Disclamer from '../../assets/icons/Disclamer';
+import useLocale from '../../locales';
+import { selectors } from '../../store/globalStore';
+import colors from '../../styles/colors';
+import scalesChordsStyle from '../../styles/scales_chords';
+import { useReview } from '../../utils/hooks';
+import { chordList, scaleList } from '../../utils/patterns';
+import BottomChords from '../containers/bottom/BottomChords';
+import TonicSlider from '../containers/tonic-slider/TonicSlider';
+import Select from '../elements/inputs/Select';
 import Legend from '../elements/misc/Legend';
 import LegendExtra from '../elements/misc/LegendExtra';
-import Disclamer from '../../assets/icons/Disclamer';
-import Select from '../elements/inputs/Select';
-import TonicSlider from '../containers/tonic-slider/TonicSlider';
-import BottomChords from '../containers/bottom/BottomChords';
-import useLocale from '../../locales';
-import { useReview } from '../../utils/hooks';
-import { selectors } from '../../store/globalStore';
-import scalesChordsStyle from '../../styles/scales_chords';
-import colors from '../../styles/colors';
-import { chordList, scaleList } from '../../utils/patterns';
 
-function Chords(): Node {
+function Chords() {
   const { t } = useLocale();
   const reviewApp = useReview();
   const global = useSelector(selectors.getGlobal, isEqual);
@@ -37,40 +35,51 @@ function Chords(): Node {
   const screenOpacity = useRef(new Animated.Value(0)).current;
   const selectedScale = global.selectedScale || lists.scales[0];
 
-  const handleChords = (selected: Object, tonicIndex: number) => {
-    const positiveChord = [];
-    const negativeChord = [];
+  const handleChords = (selected: Object | undefined, tonicIndex: number) => {
+    const positiveChord: any = [];
+    const negativeChord: any = [];
+    const positiveRange = get(global, 'scales.positiveRange', []);
+    const negativeRange = get(global, 'scales.negativeRange', []);
 
     const shift = indexOf(
-      global.scales.positiveRange,
-      global.scales.positive[tonicIndex],
+      positiveRange,
+      get(global, `scales.positive[${tonicIndex}]`),
     );
-    const shiftRangeP = global.scales.positiveRange.slice();
+    const shiftRangeP = positiveRange.slice();
+    // @ts-ignore
     times(shift, () => shiftRangeP.push(shiftRangeP.shift()));
 
-    const shiftRangeN = global.scales.negativeRange.slice();
+    const shiftRangeN = negativeRange.slice();
+    // @ts-ignore
     times(shift, () => shiftRangeN.push(shiftRangeN.shift()));
 
+    // @ts-ignore
     times(selected.value.length, (i) => {
       const obj = {
         diatonic: !includes(
+          // @ts-ignore
           global.scales.positive,
+          // @ts-ignore
           shiftRangeP[selected.value[i]],
         ),
+        // @ts-ignore
         note: shiftRangeP[selected.value[i]],
       };
       const objNeg = {
         diatonic: !includes(
+          // @ts-ignore
           global.scales.negative,
+          // @ts-ignore
           shiftRangeN[selected.value[i]],
         ),
+        // @ts-ignore
         note: shiftRangeN[selected.value[i]],
       };
       positiveChord.push(obj);
       negativeChord.push(objNeg);
     });
 
-    const pattern = [];
+    const pattern: any = [];
     forEach(negativeChord, (note) => {
       pattern.push(indexOf(shiftRangeP, note.note));
     });
@@ -122,7 +131,9 @@ function Chords(): Node {
     const negativeName = handleFindChordMatch();
 
     setChords({
+      // @ts-ignore
       positive: positiveChord,
+      // @ts-ignore
       positiveName: selected.display,
       negative: negativeChord,
       negativeName,
@@ -130,7 +141,7 @@ function Chords(): Node {
   };
 
   useEffect(() => {
-    const handleScreenAnimation = (to) => {
+    const handleScreenAnimation = (to: any) => {
       Animated.timing(screenOpacity, {
         toValue: to,
         duration: 500,
@@ -147,7 +158,7 @@ function Chords(): Node {
   }, []);
 
   const handleSelect = (val: Object) => {
-    setSelectedChord(val);
+    setSelectedChord(val as any);
     handleChords(val, tonic);
     setOpenSelect(false);
   };
@@ -191,10 +202,10 @@ function Chords(): Node {
           >
             <View style={scalesChordsStyle.selectedScaleNameWrapper}>
               <Text style={scalesChordsStyle.selectedScaleKey}>
-                {global.scales.positive[0]}
+                {get(global, 'scales.positive[0]', '')}
               </Text>
               <Text style={scalesChordsStyle.selectedScaleName}>
-                {selectedScale.name}
+                {selectedScale?.name}
               </Text>
             </View>
           </Select>
@@ -202,7 +213,7 @@ function Chords(): Node {
       </View>
 
       <TonicSlider
-        scales={global.scales}
+        scales={global.scales as any}
         unlocked={global.unlocked}
         value={tonic}
         onPress={handleTonic}

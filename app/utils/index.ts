@@ -1,7 +1,6 @@
-// @flow
 import { Dimensions, Platform } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
-import Admob, { MaxAdContentRating, AdsConsent, AdsConsentStatus } from 'react-native-google-mobile-ads';
+import Admob, { AdsConsent, AdsConsentStatus, MaxAdContentRating } from 'react-native-google-mobile-ads';
 
 type DeviceInfoType = {
   isApple: boolean,
@@ -28,13 +27,12 @@ export const getDeviceInfo = async (): Promise<DeviceInfoType> => {
   return deviceInfo;
 };
 
-// $FlowFixMe
-export const isPromise = (p) => !!p && typeof p.then === 'function';
+export const isPromise = (p: any) => !!p && typeof p.then === 'function';
 
 type AdsResponse = {
   showAds: boolean,
   personalisedAds: boolean,
-}
+};
 
 export const checkAdsConsent = async (): Promise<AdsResponse> => {
   try {

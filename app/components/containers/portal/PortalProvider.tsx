@@ -1,20 +1,20 @@
-// @flow
+/* eslint-disable react/jsx-no-constructed-context-values */
 import React, { useState } from 'react';
-import type { Node } from 'react';
+import type { ReactNode } from 'react';
 import { PortalContext } from '../../../context';
 
 type Props = {
-  children: Node,
-}
+  children: ReactNode,
+};
 
-function PortalProvider({ children }: Props): Node {
-  const [component, setComponent] = useState(null);
+function PortalProvider({ children }: Props) {
+  const [component, setComponent] = useState<ReactNode | null>(null);
 
-  const teleport = (element: Node) => setComponent(element);
+  const teleport = (element: ReactNode) => setComponent(element);
   const close = () => setComponent(null);
 
   return (
-    // eslint-disable-next-line react/jsx-no-constructed-context-values
+    // @ts-ignore
     <PortalContext.Provider value={{ teleport, close }}>
       {component}
       {children}

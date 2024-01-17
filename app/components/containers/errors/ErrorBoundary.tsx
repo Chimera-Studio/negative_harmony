@@ -1,27 +1,14 @@
-// @flow
 import React from 'react';
-import type { ComponentType, Node } from 'react';
 import {
   SafeAreaView, StyleSheet, Text, TouchableOpacity,
 } from 'react-native';
-// import axios from 'axios';
 import CodePush from 'react-native-code-push';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import WhiteBackground from '../../elements/backgrounds/WhiteBackground';
 import Emoji from '../../../assets/icons/Emoji';
 import colors from '../../../styles/colors';
-import type { ReduxState } from '../../../types';
+import WhiteBackground from '../../elements/backgrounds/WhiteBackground';
 
-type Styles = {
-  safe: Object,
-  title: Object,
-  text: Object,
-  emoji: Object,
-  button: Object,
-  buttonText: Object,
-};
-
-const styles: Styles = StyleSheet.create({
+const styles = StyleSheet.create({
   safe: {
     backgroundColor: colors.white,
     flex: 1,
@@ -73,15 +60,11 @@ const styles: Styles = StyleSheet.create({
 
 type Props = {
   children: any,
-  store: {
-    dispatch: Function,
-    getState: () => ReduxState,
-  },
-}
+};
 
 type State = {
   hasError: boolean,
-}
+};
 
 class ErrorBoundary extends React.Component<Props, State> {
   constructor(props: Props) {
@@ -105,7 +88,7 @@ class ErrorBoundary extends React.Component<Props, State> {
     CodePush.restartApp();
   };
 
-  render(): Node {
+  override render() {
     if (this.state.hasError) {
       return (
         <SafeAreaView style={styles.safe}>
@@ -142,4 +125,4 @@ class ErrorBoundary extends React.Component<Props, State> {
   }
 }
 
-export default (ErrorBoundary: ComponentType<Props>);
+export default ErrorBoundary;

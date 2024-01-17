@@ -3,10 +3,10 @@ import {
   SafeAreaView, StatusBar, StyleSheet, Text,
 } from 'react-native';
 import { secondsToMilliseconds } from 'date-fns';
+import useLocale from '../../locales';
+import colors from '../../styles/colors';
 import GradientBG from '../elements/backgrounds/GradientBackground';
 import Logo from '../elements/misc/Logo';
-import colors from '../../styles/colors';
-import useLocale from '../../locales';
 
 const styles = StyleSheet.create({
   container: {

@@ -1,20 +1,19 @@
-// @flow
-import { createStore, combineReducers, applyMiddleware } from 'redux';
-import thunk from 'redux-thunk';
-import { composeWithDevTools } from 'redux-devtools-extension';
 import {
   concat, forEach, get, includes, isString,
 } from 'lodash';
-import { reducer as staticStoreReducer } from './staticStore';
+import { applyMiddleware, combineReducers, legacy_createStore } from 'redux';
+import { composeWithDevTools } from 'redux-devtools-extension';
+import thunk from 'redux-thunk';
 import { reducer as globalStoreReducer } from './globalStore';
-import { isPromise } from '../utils';
+import { reducer as staticStoreReducer } from './staticStore';
 import ENV from '../../env.json';
+import { isPromise } from '../utils';
 import type {
-  ReduxState, ReduxAction, ReduxMiddlewareArgument, ActionChains,
+  ActionChains, ReduxAction, ReduxMiddlewareArgument, ReduxState,
 } from '../types';
 
-const sanitizedActions = get(ENV, 'REDUX.SANITIZEDLIST', []);
-const actionsDenyList = get(ENV, 'REDUX.DENYLIST', []);
+const sanitizedActions: string[] = get(ENV, 'REDUX.SANITIZED_LIST', []);
+const actionsDenyList: string[] = get(ENV, 'REDUX.DENY_LIST', []);
 
 const sanitizedPayload = 'Set REACT_APP_REDUX_SANITIZER=false';
 const actionSanitizer = (action: ReduxAction): ReduxAction => {
@@ -34,16 +33,16 @@ const stateSanitizer = (state: ReduxState): any => {
 };
 
 function promiseMiddleware({ dispatch }: ReduxMiddlewareArgument): any {
-  return (next) => (action) => {
+  return (next: any) => (action: ReduxAction) => {
     if (action.payload && isPromise(action.payload)) {
       action.payload
-        .then((payload) => {
+        .then((payload: any) => {
           dispatch({
             type: `${action.type}_FULFILLED`,
             payload,
           });
         })
-        .catch((e) => {
+        .catch((e: any) => {
           dispatch({
             type: `${action.type}_REJECTED`,
             payload: {
@@ -62,7 +61,7 @@ function promiseMiddleware({ dispatch }: ReduxMiddlewareArgument): any {
 }
 
 export function chainActionsMiddleware(chainedActions: ActionChains): any {
-  return ({ dispatch }: ReduxMiddlewareArgument) => (next) => (action) => {
+  return ({ dispatch }: ReduxMiddlewareArgument) => (next: any) => (action: ReduxAction) => {
     let nextActions = chainedActions[action.type];
     if (nextActions) {
       nextActions = concat(nextActions);
@@ -79,8 +78,8 @@ export function chainActionsMiddleware(chainedActions: ActionChains): any {
   };
 }
 
-function dispatchRecorder(dispatchedActions: ?Array<string>): any {
-  return () => (next) => (action) => {
+function dispatchRecorder(dispatchedActions: string[] | undefined): any {
+  return () => (next: any) => (action: ReduxAction) => {
     if (dispatchedActions && !actionsDenyList.includes(action.type)) {
       dispatchedActions.push(action.type);
     }
@@ -89,32 +88,24 @@ function dispatchRecorder(dispatchedActions: ?Array<string>): any {
   };
 }
 
-export const configureStore = (
-  initialState: {} | ReduxState,
-  actionChains: ?ActionChains,
-  dispatchedActions: ?Array<string>,
-): Function => {
+export const configureStore = (initialState: {} | ReduxState, actionChains?: ActionChains, dispatchedActions?: string[]) => {
   const middleware = [thunk];
   if (dispatchedActions) {
     middleware.push(dispatchRecorder(dispatchedActions));
   }
-  middleware.push(promiseMiddleware);
+  middleware.push(promiseMiddleware as any);
   if (actionChains) {
     middleware.push(chainActionsMiddleware(actionChains));
   }
 
   const sanitizers = get(ENV, 'REDUX.SANITIZER') !== false && { actionSanitizer, stateSanitizer };
-  const composeEnhancers = composeWithDevTools({
-    ...sanitizers,
-    actionsDenylist: actionsDenyList,
-  });
-  const middlewareApplier = composeEnhancers(applyMiddleware(...middleware));
+  // @ts-ignore
+  const composeEnhancers = composeWithDevTools({ ...sanitizers, actionsDenylist: actionsDenyList });
+  const middlewareApplier = composeEnhancers(applyMiddleware(...middleware as any) as any);
 
-  return createStore(
-    combineReducers({
-      static: staticStoreReducer,
-      global: globalStoreReducer,
-    }),
+  return legacy_createStore(
+    combineReducers({ static: staticStoreReducer, global: globalStoreReducer }),
+    // @ts-ignore
     initialState,
     middlewareApplier,
   );

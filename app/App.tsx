@@ -1,16 +1,15 @@
-// @flow
 import React, { useEffect, useState } from 'react';
 import CodePush from 'react-native-code-push';
-import { Provider } from 'react-redux';
 import SplashScreen from 'react-native-splash-screen';
-import ErrorBoundary from './app/components/containers/errors/ErrorBoundary';
-import PortalProvider from './app/components/containers/portal/PortalProvider';
-import Body from './app/components/Body';
-import { getDeviceInfo } from './app/utils';
-import { configureStore } from './app/store';
-import { config } from './app/tokens';
-import { actions } from './app/store/globalStore';
-import type { ReduxState } from './app/types';
+import { Provider } from 'react-redux';
+import Body from './components/Body';
+import ErrorBoundary from './components/containers/errors/ErrorBoundary';
+import PortalProvider from './components/containers/portal/PortalProvider';
+import { configureStore } from './store';
+import { actions } from './store/globalStore';
+import { config } from './tokens';
+import { getDeviceInfo } from './utils';
+import type { ReduxState } from './types';
 
 const initialState: ReduxState = {
   static: {
@@ -19,9 +18,15 @@ const initialState: ReduxState = {
   },
   global: {
     developerMode: false,
-    axis: { status: false, angle: 0 },
+    axis: {
+      status: false,
+      angle: 0,
+    },
     activeKey: {
-      x: 0, y: 0, group: null, field: null,
+      x: 0,
+      y: 0,
+      group: undefined,
+      field: undefined,
     },
     showAds: false,
     personalisedAds: false,
@@ -46,7 +51,7 @@ function App() {
 
   return (
     <Provider store={store}>
-      <ErrorBoundary store={store}>
+      <ErrorBoundary>
         <PortalProvider>
           <Body />
         </PortalProvider>
@@ -55,4 +60,4 @@ function App() {
   );
 }
 
-export default (CodePush(App): any);
+export default CodePush(App);

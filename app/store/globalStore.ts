@@ -1,7 +1,7 @@
-// @flow
 import { get } from 'lodash';
 import * as API from '../api';
-import type { ReduxAction, ReduxActionWithPayload, ReduxState } from '../types';
+import type { Option } from '../components/elements/inputs/Select';
+import type { ReduxActionWithPayload, ReduxState } from '../types';
 
 export type Axis = {
   status: boolean,
@@ -11,22 +11,22 @@ export type Axis = {
 export type ActiveKey = {
   x: number,
   y: number,
-  group: ?string,
-  field: ?number,
+  group: string | undefined,
+  field: number | undefined,
 };
 
 export type CodePushData = Object & {
-  environment: 'Production'|'Staging',
+  environment: 'Production' | 'Staging',
   deploymentKey: string,
-}
+};
 
 export type State = {
   developerMode: boolean,
   codepushData?: CodePushData,
   scales?: Object[],
   chords?: Object[],
-  selectedScale?: Object,
-  selectedChord?: Object,
+  selectedScale?: Option,
+  selectedChord?: Option,
   axis: Axis,
   activeKey: ActiveKey,
   unlocked: boolean,
@@ -57,7 +57,7 @@ export const types = {
 };
 
 export const selectors = {
-  getCodepushEnvironment: (state: ReduxState): 'Production'|'Staging' => get(state.global.codepushData, 'environment', 'Production'),
+  getCodepushEnvironment: (state: ReduxState): 'Production' | 'Staging' => get(state.global.codepushData, 'environment', 'Production'),
   getGlobal: (state: ReduxState): State => state.global,
   getScales: (state: ReduxState): any => state.global.scales,
   getChords: (state: ReduxState): any => state.global.chords,
@@ -65,51 +65,51 @@ export const selectors = {
 };
 
 export const actions = {
-  getDeploymentData: (): ReduxAction => ({
+  getDeploymentData: () => ({
     type: types.GB_GET_DEPLOYMENT_DATA,
     payload: API.getDeploymentData(),
   }),
-  showPersonalisedAds: (personalisedAds: boolean): ReduxAction => ({
+  showPersonalisedAds: (personalisedAds: boolean) => ({
     type: types.GB_SHOW_PERSONALISED_ADS,
     payload: { personalisedAds },
   }),
-  showAds: (showAds: boolean): ReduxAction => ({
+  showAds: (showAds: boolean) => ({
     type: types.GB_SHOW_ADS,
     payload: { showAds },
   }),
-  showLegend: (showLegend: boolean): ReduxAction => ({
+  showLegend: (showLegend: boolean) => ({
     type: types.GP_SHOW_LEGEND,
     payload: { showLegend },
   }),
-  storeSelectedScale: (selectedScale: any): ReduxAction => ({
+  storeSelectedScale: (selectedScale: any) => ({
     type: types.GP_STORE_SELECTED_SCALE,
     payload: { selectedScale },
   }),
-  storeSelectedChord: (selectedChord: any): ReduxAction => ({
+  storeSelectedChord: (selectedChord: any) => ({
     type: types.GP_STORE_SELECTED_CHORD,
     payload: { selectedChord },
   }),
-  storeScales: (scales: any): ReduxAction => ({
+  storeScales: (scales: any) => ({
     type: types.GP_STORE_SCALES,
     payload: { scales },
   }),
-  storeChords: (chords: any): ReduxAction => ({
+  storeChords: (chords: any) => ({
     type: types.GP_STORE_CHORDS,
     payload: { chords },
   }),
-  storeAxis: (axis: Axis): ReduxAction => ({
+  storeAxis: (axis: Axis) => ({
     type: types.GP_STORE_AXIS,
     payload: { axis },
   }),
-  storeActiveKey: (activeKey: ActiveKey): ReduxAction => ({
+  storeActiveKey: (activeKey: ActiveKey) => ({
     type: types.GP_STORE_ACTIVE_KEY,
     payload: { activeKey },
   }),
-  unlockChords: (): ReduxAction => ({
+  unlockChords: () => ({
     type: types.GP_UNLOCK_CHORDS,
     payload: { unlocked: true },
   }),
-  toggleDeveloperMode: (bool: boolean): ReduxAction => ({
+  toggleDeveloperMode: (bool: boolean) => ({
     type: types.GB_TOGGLE_DEVELOPER_MODE,
     payload: bool,
   }),

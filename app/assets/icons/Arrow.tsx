@@ -1,18 +1,14 @@
-// @flow
 import React from 'react';
-import type { Node } from 'react';
-import { Svg, Path } from 'react-native-svg';
+import { Path, Svg } from 'react-native-svg';
 import colors from '../../styles/colors';
 
 type Props = {
   style?: Object,
 };
 
-function Arrow(props: Props): Node {
+function Arrow(props: Props) {
   return (
     <Svg
-      version="1.1"
-      xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 255 255"
       style={props.style}
       fill={colors.disabled}

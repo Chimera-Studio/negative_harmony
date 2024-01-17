@@ -1,14 +1,12 @@
-// @flow
 import React from 'react';
-import type { Node } from 'react';
-import { Svg, Path } from 'react-native-svg';
+import { Path, Svg } from 'react-native-svg';
 
 type Props = {
   color: string,
   style?: Object,
 };
 
-function Exit(props: Props): Node {
+function Exit(props: Props) {
   return (
     <Svg height="100%" width="100%" viewBox="0 0 352 352" style={props.style}>
       <Path

@@ -1,24 +1,22 @@
-// @flow
 import React, { useEffect, useRef, useState } from 'react';
-import type { Node } from 'react';
 import {
-  View,
   Animated,
   Easing,
+  View,
 } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { isEqual, times } from 'lodash';
-import Legend from '../elements/misc/Legend';
-import Select from '../elements/inputs/Select';
-import Circle from '../containers/circle/Circle';
-import BottomScales from '../containers/bottom/BottomScales';
 import useLocale from '../../locales';
-import { useReview, useTeleport } from '../../utils/hooks';
-import { musicScale, scaleList } from '../../utils/patterns';
 import { actions, selectors } from '../../store/globalStore';
 import scalesChordsStyle from '../../styles/scales_chords';
+import { useReview, useTeleport } from '../../utils/hooks';
+import { musicScale, scaleList } from '../../utils/patterns';
+import BottomScales from '../containers/bottom/BottomScales';
+import Circle from '../containers/circle/Circle';
+import Select from '../elements/inputs/Select';
+import Legend from '../elements/misc/Legend';
 
-export function Scales(): Node {
+export function Scales() {
   const { t } = useLocale();
   const dispatch = useDispatch();
   const { close } = useTeleport();
@@ -28,7 +26,7 @@ export function Scales(): Node {
   const screenOpacity = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
-    const handleScreenAnimation = (to) => {
+    const handleScreenAnimation = (to: any) => {
       Animated.timing(screenOpacity, {
         toValue: to,
         duration: 500,
@@ -59,14 +57,16 @@ export function Scales(): Node {
     keyG12: 'G12',
   };
 
-  const handleScales = (shift, scale) => {
-    const positive = [];
-    const negative = [];
+  const handleScales = (shift: any, scale: any) => {
+    const positive: any = [];
+    const negative: any = [];
 
     const clone = musicScale.slice();
+    // @ts-ignore
     times(shift, () => clone.push(clone.shift()));
 
     const negativeClone = clone.slice();
+    // @ts-ignore
     times(8, () => negativeClone.push(negativeClone.shift()));
     negativeClone.reverse();
 
@@ -85,7 +85,7 @@ export function Scales(): Node {
     );
   };
 
-  const handleSelect = (scale) => {
+  const handleSelect = (scale: any) => {
     dispatch(actions.storeSelectedScale(scale));
     if (global.scales) handleScales(global.activeKey.field, scale);
     setOpenSelect(false);

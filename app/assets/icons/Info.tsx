@@ -1,15 +1,13 @@
-// @flow
 import React from 'react';
-import type { Node } from 'react';
 import {
-  Svg, Path, G, Circle,
+  Circle, G, Path, Svg,
 } from 'react-native-svg';
 
 type Props = {
   style?: Object,
 };
 
-function Info(props: Props): Node {
+function Info(props: Props) {
   return (
     <Svg
       viewBox="0 0 53.9 53.9"

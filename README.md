@@ -37,4 +37,4 @@ The second-page "Chords" is made available after selecting the key and scale on 
 
 ###### Copyright
 
-© 2023 Chimera Studio
+© 2024 Chimera Studio

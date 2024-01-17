@@ -1,15 +1,13 @@
-// @flow
 import React from 'react';
-import type { Node } from 'react';
 import {
-  Svg, Path, G, Rect, Polygon,
+  G, Path, Polygon, Rect, Svg,
 } from 'react-native-svg';
 
 type Props = {
   style?: Object,
 };
 
-function Legend(props: Props): Node {
+function Legend(props: Props) {
   return (
     <Svg viewBox="0 0 714.89 127.8" style={props.style}>
       <G>

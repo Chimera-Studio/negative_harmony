@@ -1,6 +1,4 @@
-// @flow
 import React, { useEffect, useRef } from 'react';
-import type { Node } from 'react';
 import { Animated, Easing } from 'react-native';
 import { secondsToMilliseconds } from 'date-fns';
 import Icon from '../../../assets/icons/Icon';
@@ -11,7 +9,7 @@ type Props = {
   style?: Object,
 };
 
-function Logo(props: Props): Node {
+function Logo(props: Props) {
   const rotate = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
@@ -35,13 +33,12 @@ function Logo(props: Props): Node {
     <Animated.View
       style={[
         scalesChordsStyles.icon,
-        { ...props.style },
         {
+          ...props.style,
           transform: [
             {
               rotate: rotate.interpolate({
                 inputRange: [0, 1],
-                // $FlowFixMe
                 outputRange: ['0deg', '360deg'],
               }),
             },

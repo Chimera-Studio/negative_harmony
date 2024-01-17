@@ -1,36 +1,34 @@
-// @flow
 import React from 'react';
-import type { Node } from 'react';
 import { View } from 'react-native';
 import {
-  Svg, Path, G, Polygon, Circle as CircleSVG,
+  Circle as CircleSVG, G, Path, Polygon, Svg,
 } from 'react-native-svg';
-import Logo from '../../elements/misc/Logo';
-import scalesChordsStyle from '../../../styles/scales_chords';
 import colors from '../../../styles/colors';
+import scalesChordsStyle from '../../../styles/scales_chords';
+import Logo from '../../elements/misc/Logo';
 import type { ActiveKey, Axis } from '../../../store/globalStore';
 
 type Props = {
   axis: Axis,
   activeKey: ActiveKey,
   keys: {
-    keyG1: 'G1',
-    keyG2: 'G2',
-    keyG3: 'G3',
-    keyG4: 'G4',
-    keyG5: 'G5',
-    keyG6: 'G6',
-    keyG7: 'G7',
-    keyG8: 'G8',
-    keyG9: 'G9',
-    keyG10: 'G10',
-    keyG11: 'G11',
-    keyG12: 'G12',
+    keyG1: string,
+    keyG2: string,
+    keyG3: string,
+    keyG4: string,
+    keyG5: string,
+    keyG6: string,
+    keyG7: string,
+    keyG8: string,
+    keyG9: string,
+    keyG10: string,
+    keyG11: string,
+    keyG12: string,
   },
   handleKey: Function,
 };
 
-function Circle(props: Props): Node {
+function Circle(props: Props) {
   const keyColorBG = colors.white;
   const keyColorText = colors.negativeText;
   const keyColorSymbol = colors.positiveText;
@@ -49,7 +47,7 @@ function Circle(props: Props): Node {
         {props.axis.status ? (
           <Path
             fill={colors.blue}
-            origin={(315, 315)}
+            origin={[315, 315]}
             rotation={props.axis.angle}
             d="M1986,2672.2a344.69,344.69,0,0,0-317.88-210.7q-3.75,0-7.5.09h0v11.16h0V3136.4h0c-178.51-4-322.49-150.45-322.49-329.9,0-116.67,60.86-219.38,152.51-278.08a7.49,7.49,0,0,0,2.46-10.06l-.09-.16a7.51,7.51,0,0,0-10.54-2.58,345,345,0,0,0,185.66,635.88q3.73,0,7.49-.09h0v-11.16h0V2476.6h0c178.51,4,322.5,150.46,322.5,329.91,0,152.64-104.18,281.4-245.17,318.93a7.54,7.54,0,1,0,4,14.56A345.34,345.34,0,0,0,1986,2672.2Z"
             transform="translate(-1353.09 -2491.5)"

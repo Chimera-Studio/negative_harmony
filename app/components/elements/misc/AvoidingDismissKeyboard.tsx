@@ -1,15 +1,14 @@
-// @flow
 import React from 'react';
-import type { Node } from 'react';
+import type { ReactNode } from 'react';
 import { KeyboardAvoidingView } from 'react-native';
 import DismissKeyboard from './DismissKeyboard';
 import { isApple } from '../../../utils';
 
 type Props = {
-  children: Node,
+  children: ReactNode,
 };
 
-function AvoidingDismissKeyboard(props: Props): Node {
+function AvoidingDismissKeyboard(props: Props) {
   return (
     <KeyboardAvoidingView
       behavior={isApple ? 'padding' : 'height'}

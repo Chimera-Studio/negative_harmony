@@ -1,17 +1,8 @@
-// @flow
 import { StyleSheet } from 'react-native';
-import { isiPhone } from '../utils';
 import colors from './colors';
+import { isiPhone } from '../utils';
 
-type InfoStyle = {
-  wrapper: Object,
-  title: Object,
-  subTitle: Object,
-  contactTitle: Object,
-  text: Object,
-};
-
-const infoStyle: InfoStyle = StyleSheet.create({
+const infoStyle = StyleSheet.create({
   wrapper: {
     alignItems: 'center',
     display: 'flex',

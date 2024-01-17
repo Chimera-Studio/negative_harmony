@@ -1,25 +1,10 @@
-// @flow
 import { StyleSheet } from 'react-native';
-import { deviceHeight } from '../utils';
 import colors from './colors';
-
-type BottomStyle = {
-  space: Object,
-  wrapper: Object,
-  scale: Object,
-  scaleText: Object,
-  axis: Object,
-  chord: Object,
-  chordName: Object,
-  tonic: Object,
-  name: Object,
-  notes: Object,
-  notesText: Object,
-};
+import { deviceHeight } from '../utils';
 
 const smallScreenHeight = deviceHeight <= 700;
 
-const bottomStyle: BottomStyle = StyleSheet.create({
+const bottomStyle = StyleSheet.create({
   space: {
     height: smallScreenHeight ? '40%' : '35%',
     marginBottom: '-5%',

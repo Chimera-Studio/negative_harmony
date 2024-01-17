@@ -1,52 +1,12 @@
-// @flow
 import { StyleSheet } from 'react-native';
+import colors from './colors';
 import {
   deviceHeight, deviceWidth, isApple, isTablet,
 } from '../utils';
-import colors from './colors';
-
-type ScalesChordsStyle = {
-  legendContainer: Object,
-  legend: Object,
-  legendExtra: Object,
-  disclamerBtn: Object,
-  disclamer: Object,
-  wrapper: Object,
-  selectWrapper: Object,
-  selectChordsWrapper: Object,
-  selectTextExp: Object,
-  selectInput: Object,
-  selectInputText: Object,
-  selectListWrapper: Object,
-  selectListOverlay: Object,
-  selectList: Object,
-  selectItem: Object,
-  selectItemNoBorder: Object,
-  selectDisabledText: Object,
-  selectText: Object,
-  selectListArrow: Object,
-  circleWrapper: Object,
-  icon: Object,
-  circleKeys: Object,
-  selectedScaleNameWrapper: Object,
-  selectedScaleKey: Object,
-  selectedScaleName: Object,
-  chordsWrapper: Object,
-  rewardedOpen: Object,
-  rewardedOpenText: Object,
-  scrollChords: Object,
-  scrollChordsExpText: Object,
-  scrollChordsWrapper: Object,
-  scrollChordsSpace: Object,
-  scrollChordsNoteSelected: Object,
-  scrollChordsNote: Object,
-  scrollChordsNoteTextSelected: Object,
-  scrollChordsNoteText: Object,
-};
 
 const smallScreenHeight = deviceHeight <= 700;
 
-const scalesChordsStyle: ScalesChordsStyle = StyleSheet.create({
+const scalesChordsStyle = StyleSheet.create({
   legendContainer: {
     alignItems: 'center',
     display: 'flex',

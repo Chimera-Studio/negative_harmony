@@ -1,32 +1,27 @@
-// @flow
 import React from 'react';
-import type { Node } from 'react';
-import {
-  Text,
-  View,
-} from 'react-native';
+import { Text, View } from 'react-native';
 import { includes, map } from 'lodash';
-import ChordSounds from '../../elements/inputs/ChordSounds';
 import bottomStyle from '../../../styles/bottom';
-import mainStyle from '../../../styles/main';
 import colors from '../../../styles/colors';
+import mainStyle from '../../../styles/main';
+import ChordSounds from '../../elements/inputs/ChordSounds';
 import type { Note } from '../../../utils/hooks';
 
-export type ChordPlaying = 'positive'|'negative'|'both';
+export type ChordPlaying = 'positive' | 'negative' | 'both';
 
 type Props = {
   data: any,
 };
 
-function BottomChords(props: Props): Node {
+function BottomChords(props: Props) {
   const { data } = props;
 
   const handleNegativeChordNote = (chord: string, notes: Note[]) => {
     if (includes(['m6', '6 chord', 'dim7'], chord)) {
-      return notes[notes.length - 2].note;
+      return notes[notes.length - 2]?.note;
     }
 
-    return notes[notes.length - 1].note;
+    return notes[notes.length - 1]?.note;
   };
 
   const handleNegativeChordName = (chordP: string, chordN: string) => {
@@ -45,7 +40,7 @@ function BottomChords(props: Props): Node {
       {data && (
         <ChordSounds
           data={data}
-          negativeChordNote={negativeChordNote}
+          negativeChordNote={negativeChordNote || ''}
           negativeChordName={negativeChordName}
         />
       )}

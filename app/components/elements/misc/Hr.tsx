@@ -1,6 +1,4 @@
-// @flow
 import React from 'react';
-import type { Node } from 'react';
 import { View } from 'react-native';
 import colors from '../../../styles/colors';
 
@@ -11,7 +9,7 @@ type Props = {
   paddingY?: number,
 };
 
-function Hr(props: Props): Node {
+function Hr(props: Props) {
   const height = props.height || 2;
   const color = props.color || colors.white;
 

@@ -1,4 +1,3 @@
-// @flow
 import CodePush from 'react-native-code-push';
 import { get, has, omit } from 'lodash';
 import { codepush } from '../tokens';

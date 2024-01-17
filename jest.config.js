@@ -11,7 +11,8 @@ module.exports = {
     './jest.setup.js',
   ],
   transform: {
-    '^.+\\.js$': 'babel-jest',
+    '^.+\\.(js|jsx)$': 'babel-jest',
+    '^.+\\.(ts|tsx)$': 'ts-jest',
   },
   transformIgnorePatterns: [
     `node_modules/(?!((jest-)?${esModules}(-community)?)/)`,

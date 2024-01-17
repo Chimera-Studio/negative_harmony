@@ -1,27 +1,25 @@
-// @flow
 import React, { useState } from 'react';
-import type { Node } from 'react';
 import {
   Modal, Text, TouchableOpacity, View,
 } from 'react-native';
-import { Link, useNavigate } from 'react-router-native';
-import { useDispatch, useSelector } from 'react-redux';
 import CodePush from 'react-native-code-push';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link, useNavigate } from 'react-router-native';
 import { secondsToMilliseconds } from 'date-fns';
 import { isEmpty, isEqual } from 'lodash';
-import useLocale from '../../../locales';
-import Alert from '../../elements/misc/Alert';
 import Info from '../../../assets/icons/Info';
+import useLocale from '../../../locales';
+import { actions, selectors } from '../../../store/globalStore';
+import colors from '../../../styles/colors';
+import mainStyle from '../../../styles/main';
+import navigationStyle from '../../../styles/navigation';
+import { codepush } from '../../../tokens';
 import { deviceInfo } from '../../../utils';
 import { useLocationInfo, useTeleport } from '../../../utils/hooks';
-import { codepush } from '../../../tokens';
-import { actions, selectors } from '../../../store/globalStore';
-import navigationStyle from '../../../styles/navigation';
-import mainStyle from '../../../styles/main';
-import colors from '../../../styles/colors';
+import Alert from '../../elements/misc/Alert';
 import type { ReduxState } from '../../../types';
 
-function Navigation(): Node {
+function Navigation() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { t } = useLocale();
@@ -36,7 +34,7 @@ function Navigation(): Node {
   const [codepushSyncing, setCodepushSyncing] = useState(false);
   const isProduction = codepushEnvironment === 'Production';
 
-  const handleAlert = (e) => {
+  const handleAlert = (e: any) => {
     if (isEmpty(scales)) {
       e.preventDefault();
       teleport(

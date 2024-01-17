@@ -1,19 +1,8 @@
-// @flow
 import { StyleSheet } from 'react-native';
-import { isiPhone } from '../utils';
 import colors from './colors';
+import { isiPhone } from '../utils';
 
-type RewardedStyle = {
-  wrapper: Object,
-  paragraph: Object,
-  paragraphText: Object,
-  start: Object,
-  disabled: Object,
-  startText: Object,
-  disclamer: Object,
-};
-
-const rewardedStyle: RewardedStyle = StyleSheet.create({
+const rewardedStyle = StyleSheet.create({
   wrapper: {
     alignItems: 'center',
     display: 'flex',
