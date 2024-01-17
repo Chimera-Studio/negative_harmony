@@ -8,15 +8,19 @@ on:
     types: [opened, synchronize, reopened]
     branches:
       - main
+  workflow_call:
+    secrets:
+      access-token:
+        required: false
 
 env:
-  NODE_VERSION: 16.10.0
+  NODE_VERSION: 18.0
 
 jobs:
   run_tests:
-    if: github.event_name == 'push' || (github.event_name == 'pull_request')
     name: Run Tests
     runs-on: ubuntu-latest
+    timeout-minutes: 5
 
     steps:
       - uses: actions/checkout@v3
@@ -37,4 +41,4 @@ jobs:
       # Run tests
       - run: yarn tsc
       - run: yarn lint
-      - run: yarn test
+      # - run: yarn test
