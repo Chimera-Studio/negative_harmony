@@ -5,7 +5,7 @@ import { RewardedAd } from 'react-native-google-mobile-ads';
 import InAppReview from 'react-native-in-app-review';
 import Sound from 'react-native-sound';
 import { useSelector } from 'react-redux';
-import { useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   addMonths, minutesToMilliseconds, secondsToMilliseconds,

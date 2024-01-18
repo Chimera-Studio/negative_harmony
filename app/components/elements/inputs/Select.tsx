@@ -2,7 +2,7 @@ import React from 'react';
 import {
   Modal, ScrollView, Text, TouchableOpacity, TouchableWithoutFeedback, View,
 } from 'react-native';
-import { useNavigate } from 'react-router';
+import { useNavigate } from 'react-router-native';
 import { map } from 'lodash';
 import Arrow from '../../../assets/icons/Arrow';
 import colors from '../../../styles/colors';
