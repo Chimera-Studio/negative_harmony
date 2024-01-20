@@ -8,7 +8,6 @@ import {
   View,
 } from 'react-native';
 import { RewardedAdEventType } from 'react-native-google-mobile-ads';
-import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-native';
 import { isEqual } from 'lodash';
 import Exit from '../../assets/icons/Exit';
@@ -18,14 +17,13 @@ import { selectors } from '../../store/staticStore';
 import colors from '../../styles/colors';
 import mainStyle from '../../styles/main';
 import rewardedStyle from '../../styles/rewarded';
-import { useRewardedAd } from '../../utils/hooks';
-import type { ReduxState } from '../../types';
+import { useAppDispatch, useAppSelector, useRewardedAd } from '../../utils/hooks';
 
 function Rewarded() {
   const { t } = useLocale();
-  const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { personalisedAds, rewarded } = useSelector((state: ReduxState) => ({
+  const dispatch = useAppDispatch();
+  const { personalisedAds, rewarded } = useAppSelector((state) => ({
     personalisedAds: state.global.personalisedAds,
     rewarded: selectors.getAdmobIds(state).rewarded,
   }), isEqual);

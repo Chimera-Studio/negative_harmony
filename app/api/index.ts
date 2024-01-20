@@ -7,9 +7,7 @@ export const getDeploymentData = async (): Promise<any> => {
   const response = await CodePush.getUpdateMetadata();
 
   if (!has(response, 'deploymentKey')) {
-    return {
-      environment: 'Production',
-    };
+    return { environment: 'Production' };
   }
 
   const newResponse = omit(response, 'install');

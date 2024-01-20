@@ -34,8 +34,6 @@ export const codepush = {
 };
 
 export const localStorageKeys = {
-  appContent: 'appContent',
-  contentTimestamps: 'contentTimestamps',
   announcementTimestamp: 'announcementTimestamp',
   reviewTimestamp: 'reviewTimestamp',
   rewardedAt: 'rewardedAt',

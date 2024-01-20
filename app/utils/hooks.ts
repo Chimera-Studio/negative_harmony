@@ -4,7 +4,8 @@ import {
 import { RewardedAd } from 'react-native-google-mobile-ads';
 import InAppReview from 'react-native-in-app-review';
 import Sound from 'react-native-sound';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import type { TypedUseSelectorHook } from 'react-redux';
 import { useLocation } from 'react-router-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
@@ -17,7 +18,7 @@ import { PortalContext } from '../context';
 import { localStorageKeys } from '../tokens';
 import { rewardedKeywords } from '../tokens/keywords';
 import type { ChordPlaying } from '../components/containers/bottom/BottomChords';
-import type { ReduxState } from '../types';
+import type { AppDispatch, RootState } from '../store';
 
 export const getItem = async (key: string) => {
   try {
@@ -47,23 +48,26 @@ export const removeItem = async (key: string) => {
   }
 };
 
-export const useLocalStorage = () => ({
+export const localStorage = {
   getItem,
   setItem,
   removeItem,
-});
+};
+
+// Use throughout your app instead of plain `useDispatch` and `useSelector`
+export const useAppDispatch: () => AppDispatch = useDispatch;
+export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
 
 export const useReview = () => {
   const { loadTime, reviewMinutes, unlocked }: {
     loadTime: number,
     reviewMinutes: number,
     unlocked: boolean,
-  } = useSelector((state: ReduxState) => ({
+  } = useAppSelector((state) => ({
     loadTime: state.static.loadTime,
     reviewMinutes: state.static.reviewMinutes,
     unlocked: state.global.unlocked,
   }), isEqual);
-  const localStorage = useLocalStorage();
   const isAvailable = InAppReview.isAvailable();
 
   const handleReview = async () => {

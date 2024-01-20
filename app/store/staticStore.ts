@@ -1,6 +1,7 @@
 import { admob } from '../tokens';
 import { deviceInfo } from '../utils';
-import type { ReduxActionWithPayload, ReduxState } from '../types';
+import type { RootState } from '.';
+import type { ReduxAction } from '../types';
 
 export type State = {
   reviewMinutes: number,
@@ -12,7 +13,7 @@ type AdmobIds = {
   rewarded: string | null,
 };
 
-export const getAdmobIds = (state: ReduxState): AdmobIds => {
+export const getAdmobIds = (state: RootState): AdmobIds => {
   const showTestAds = state.global.developerMode;
 
   const getBannerID = (): string | null => {
@@ -38,11 +39,11 @@ export const getAdmobIds = (state: ReduxState): AdmobIds => {
 };
 
 export const selectors = {
-  getStatic: (state: ReduxState): State => state.static,
-  getAdmobIds: (state: ReduxState): AdmobIds => getAdmobIds(state),
+  getStatic: (state: RootState): State => state.static,
+  getAdmobIds: (state: RootState): AdmobIds => getAdmobIds(state),
 };
 
-export const reducer = (state: State, action: ReduxActionWithPayload): State => {
+export const reducer = (state, action: ReduxAction) => {
   switch (action.type) {
     default:
       return state || {};

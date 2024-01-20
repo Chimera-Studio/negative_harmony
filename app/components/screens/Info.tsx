@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState } from 'react';
 import {
   Animated, Easing, ScrollView, Text, TouchableOpacity, View,
 } from 'react-native';
-import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-native';
 import { secondsToMilliseconds } from 'date-fns';
 import Exit from '../../assets/icons/Exit';
@@ -11,12 +10,12 @@ import { actions } from '../../store/globalStore';
 import colors from '../../styles/colors';
 import infoStyle from '../../styles/info';
 import mainStyle from '../../styles/main';
-import { useTeleport } from '../../utils/hooks';
+import { useAppDispatch, useTeleport } from '../../utils/hooks';
 import Alert from '../elements/misc/Alert';
 
 function Info() {
   const { t } = useLocale();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const { teleport } = useTeleport();
   const [secretDeviceIdTap, setSecretDeviceIdTap] = useState(0);
   const screenOpacity = useRef(new Animated.Value(0)).current;

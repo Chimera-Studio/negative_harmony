@@ -4,12 +4,10 @@ import { Provider } from 'react-redux';
 import renderer from 'react-test-renderer';
 import Body from '../app/components/Body';
 import PortalProvider from '../app/components/containers/portal/PortalProvider';
-import { configureStore } from '../app/store';
-import { types } from '../app/store/globalStore';
+import { store } from '../app/store';
+import { GlobalTypes } from '../app/store/globalStore';
 
 describe('Body tests', () => {
-  const store = configureStore({});
-
   test('triggers API calls', () => {
     const storeSpy = jest.spyOn(store, 'dispatch');
 
@@ -21,6 +19,6 @@ describe('Body tests', () => {
       </Provider>,
     );
 
-    expect(storeSpy).toHaveBeenCalledWith(expect.objectContaining({ type: types.GB_GET_DEPLOYMENT_DATA }));
+    expect(storeSpy).toHaveBeenCalledWith(expect.objectContaining({ type: GlobalTypes.GB_GET_DEPLOYMENT_DATA }));
   });
 });

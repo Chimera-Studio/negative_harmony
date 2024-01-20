@@ -3,7 +3,6 @@ import {
   Modal, Text, TouchableOpacity, View,
 } from 'react-native';
 import CodePush from 'react-native-code-push';
-import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-native';
 import { secondsToMilliseconds } from 'date-fns';
 import { isEmpty, isEqual } from 'lodash';
@@ -15,22 +14,23 @@ import mainStyle from '../../../styles/main';
 import navigationStyle from '../../../styles/navigation';
 import { codepush } from '../../../tokens';
 import { deviceInfo } from '../../../utils';
-import { useLocationInfo, useTeleport } from '../../../utils/hooks';
+import {
+  useAppDispatch, useAppSelector, useLocationInfo, useTeleport,
+} from '../../../utils/hooks';
 import Alert from '../../elements/misc/Alert';
-import type { ReduxState } from '../../../types';
 
 function Navigation() {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { t } = useLocale();
   const { teleport } = useTeleport();
   const locationInfo = useLocationInfo();
-  const developerMode: boolean = useSelector((state: ReduxState) => state.global.developerMode, isEqual);
-  const { scales, showLegend } = useSelector((state: ReduxState) => ({
+  const developerMode: boolean = useAppSelector((state) => state.global.developerMode, isEqual);
+  const { scales, showLegend } = useAppSelector((state) => ({
     scales: selectors.getScales(state),
     showLegend: state.global.showLegend,
   }), isEqual);
-  const codepushEnvironment = useSelector(selectors.getCodepushEnvironment, isEqual);
+  const codepushEnvironment = useAppSelector(selectors.getCodepushEnvironment, isEqual);
   const [codepushSyncing, setCodepushSyncing] = useState(false);
   const isProduction = codepushEnvironment === 'Production';
 
@@ -53,6 +53,8 @@ function Navigation() {
     CodePush.sync({
       deploymentKey: key,
       installMode: CodePush.InstallMode.IMMEDIATE,
+    }).finally(() => {
+      setCodepushSyncing(false);
     });
   };
 

@@ -4,12 +4,13 @@ import {
   Easing,
   View,
 } from 'react-native';
-import { useDispatch, useSelector } from 'react-redux';
 import { isEqual, times } from 'lodash';
 import useLocale from '../../locales';
 import { actions, selectors } from '../../store/globalStore';
 import scalesChordsStyle from '../../styles/scales_chords';
-import { useReview, useTeleport } from '../../utils/hooks';
+import {
+  useAppDispatch, useAppSelector, useReview, useTeleport,
+} from '../../utils/hooks';
 import { musicScale, scaleList } from '../../utils/patterns';
 import BottomScales from '../containers/bottom/BottomScales';
 import Circle from '../containers/circle/Circle';
@@ -18,10 +19,10 @@ import Legend from '../elements/misc/Legend';
 
 export function Scales() {
   const { t } = useLocale();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const { close } = useTeleport();
   const reviewApp = useReview();
-  const global = useSelector(selectors.getGlobal, isEqual);
+  const global = useAppSelector(selectors.getGlobal, isEqual);
   const [openSelect, setOpenSelect] = useState(false);
   const screenOpacity = useRef(new Animated.Value(0)).current;
 

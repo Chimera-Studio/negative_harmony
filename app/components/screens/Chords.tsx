@@ -5,7 +5,6 @@ import {
   Text,
   View,
 } from 'react-native';
-import { useSelector } from 'react-redux';
 import { Link } from 'react-router-native';
 import {
   forEach, get, includes, indexOf, isEqual, sortBy, times,
@@ -15,7 +14,7 @@ import useLocale from '../../locales';
 import { selectors } from '../../store/globalStore';
 import colors from '../../styles/colors';
 import scalesChordsStyle from '../../styles/scales_chords';
-import { useReview } from '../../utils/hooks';
+import { useAppSelector, useReview } from '../../utils/hooks';
 import { chordList, scaleList } from '../../utils/patterns';
 import BottomChords from '../containers/bottom/BottomChords';
 import TonicSlider from '../containers/tonic-slider/TonicSlider';
@@ -26,7 +25,7 @@ import LegendExtra from '../elements/misc/LegendExtra';
 function Chords() {
   const { t } = useLocale();
   const reviewApp = useReview();
-  const global = useSelector(selectors.getGlobal, isEqual);
+  const global = useAppSelector(selectors.getGlobal, isEqual);
   const lists = { scales: scaleList, chords: chordList };
   const [selectedChord, setSelectedChord] = useState(lists.chords[0]);
   const [chords, setChords] = useState(null);

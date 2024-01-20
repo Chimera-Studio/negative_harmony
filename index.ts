@@ -7,4 +7,4 @@ import App from './app/App';
 import { name } from './app.json';
 
 LogBox.ignoreLogs(['Require cycle:']);
-AppRegistry.registerComponent(name, App);
+AppRegistry.registerComponent(name, () => App);

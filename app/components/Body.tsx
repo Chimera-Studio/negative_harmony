@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { SafeAreaView, StatusBar, View } from 'react-native';
-import { useDispatch } from 'react-redux';
 import { NativeRouter, Route, Routes } from 'react-router-native';
 import { secondsToMilliseconds } from 'date-fns';
 import Navigation from './containers/navigation/Navigation';
@@ -15,9 +14,10 @@ import StateTree from './screens/StateTree';
 import { actions, actions as globalActions } from '../store/globalStore';
 import mainStyle from '../styles/main';
 import { initializeAds } from '../utils';
+import { useAppDispatch } from '../utils/hooks';
 
 function Body() {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const [loadingAnimationDone, setLoadingAnimationDone] = useState(false);
   const initLoad = useRef(true);
   const timeoutRef = useRef<any>();
