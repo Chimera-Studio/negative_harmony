@@ -22,7 +22,7 @@
     "react": "^18.2.0",
     "react-devtools-core": "^5.0.0",
     "react-native": "^0.73.2",
-    "react-native-code-push": "^8.1.1",
+    "react-native-code-push": "^8.2.0",
     "react-native-device-info": "^10.12.0",
     "react-native-google-mobile-ads": "^12.10.0",
     "react-native-in-app-review": "^4.3.3",

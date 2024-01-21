@@ -33,7 +33,7 @@ function StateTree() {
 
   return (
     <SafeAreaView style={mainStyle.safe}>
-      <Link to="/" style={mainStyle.exit} underlayColor={undefined}>
+      <Link to="/" style={mainStyle.exit} underlayColor={colors.transparent}>
         <Exit color={colors.blue} />
       </Link>
       <ScrollView

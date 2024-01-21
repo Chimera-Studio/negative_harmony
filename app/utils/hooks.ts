@@ -85,7 +85,7 @@ export const useReview = () => {
             const newTimestamp = addMonths(currentTime, 1).valueOf();
             localStorage.setItem(localStorageKeys.reviewTimestamp, JSON.stringify(newTimestamp));
           }
-        });
+        }).catch(() => {});
       }
     }
   };

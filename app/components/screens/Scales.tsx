@@ -1,9 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import {
-  Animated,
-  Easing,
-  View,
-} from 'react-native';
+import { Animated, Easing, View } from 'react-native';
 import { isEqual, times } from 'lodash';
 import useLocale from '../../locales';
 import { actions, selectors } from '../../store/globalStore';

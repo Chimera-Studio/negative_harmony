@@ -9,6 +9,12 @@ import { store } from './store';
 import { actions } from './store/globalStore';
 import { getDeviceInfo } from './utils';
 
+const codePushOptions = {
+  checkFrequency: CodePush.CheckFrequency.ON_APP_START,
+  installMode: CodePush.InstallMode.IMMEDIATE,
+  mandatoryInstallMode: CodePush.InstallMode.IMMEDIATE,
+};
+
 function App() {
   const [setupPending, setSetupPending] = useState(true);
 
@@ -34,4 +40,4 @@ function App() {
   );
 }
 
-export default CodePush(App);
+export default CodePush(codePushOptions)(App);

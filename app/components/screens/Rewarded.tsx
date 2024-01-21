@@ -32,21 +32,21 @@ function Rewarded() {
   const screenOpacity = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
-    if (rewardedAd) {
-      rewardedAd.addAdEventListener(
-        RewardedAdEventType.LOADED, () => {
-          setAdLoading(false);
-        });
+    if (!rewardedAd) return;
 
-      rewardedAd.addAdEventListener(
-        RewardedAdEventType.EARNED_REWARD, () => {
-          dispatch(actions.unlockChords());
-          navigate('/chords');
-        },
-      );
+    rewardedAd.addAdEventListener(
+      RewardedAdEventType.LOADED, () => {
+        setAdLoading(false);
+      });
 
-      rewardedAd.load();
-    }
+    rewardedAd.addAdEventListener(
+      RewardedAdEventType.EARNED_REWARD, () => {
+        dispatch(actions.unlockChords());
+        navigate('/chords');
+      },
+    );
+
+    rewardedAd.load();
 
     return () => {
       rewardedAd?.removeAllListeners();
@@ -71,7 +71,7 @@ function Rewarded() {
   }, []);
 
   const requestReward = () => {
-    rewardedAd?.show();
+    rewardedAd?.show().catch(() => {});
   };
 
   return (
