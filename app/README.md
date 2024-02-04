@@ -4,7 +4,7 @@
 
 #### Node.js & yarn
 
-Node version `16.10.0` and up needed to run the React scripts. And yarn to run the scripts and handle dependencies.
+Node version `>=18` and up needed to run the React scripts. And yarn to run the scripts and handle dependencies.
 
 This project was bootstrapped with [Create React Native App](https://github.com/expo/create-react-native-app).
 
@@ -45,23 +45,3 @@ To deploy the app with codepush (*codepush-cli needed):
 ### Environment Variables
 
 Add `env.json` file to root directory
-
-#### A list of all used variables
-    {
-      "REDUX": {
-        "DENYLIST": [],
-        "SANITIZEDLIST": [],
-        "SANITIZER": true,
-        "STATE_LOG": false
-      },
-      "CMS": {
-        "GRAPHQL_URL": "<secret>",
-        "SPACE": "<secret>",
-        "AUTHORIZATION": "<secret>"
-      },
-      "RELEASE_SECRETS": {
-        "RELEASE_KEYSTORE_PASSWORD": "<secret>",
-        "RELEASE_KEYSTORE_KEY_PASSWORD": "<secret>",
-        "RELEASE_KEYSTORE_KEY_ALIAS": "<secret>"
-      }
-    }

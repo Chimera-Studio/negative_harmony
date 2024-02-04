@@ -1,7 +1,6 @@
-/* eslint-disable no-undef -- jest is not defined and cannot be */
-// @flow
-import mockRNDeviceInfo from 'react-native-device-info/jest/react-native-device-info-mock';
+/* eslint-disable no-undef */
 import mockAsyncStorage from '@react-native-async-storage/async-storage/jest/async-storage-mock';
+import mockRNDeviceInfo from 'react-native-device-info/jest/react-native-device-info-mock';
 
 afterEach(() => {
   jest.clearAllMocks();
@@ -25,7 +24,7 @@ jest.mock('react-native-in-app-review', () => ({
 }));
 
 jest.mock('react-native-code-push', () => {
-  const cp = () => (app: any) => app;
+  const cp = () => (app) => app;
   Object.assign(cp, {
     InstallMode: {},
     CheckFrequency: {},
