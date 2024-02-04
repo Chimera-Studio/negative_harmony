@@ -21,7 +21,8 @@ function Info() {
   const screenOpacity = useRef(new Animated.Value(0)).current;
 
   const handleDeveloperModeToggle = () => {
-    if (secretDeviceIdTap === 7) {
+    const tapCount = secretDeviceIdTap + 1;
+    if (tapCount === 7) {
       dispatch(actions.toggleDeveloperMode(true));
       teleport(
         <Alert clearDelayMS={secondsToMilliseconds(5)}>
@@ -32,7 +33,7 @@ function Info() {
       return;
     }
 
-    setSecretDeviceIdTap(secretDeviceIdTap + 1);
+    setSecretDeviceIdTap(tapCount);
   };
 
   useEffect(() => {

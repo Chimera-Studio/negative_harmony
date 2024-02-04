@@ -21,7 +21,6 @@ function Body() {
   const [loadingAnimationDone, setLoadingAnimationDone] = useState(false);
   const initLoad = useRef(true);
   const timeoutRef = useRef<any>();
-  // const announcementSeen = get(cms, 'timestamps.local.announcement', 0) < get(cms, 'timestamps.announcement', 0);
 
   useEffect(() => {
     if (initLoad.current) {
