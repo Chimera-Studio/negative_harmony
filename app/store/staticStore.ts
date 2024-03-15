@@ -43,7 +43,7 @@ export const selectors = {
   getAdmobIds: (state: RootState): AdmobIds => getAdmobIds(state),
 };
 
-export const reducer = (state, action: ReduxAction) => {
+export const reducer = (state: any, action: ReduxAction) => {
   switch (action.type) {
     default:
       return state || {};

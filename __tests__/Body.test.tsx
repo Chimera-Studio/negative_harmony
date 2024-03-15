@@ -1,4 +1,5 @@
 import 'react-native';
+import React from 'react';
 import { Provider } from 'react-redux';
 // Note: test renderer must be required after react-native.
 import renderer from 'react-test-renderer';
@@ -7,18 +8,24 @@ import PortalProvider from '../app/components/containers/portal/PortalProvider';
 import { store } from '../app/store';
 import { GlobalTypes } from '../app/store/globalStore';
 
-describe('Body tests', () => {
-  test('triggers API calls', () => {
-    const storeSpy = jest.spyOn(store, 'dispatch');
+it('Body: triggers API calls', () => {
+  let container: renderer.ReactTestRenderer;
+  const dispatchSpy = jest.spyOn(store, 'dispatch');
 
-    renderer.create(
+  renderer.act(() => {
+    container = renderer.create(
       <Provider store={store}>
         <PortalProvider>
           <Body />
         </PortalProvider>
       </Provider>,
     );
-
-    expect(storeSpy).toHaveBeenCalledWith(expect.objectContaining({ type: GlobalTypes.GB_GET_DEPLOYMENT_DATA }));
   });
+
+  renderer.act(() => {
+    container.unmount();
+  });
+
+  expect(dispatchSpy).toHaveBeenCalledWith(expect.objectContaining({ type: GlobalTypes.GB_GET_DEPLOYMENT_DATA }));
+  dispatchSpy.mockClear();
 });

@@ -5,18 +5,19 @@ import { reducer as globalStoreReducer } from './globalStore';
 import { reducer as staticStoreReducer } from './staticStore';
 import { config } from '../tokens';
 import { isPromise } from '../utils';
+import type { Dispatch } from '@reduxjs/toolkit';
 
-function promiseMiddleware({ dispatch }) {
-  return (next) => (action) => {
+function promiseMiddleware({ dispatch }: { dispatch: Dispatch }) {
+  return (next: (arg0: any) => any) => (action: { payload: Promise<any>; type: any; }) => {
     if (action.payload && isPromise(action.payload)) {
       action.payload
-        .then((payload) => {
+        .then((payload: any) => {
           dispatch({
             type: `${action.type}_FULFILLED`,
             payload,
           });
         })
-        .catch((e) => {
+        .catch((e: { status: any; name: any; message: any; }) => {
           console.error(
             `REDUX: ${action.type}_REJECTED: statusCode = `,
             (e && e.status) || '',
