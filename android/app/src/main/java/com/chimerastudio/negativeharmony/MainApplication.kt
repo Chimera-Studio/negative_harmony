@@ -12,6 +12,10 @@ import com.facebook.react.defaults.DefaultReactNativeHost
 import com.facebook.react.flipper.ReactNativeFlipper
 import com.facebook.soloader.SoLoader
 import org.devio.rn.splashscreen.SplashScreenReactPackage;
+import com.ibits.react_native_in_app_review.AppReviewPackage;
+import com.zmxv.RNSound.RNSoundPackage;
+import com.learnium.RNDeviceInfo.RNDeviceInfo;
+import com.reactnativecommunity.asyncstorage.AsyncStoragePackage;
 import com.microsoft.codepush.react.CodePush;
 
 class MainApplication : Application(), ReactApplication {
