@@ -1,3 +1,5 @@
+![feature_graphic](.github/docs/feature_graphic.jpg)
+
 # Negative Harmony - Simplified
 
 ### Find scales, modes & chords
@@ -9,6 +11,12 @@
 - [Google Play Store](https://play.google.com/store/apps/details?id=com.chimerastudio.negativeharmony)
 - [App Store](https://apps.apple.com/us/app/negative-harmony-simplified/id1561674380)
 - [Amazon Store](https://www.amazon.com/gp/product/B09QBMPTBJ)
+
+<!-- Hack to display images in a grid -->
+| | | |
+|-|-|-|
+| ![screen_1](.github/docs/screen_1.jpg) | ![screen_2](.github/docs/screen_2.jpg) | ![screen_3](.github/docs/screen_3.jpg)
+| | | |
 
 ### Negative Harmony is an app made to make the musical theory of negative harmony easier to understand and visualise.
 
