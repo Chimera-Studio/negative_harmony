@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native';
+import { Font } from '.';
 import colors from './colors';
 import { deviceHeight } from '../utils';
 
@@ -35,7 +36,7 @@ const bottomStyle = StyleSheet.create({
     minHeight: 40,
   },
   scaleText: {
-    fontFamily: 'NegativeHarmony-Bold',
+    fontFamily: Font.bold,
     fontSize: 15,
     textAlign: 'center',
     width: 30,
@@ -63,13 +64,13 @@ const bottomStyle = StyleSheet.create({
     width: '50%',
   },
   tonic: {
-    fontFamily: 'NegativeHarmony-Bold',
+    fontFamily: Font.bold,
     fontSize: 26,
     marginRight: 3,
   },
   name: {
     color: colors.positiveText,
-    fontFamily: 'NegativeHarmony-Bold',
+    fontFamily: Font.bold,
     fontSize: 16,
     marginLeft: 3,
   },
@@ -84,7 +85,7 @@ const bottomStyle = StyleSheet.create({
     display: 'flex',
     flexShrink: 1,
     flexWrap: 'wrap',
-    fontFamily: 'NegativeHarmony-Bold',
+    fontFamily: Font.bold,
     fontSize: 15,
     marginHorizontal: 2,
     textAlign: 'center',

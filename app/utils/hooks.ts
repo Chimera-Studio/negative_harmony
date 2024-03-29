@@ -8,9 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import type { TypedUseSelectorHook } from 'react-redux';
 import { useLocation } from 'react-router-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {
-  addMonths, minutesToMilliseconds, secondsToMilliseconds,
-} from 'date-fns';
+import { addMonths, minutesToMilliseconds } from 'date-fns';
 import { isEqual, keys } from 'lodash';
 import { isPromise } from '.';
 import { symbolFlat, symbolSharp } from './patterns';
@@ -130,58 +128,23 @@ export const useRewardedAd = (rewardedId: string, showPersonalisedAds: boolean) 
   return rewardedAd;
 };
 
-export const useCountdown = (onTimeEnd: Function, countdownFrom: number | undefined) => {
-  const [time, setTime] = useState(countdownFrom || 0);
-  const timerRef = useRef(time);
-
-  useEffect(() => {
-    if (countdownFrom) {
-      timerRef.current = countdownFrom;
-      setTime(timerRef.current);
-    }
-  }, [countdownFrom]);
-
-  useEffect(() => {
-    if (!countdownFrom) return;
-
-    const timerId = setInterval(() => {
-      timerRef.current -= secondsToMilliseconds(1);
-
-      if (timerRef.current < 0 && countdownFrom) {
-        onTimeEnd();
-        clearInterval(timerId);
-      } else {
-        setTime(timerRef.current);
-      }
-    }, secondsToMilliseconds(1));
-
-    return () => clearInterval(timerId);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-};
-
 export type Note = { diatonic: boolean, note: string };
-export type UseSoundChords = {
-  chordsPause: Function,
-  chordsPlay: Function,
-};
 
-export const useSoundChords = (): UseSoundChords => {
+export const useSoundChords = () => {
   Sound.setCategory('Playback');
-  const playbackRef = useRef<{ [key: string]: any }>({});
+  const playbackRef = useRef<{ [key: string]: Sound }>({});
 
-  const chordsPause = () => {
-    const notes = keys(playbackRef.current);
-    for (let index = 0; index < notes.length; index++) {
-      const note = notes[index] || '';
-      playbackRef.current[note].stop();
-      playbackRef.current[note].release();
-    }
+  const initSound = (soundPath: string): Sound => {
+    const sound = new Sound(soundPath, Sound.MAIN_BUNDLE, (error) => {
+      if (error) return;
 
-    playbackRef.current = {};
+      sound.setVolume(0.8);
+    });
+
+    return sound;
   };
 
-  const chordsPlay = (notes: Note[], type: ChordPlaying) => {
+  const initChord = (notes: Note[], type: ChordPlaying) => {
     const isNegative = type === 'negative';
     const chord = [...notes];
 
@@ -190,19 +153,39 @@ export const useSoundChords = (): UseSoundChords => {
       const soundPath = (note.includes(symbolSharp) || note.includes(symbolFlat)) ? note.charAt(0) + '_sharp' : note;
       const soundKey = (isNegative ? 'low_' : '') + soundPath.toLowerCase();
 
-      const sound = new Sound(`${soundKey}.mp3`, Sound.MAIN_BUNDLE, (error) => {
-        if (error) return;
+      playbackRef.current[soundKey] = initSound(`${soundKey}.mp3`);
+    }
+  };
 
-        sound.setVolume(0.8);
-        sound.play();
-      });
+  const switchChord = (notes: Note[], type: ChordPlaying) => {
+    const oldNotes = keys(playbackRef.current);
+    for (let index = 0; index < oldNotes.length; index++) {
+      const note = oldNotes[index] || '';
+      playbackRef.current[note]?.release();
+    }
+    initChord(notes, type);
+  };
 
-      playbackRef.current[soundKey] = sound;
+  const chordsPlay = () => {
+    const notes = keys(playbackRef.current);
+    for (let index = 0; index < notes.length; index++) {
+      const note = notes[index] || '';
+      playbackRef.current[note]?.play();
+    }
+  };
+
+  const chordsPause = () => {
+    const notes = keys(playbackRef.current);
+    for (let index = 0; index < notes.length; index++) {
+      const note = notes[index] || '';
+      playbackRef.current[note]?.stop();
     }
   };
 
   return {
-    chordsPause: () => chordsPause(),
-    chordsPlay: (notes: Note[], type: ChordPlaying) => chordsPlay(notes, type),
+    initChord,
+    switchChord,
+    chordsPlay,
+    chordsPause,
   };
 };

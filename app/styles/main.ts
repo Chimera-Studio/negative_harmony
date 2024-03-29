@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native';
+import { Font } from '.';
 import colors from './colors';
 import {
   deviceHeight, deviceWidth, isApple, isiPhone,
@@ -48,7 +49,7 @@ const mainStyle = StyleSheet.create({
   },
   alertText: {
     color: colors.black,
-    fontFamily: 'NegativeHarmony-Bold',
+    fontFamily: Font.bold,
     fontSize: 18,
     textAlign: 'center',
   },

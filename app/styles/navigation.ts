@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native';
+import { Font } from '.';
 import colors from './colors';
 import { isTablet, isiPhone } from '../utils';
 
@@ -23,7 +24,7 @@ const navigationStyle = StyleSheet.create({
   },
   switchText: {
     color: colors.white,
-    fontFamily: 'NegativeHarmony-Bold',
+    fontFamily: Font.bold,
     fontSize: 12,
     textAlign: 'center',
   },
@@ -45,7 +46,7 @@ const navigationStyle = StyleSheet.create({
   },
   appEnvironmentText: {
     color: colors.black,
-    fontFamily: 'NegativeHarmony',
+    fontFamily: Font.regular,
     fontSize: isTablet ? 14 : 12,
   },
 });

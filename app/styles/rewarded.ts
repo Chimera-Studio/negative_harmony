@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native';
+import { Font } from '.';
 import colors from './colors';
 import { isiPhone } from '../utils';
 
@@ -18,7 +19,7 @@ const rewardedStyle = StyleSheet.create({
   paragraphText: {
     color: colors.black,
     textAlign: 'center',
-    fontFamily: 'NegativeHarmony-Bold',
+    fontFamily: Font.bold,
     fontSize: 24,
     marginVertical: 2,
   },
@@ -47,13 +48,13 @@ const rewardedStyle = StyleSheet.create({
   startText: {
     color: colors.white,
     textAlign: 'center',
-    fontFamily: 'NegativeHarmony-Bold',
+    fontFamily: Font.bold,
     fontSize: 20,
   },
   disclamer: {
     color: colors.black,
     textAlign: 'center',
-    fontFamily: 'NegativeHarmony',
+    fontFamily: Font.regular,
     fontSize: 12,
   },
 });

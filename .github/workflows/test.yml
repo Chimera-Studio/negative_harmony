@@ -8,32 +8,27 @@ on:
     types: [opened, synchronize, reopened]
     branches:
       - main
-  workflow_call:
-    secrets:
-      access-token:
-        required: false
 
 env:
-  NODE_VERSION: 18.0
+  NODE_VERSION: 20.0
 
 jobs:
   test:
-    name: Run Tests
+    name: Test
     runs-on: ubuntu-latest
     timeout-minutes: 5
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Set up Node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: yarn
 
       - name: Install dependencies
-        if: steps.yarn-cache.outputs.cache-hit != true
-        run: yarn install --frozen-lockfile
+        run: yarn install
 
       - name: Create mock ENV
         run: cp __mocks__/env.json env.json

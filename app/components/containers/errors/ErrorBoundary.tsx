@@ -1,12 +1,16 @@
+/* eslint-disable no-console */
 import React from 'react';
 import {
-  SafeAreaView, StyleSheet, Text, TouchableOpacity,
+  SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity,
 } from 'react-native';
 import CodePush from 'react-native-code-push';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Emoji from '../../../assets/icons/Emoji';
+import { Font } from '../../../styles';
 import colors from '../../../styles/colors';
+import { deviceInfo } from '../../../utils';
 import WhiteBackground from '../../elements/backgrounds/WhiteBackground';
+import Hr from '../../elements/misc/Hr';
 
 const styles = StyleSheet.create({
   safe: {
@@ -20,16 +24,21 @@ const styles = StyleSheet.create({
     position: 'relative',
     width: '90%',
   },
+  scrollDeviceContainer: {
+    flexGrow: 1,
+    minHeight: '100%',
+    width: '100%',
+  },
   title: {
     color: colors.blue,
-    fontFamily: 'NegativeHarmony-Bold',
+    fontFamily: Font.bold,
     fontSize: 24,
     marginBottom: 10,
     textAlign: 'center',
   },
   text: {
     color: colors.black,
-    fontFamily: 'NegativeHarmony',
+    fontFamily: Font.regular,
     fontSize: 16,
     marginVertical: 16,
     textAlign: 'left',
@@ -52,9 +61,16 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     color: colors.white,
-    fontFamily: 'NegativeHarmony-Bold',
+    fontFamily: Font.bold,
     fontSize: 16,
     textAlign: 'center',
+  },
+  error: {
+    color: colors.red,
+    fontFamily: Font.regular,
+    fontSize: 12,
+    marginVertical: 12,
+    textAlign: 'left',
   },
 });
 
@@ -64,24 +80,32 @@ type Props = {
 
 type State = {
   hasError: boolean,
+  error: Error | null
+  stacktrace: string
 };
 
 class ErrorBoundary extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
-    this.state = { hasError: false };
+    this.state = {
+      hasError: false,
+      error: null,
+      stacktrace: '',
+    };
   }
 
   static getDerivedStateFromError(): State {
-    return { hasError: true };
+    return { hasError: true, error: null, stacktrace: '' };
   }
 
-  // componentDidCatch(error: Error, errorInfo: { componentStack: string, ... }) {
-  //   axios.post('<api_url>/log/error', JSON.stringify({ error_log: errorInfo })).catch(() => {
-  //     // eslint-disable-next-line no-console
-  //     console.error('Failed to send error log...');
-  //   });
-  // }
+  override componentDidCatch(error: Error, errorInfo: { componentStack: string }) {
+    this.setState({ error, stacktrace: errorInfo.componentStack });
+    console.log('----ERROR----');
+    console.error(error);
+    console.log('-------------');
+    console.error(errorInfo.componentStack);
+    console.log('----ERROR----');
+  }
 
   handleRestart = async () => {
     await AsyncStorage.clear();
@@ -89,8 +113,15 @@ class ErrorBoundary extends React.Component<Props, State> {
   };
 
   override render() {
-    if (this.state.hasError) {
-      return (
+    if (!this.state.hasError) return this.props.children;
+
+    return (
+      <ScrollView
+        style={{ flex: 1 }}
+        contentContainerStyle={styles.scrollDeviceContainer}
+        showsVerticalScrollIndicator={false}
+        bounces={false}
+      >
         <SafeAreaView style={styles.safe}>
           <WhiteBackground />
           <Text style={styles.title}>Oops...</Text>
@@ -110,6 +141,23 @@ class ErrorBoundary extends React.Component<Props, State> {
           <Text style={styles.text}>
             You can reopen the app manually or by pressing the button below.
           </Text>
+          {!deviceInfo.isRealDevice && (
+            <>
+              <Hr />
+              {this.state.error && (
+                <Text style={styles.error}>
+                  Name: {this.state.error?.name}{'\n'}
+                  Message: {this.state.error?.message}
+                </Text>
+              )}
+              <Hr />
+              {this.state.stacktrace && (
+                <Text style={styles.error}>
+                  Stacktrace: {this.state.stacktrace}
+                </Text>
+              )}
+            </>
+          )}
           <TouchableOpacity
             style={styles.button}
             activeOpacity={0.6}
@@ -118,10 +166,8 @@ class ErrorBoundary extends React.Component<Props, State> {
             <Text style={styles.buttonText}>Restart the App</Text>
           </TouchableOpacity>
         </SafeAreaView>
-      );
-    }
-
-    return this.props.children;
+      </ScrollView>
+    );
   }
 }
 

@@ -4,6 +4,7 @@ import {
 } from 'react-native';
 import { secondsToMilliseconds } from 'date-fns';
 import useLocale from '../../locales';
+import { Font } from '../../styles';
 import colors from '../../styles/colors';
 import GradientBG from '../elements/backgrounds/GradientBackground';
 import Logo from '../elements/misc/Logo';
@@ -23,7 +24,7 @@ const styles = StyleSheet.create({
   text: {
     bottom: '10%',
     color: colors.white,
-    fontFamily: 'NegativeHarmony',
+    fontFamily: Font.regular,
     fontSize: 20,
     position: 'absolute',
   },

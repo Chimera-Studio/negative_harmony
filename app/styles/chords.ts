@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native';
+import { Font } from '.';
 import colors from './colors';
 
 const chordsStyle = StyleSheet.create({
@@ -41,7 +42,7 @@ const chordsStyle = StyleSheet.create({
   },
   soundButtonText: {
     color: colors.white,
-    fontFamily: 'NegativeHarmony-Bold',
+    fontFamily: Font.bold,
     marginLeft: 5,
     textAlign: 'center',
   },

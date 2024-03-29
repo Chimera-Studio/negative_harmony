@@ -82,13 +82,18 @@ jest.mock('react-native-code-push', () => {
   return cp;
 });
 
-jest.mock('react-native-sound', () => ({
-  setVolume: jest.fn(),
-  setNumberOfLoops: jest.fn(),
-  play: jest.fn(),
-  stop: jest.fn(),
-  setCategory: jest.fn(),
-}));
+jest.mock('react-native-sound', () => {
+  class SoundMock {}
+
+  SoundMock.prototype.setVolume = jest.fn();
+  SoundMock.prototype.setNumberOfLoops = jest.fn();
+  SoundMock.prototype.play = jest.fn();
+  SoundMock.prototype.stop = jest.fn();
+
+  SoundMock.setCategory = jest.fn();
+
+  return SoundMock;
+});
 
 jest.mock('react-native-json-tree', () => 'JSONTree');
 

@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native';
+import { Font } from '.';
 import colors from './colors';
 import {
   deviceHeight, deviceWidth, isApple, isTablet,
@@ -54,7 +55,7 @@ const scalesChordsStyle = StyleSheet.create({
   },
   selectTextExp: {
     color: colors.black,
-    fontFamily: 'NegativeHarmony',
+    fontFamily: Font.regular,
     fontSize: 14,
     marginVertical: 10,
     textAlign: 'center',
@@ -73,7 +74,7 @@ const scalesChordsStyle = StyleSheet.create({
   },
   selectInputText: {
     color: colors.black,
-    fontFamily: 'NegativeHarmony',
+    fontFamily: Font.regular,
     fontSize: 14,
     textAlign: 'center',
   },
@@ -114,13 +115,13 @@ const scalesChordsStyle = StyleSheet.create({
     borderBottomWidth: 0,
   },
   selectDisabledText: {
-    fontFamily: 'NegativeHarmony',
+    fontFamily: Font.regular,
     fontSize: 18,
     marginVertical: 10,
     textAlign: 'center',
   },
   selectText: {
-    fontFamily: 'NegativeHarmony',
+    fontFamily: Font.regular,
     fontSize: 18,
     marginVertical: 10,
     textAlign: 'center',
@@ -162,13 +163,13 @@ const scalesChordsStyle = StyleSheet.create({
   },
   selectedScaleKey: {
     color: colors.white,
-    fontFamily: 'NegativeHarmony-Bold',
+    fontFamily: Font.bold,
     fontSize: 32,
     marginRight: 3,
   },
   selectedScaleName: {
     color: colors.black,
-    fontFamily: 'NegativeHarmony-Bold',
+    fontFamily: Font.bold,
     fontSize: 16,
     marginLeft: 3,
     textTransform: 'lowercase',
@@ -189,7 +190,7 @@ const scalesChordsStyle = StyleSheet.create({
   },
   rewardedOpenText: {
     color: colors.white,
-    fontFamily: 'NegativeHarmony-Bold',
+    fontFamily: Font.bold,
     fontSize: 18,
     textAlign: 'center',
   },
@@ -203,7 +204,7 @@ const scalesChordsStyle = StyleSheet.create({
   },
   scrollChordsExpText: {
     color: colors.black,
-    fontFamily: 'NegativeHarmony',
+    fontFamily: Font.regular,
     fontSize: 14,
     marginVertical: 10,
     textAlign: 'center',
@@ -243,14 +244,14 @@ const scalesChordsStyle = StyleSheet.create({
   },
   scrollChordsNoteTextSelected: {
     color: colors.white,
-    fontFamily: 'NegativeHarmony-Bold',
+    fontFamily: Font.bold,
     fontSize: 22,
     textAlign: 'center',
     width: 44,
   },
   scrollChordsNoteText: {
     color: colors.blue,
-    fontFamily: 'NegativeHarmony-Bold',
+    fontFamily: Font.bold,
     fontSize: 22,
     textAlign: 'center',
     width: 44,

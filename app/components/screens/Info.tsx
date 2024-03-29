@@ -7,6 +7,7 @@ import { secondsToMilliseconds } from 'date-fns';
 import Exit from '../../assets/icons/Exit';
 import useLocale from '../../locales';
 import { actions } from '../../store/globalStore';
+import { Font } from '../../styles';
 import colors from '../../styles/colors';
 import infoStyle from '../../styles/info';
 import mainStyle from '../../styles/main';
@@ -67,7 +68,7 @@ function Info() {
           {t('info.disclamer_1')}{' '}
           <Text
             style={{
-              fontFamily: 'NegativeHarmony-Bold',
+              fontFamily: Font.bold,
               color: colors.red,
             }}
           >
