@@ -11,36 +11,39 @@ This project was bootstrapped with [Create React Native App](https://github.com/
 ### Development
 
 Install node dependencies:
-
-    yarn (install)
+```sh
+yarn (install)
+```
 
 Run dev server for development:
-
-    yarn start
+```sh
+yarn start
+```
 
 To build application for "android" simulator:
-
-    yarn android
+```sh
+yarn android
+```
 
 To build application for "ios" simulator:
-
-    yarn ios
+```sh
+yarn ios
+```
 
 To build release:
+```sh
+yarn release
+```
 
-    yarn release
-
-Run test handled by [testing-library](https://testing-library.com/):
-
-    yarn test
+Run tests
+```sh
+yarn test
+```
 
 To create test coverage:
-
-    yarn test-coverage
-
-To deploy the app with codepush (*codepush-cli needed):
-
-    yarn deploy
+```sh
+yarn test:coverage
+```
 
 ### Environment Variables
 

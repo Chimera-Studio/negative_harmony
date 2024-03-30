@@ -622,6 +622,7 @@
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 6;
 				DEVELOPMENT_TEAM = 3586QUHAP4;
+				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 3586QUHAP4;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = NegativeHarmony/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Negative Harmony";
@@ -640,6 +641,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.chimerastudio.negativeharmonyios;
 				PRODUCT_NAME = NegativeHarmony;
 				PROVISIONING_PROFILE_SPECIFIER = "Negative Harmony App Store Distribution";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "Negative Harmony App Store Distribution";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
@@ -662,6 +664,7 @@
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 6;
 				DEVELOPMENT_TEAM = 3586QUHAP4;
+				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 3586QUHAP4;
 				INFOPLIST_FILE = NegativeHarmony/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "Negative Harmony";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.music";
@@ -679,6 +682,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.chimerastudio.negativeharmonyios;
 				PRODUCT_NAME = NegativeHarmony;
 				PROVISIONING_PROFILE_SPECIFIER = "Negative Harmony App Store Distribution";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "Negative Harmony App Store Distribution";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
 				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;

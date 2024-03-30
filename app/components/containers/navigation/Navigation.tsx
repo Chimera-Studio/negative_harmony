@@ -79,7 +79,7 @@ function Navigation() {
         style={navigationStyle.switch}
       >
         <Text style={navigationStyle.switchText}>
-          {t(locationInfo.isScales ? 'links.chords' : 'links.scales')}
+          {t(locationInfo.isScales ? 'links.scales' : 'links.chords')}
         </Text>
       </Link>
       {developerMode && (

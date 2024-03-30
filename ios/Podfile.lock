@@ -19,9 +19,9 @@ PODS:
     - ReactCommon/turbomodule/core (= 0.73.6)
   - fmt (6.2.1)
   - glog (0.3.5)
-  - Google-Mobile-Ads-SDK (11.2.0):
+  - Google-Mobile-Ads-SDK (11.0.1):
     - GoogleUserMessagingPlatform (>= 1.1)
-  - GoogleUserMessagingPlatform (2.3.0)
+  - GoogleUserMessagingPlatform (2.2.0)
   - hermes-engine (0.73.6):
     - hermes-engine/Pre-built (= 0.73.6)
   - hermes-engine/Pre-built (0.73.6)
@@ -1076,10 +1076,10 @@ PODS:
     - React-Core
   - RNDeviceInfo (10.13.1):
     - React-Core
-  - RNGoogleMobileAds (13.1.0):
+  - RNGoogleMobileAds (13.0.2):
     - glog
-    - Google-Mobile-Ads-SDK (= 11.2.0)
-    - GoogleUserMessagingPlatform (= 2.3.0)
+    - Google-Mobile-Ads-SDK (= 11.0.1)
+    - GoogleUserMessagingPlatform (= 2.2.0)
     - RCT-Folly (= 2022.05.16.00)
     - React-Core
   - RNSound (0.11.2):
@@ -1296,8 +1296,8 @@ SPEC CHECKSUMS:
   FBReactNativeSpec: 9f2b8b243131565335437dba74923a8d3015e780
   fmt: ff9d55029c625d3757ed641535fd4a75fedc7ce9
   glog: c5d68082e772fa1c511173d6b30a9de2c05a69a2
-  Google-Mobile-Ads-SDK: 5a6d005a6cb5b5e8f4c7b69ca05cdea79c181139
-  GoogleUserMessagingPlatform: b1ad7bb1ee3ce64749d4fec24f667b36e45c396c
+  Google-Mobile-Ads-SDK: 7a466427864972f5229f1f89d004b998a28ddcae
+  GoogleUserMessagingPlatform: d31dbfb40ec02c5d9683029815c5d5a7f46389ee
   hermes-engine: 9cecf9953a681df7556b8cc9c74905de8f3293c0
   JWT: ef71dfb03e1f842081e64dc42eef0e164f35d251
   libevent: 4049cae6c81cdb3654a443be001fb9bdceff7913
@@ -1347,7 +1347,7 @@ SPEC CHECKSUMS:
   ReactCommon: 2aa35648354bd4c4665b9a5084a7d37097b89c10
   RNCAsyncStorage: 826b603ae9c0f88b5ac4e956801f755109fa4d5c
   RNDeviceInfo: 4f9c7cfd6b9db1b05eb919620a001cf35b536423
-  RNGoogleMobileAds: e15b667be74c66dcbd78ee87699cf7ee2e7d13bb
+  RNGoogleMobileAds: 5b93e2b1f0dade2184fd7f8999d8197903f563db
   RNSound: 6c156f925295bdc83e8e422e7d8b38d33bc71852
   RNSVG: 50cf2c7018e57cf5d3522d98d0a3a4dd6bf9d093
   SocketRocket: f32cd54efbe0f095c4d7594881e52619cfe80b17
