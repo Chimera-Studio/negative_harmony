@@ -103,7 +103,7 @@ function Rewarded() {
           <Text style={rewardedStyle.startText}>{t('rewarded.cta')}</Text>
         )}
       </TouchableOpacity>
-      <Text style={rewardedStyle.disclamer}>{t('rewarded.disclamer')}</Text>
+      <Text style={rewardedStyle.disclaimer}>{t('rewarded.disclaimer')}</Text>
     </Animated.View>
   );
 }

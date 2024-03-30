@@ -51,7 +51,7 @@ const rewardedStyle = StyleSheet.create({
     fontFamily: Font.bold,
     fontSize: 20,
   },
-  disclamer: {
+  disclaimer: {
     color: colors.black,
     textAlign: 'center',
     fontFamily: Font.regular,

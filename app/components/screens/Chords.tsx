@@ -9,7 +9,7 @@ import { Link } from 'react-router-native';
 import {
   forEach, get, includes, indexOf, isEqual, sortBy, times,
 } from 'lodash';
-import Disclamer from '../../assets/icons/Disclamer';
+import Disclaimer from '../../assets/icons/Disclaimer';
 import useLocale from '../../locales';
 import { selectors } from '../../store/globalStore';
 import colors from '../../styles/colors';
@@ -21,6 +21,14 @@ import TonicSlider from '../containers/tonic-slider/TonicSlider';
 import Select from '../elements/inputs/Select';
 import Legend from '../elements/misc/Legend';
 import LegendExtra from '../elements/misc/LegendExtra';
+import type { Note } from '../../utils/hooks';
+
+export type ChordData = {
+  positive: Note[]
+  positiveName: string
+  negative: Note[]
+  negativeName: string
+};
 
 function Chords() {
   const { t } = useLocale();
@@ -28,7 +36,7 @@ function Chords() {
   const global = useAppSelector(selectors.getGlobal, isEqual);
   const lists = { scales: scaleList, chords: chordList };
   const [selectedChord, setSelectedChord] = useState(lists.chords[0]);
-  const [chords, setChords] = useState(null);
+  const [chords, setChords] = useState<ChordData | null>(null);
   const [tonic, setTonic] = useState(0);
   const [openSelect, setOpenSelect] = useState(false);
   const screenOpacity = useRef(new Animated.Value(0)).current;
@@ -130,10 +138,8 @@ function Chords() {
     const negativeName = handleFindChordMatch();
 
     setChords({
-      // @ts-ignore
       positive: positiveChord,
-      // @ts-ignore
-      positiveName: selected.display,
+      positiveName: get(selected, 'display', ''),
       negative: negativeChord,
       negativeName,
     });
@@ -182,9 +188,9 @@ function Chords() {
               <Link
                 to="/info"
                 underlayColor={colors.transparent}
-                style={scalesChordsStyle.disclamerBtn}
+                style={scalesChordsStyle.disclaimerBtn}
               >
-                <Disclamer style={scalesChordsStyle.disclamer} />
+                <Disclaimer style={scalesChordsStyle.disclaimer} />
               </Link>
             </View>
           </View>

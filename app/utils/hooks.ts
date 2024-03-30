@@ -9,13 +9,14 @@ import type { TypedUseSelectorHook } from 'react-redux';
 import { useLocation } from 'react-router-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { addMonths, minutesToMilliseconds } from 'date-fns';
-import { isEqual, keys } from 'lodash';
+import {
+  flatten, forEach, isEqual, values,
+} from 'lodash';
 import { isPromise } from '.';
 import { symbolFlat, symbolSharp } from './patterns';
 import { PortalContext } from '../context';
 import { localStorageKeys } from '../tokens';
 import { rewardedKeywords } from '../tokens/keywords';
-import type { ChordPlaying } from '../components/containers/bottom/BottomChords';
 import type { AppDispatch, RootState } from '../store';
 
 export const getItem = async (key: string) => {
@@ -128,11 +129,27 @@ export const useRewardedAd = (rewardedId: string, showPersonalisedAds: boolean) 
   return rewardedAd;
 };
 
+export enum ChordPlaying {
+  positive = 'positive',
+  negative = 'negative',
+  both = 'both',
+}
+
 export type Note = { diatonic: boolean, note: string };
 
+export type ChordNotes = {
+  positive: Note[]
+  negative: Note[]
+};
+
+type SoundChords = {
+  positive: Sound[]
+  negative: Sound[]
+};
+
 export const useSoundChords = () => {
+  const playbackRef = useRef<SoundChords>({ positive: [], negative: [] });
   Sound.setCategory('Playback');
-  const playbackRef = useRef<{ [key: string]: Sound }>({});
 
   const initSound = (soundPath: string): Sound => {
     const sound = new Sound(soundPath, Sound.MAIN_BUNDLE, (error) => {
@@ -144,48 +161,53 @@ export const useSoundChords = () => {
     return sound;
   };
 
-  const initChord = (notes: Note[], type: ChordPlaying) => {
-    const isNegative = type === 'negative';
-    const chord = [...notes];
+  const initChords = (chords: ChordNotes) => {
+    forEach(chords, (notes, key) => {
+      const isNegative = key === 'negative';
+      forEach(notes, ({ note }) => {
+        const soundPath = (note.includes(symbolSharp) || note.includes(symbolFlat)) ? note.charAt(0) + '_sharp' : note;
+        const soundKey = (isNegative ? 'low_' : '') + soundPath.toLowerCase();
 
-    for (let index = 0; index < chord.length; index++) {
-      const { note } = chord[index] as Note;
-      const soundPath = (note.includes(symbolSharp) || note.includes(symbolFlat)) ? note.charAt(0) + '_sharp' : note;
-      const soundKey = (isNegative ? 'low_' : '') + soundPath.toLowerCase();
-
-      playbackRef.current[soundKey] = initSound(`${soundKey}.mp3`);
-    }
+        playbackRef.current[key as 'positive' | 'negative'].push(initSound(`${soundKey}.mp3`));
+      });
+    });
   };
 
-  const switchChord = (notes: Note[], type: ChordPlaying) => {
-    const oldNotes = keys(playbackRef.current);
-    for (let index = 0; index < oldNotes.length; index++) {
-      const note = oldNotes[index] || '';
-      playbackRef.current[note]?.release();
-    }
-    initChord(notes, type);
+  const switchChords = (chords: ChordNotes) => {
+    const sounds = flatten(values(playbackRef.current));
+    forEach(sounds, (sound) => {
+      sound.release();
+    });
+    playbackRef.current = { positive: [], negative: [] };
+    initChords(chords);
   };
 
-  const chordsPlay = () => {
-    const notes = keys(playbackRef.current);
-    for (let index = 0; index < notes.length; index++) {
-      const note = notes[index] || '';
-      playbackRef.current[note]?.play();
+  const play = (type: ChordPlaying) => {
+    if (type === ChordPlaying.both) {
+      const sounds = flatten(values(playbackRef.current));
+      forEach(sounds, (sound) => {
+        sound.play();
+      });
+
+      return;
     }
+
+    forEach(playbackRef.current[type], (sound) => {
+      sound.play();
+    });
   };
 
-  const chordsPause = () => {
-    const notes = keys(playbackRef.current);
-    for (let index = 0; index < notes.length; index++) {
-      const note = notes[index] || '';
-      playbackRef.current[note]?.stop();
-    }
+  const pause = () => {
+    const sounds = flatten(values(playbackRef.current));
+    forEach(sounds, (sound) => {
+      sound.stop();
+    });
   };
 
   return {
-    initChord,
-    switchChord,
-    chordsPlay,
-    chordsPause,
+    initChords,
+    switchChords,
+    play,
+    pause,
   };
 };

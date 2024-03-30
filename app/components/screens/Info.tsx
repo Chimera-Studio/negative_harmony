@@ -65,14 +65,14 @@ function Info() {
       <Text style={infoStyle.title}>{t('info.title')}</Text>
       <ScrollView showsVerticalScrollIndicator={false}>
         <Text style={infoStyle.text}>
-          {t('info.disclamer_1')}{' '}
+          {t('info.disclaimer_1')}{' '}
           <Text
             style={{
               fontFamily: Font.bold,
               color: colors.red,
             }}
           >
-            {t('info.disclamer_2')}
+            {t('info.disclaimer_2')}
           </Text>{' '}
           {t('info.paragraph_1')}
         </Text>

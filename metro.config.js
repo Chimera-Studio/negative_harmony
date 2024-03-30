@@ -1,3 +1,4 @@
+// eslint-disable-next-line import/no-unresolved
 const { getDefaultConfig, mergeConfig } = require('@react-native/metro-config');
 
 const defaultConfig = getDefaultConfig(__dirname);

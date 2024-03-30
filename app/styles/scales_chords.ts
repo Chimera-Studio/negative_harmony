@@ -28,10 +28,10 @@ const scalesChordsStyle = StyleSheet.create({
     justifyContent: 'space-between',
     width: '80%',
   },
-  disclamerBtn: {
+  disclaimerBtn: {
     width: '42%',
   },
-  disclamer: {
+  disclaimer: {
     height: '100%',
   },
   wrapper: {

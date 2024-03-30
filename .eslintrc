@@ -107,6 +107,7 @@
     "react/prefer-exact-props": 0,
     "react-hooks/rules-of-hooks": 2,
     "react-hooks/exhaustive-deps": 1,
+    "react-native/no-inline-styles": 0,
     "space-before-function-paren": 0,
     "semi": 1,
     "require-await": "error",

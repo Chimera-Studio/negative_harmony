@@ -1,22 +1,16 @@
 import React, { useEffect, useRef, useState } from 'react';
-import {
-  Text,
-  TouchableHighlight,
-  View,
-} from 'react-native';
+import { Text, TouchableHighlight, View } from 'react-native';
 import { secondsToMilliseconds } from 'date-fns';
-import { includes } from 'lodash';
 import Pause from '../../../assets/icons/Pause';
 import Play from '../../../assets/icons/Play';
 import useLocale from '../../../locales';
 import chordsStyle from '../../../styles/chords';
 import colors from '../../../styles/colors';
-import { useSoundChords } from '../../../utils/hooks';
-
-export type ChordPlaying = 'positive' | 'negative' | 'both';
+import { ChordPlaying, useSoundChords } from '../../../utils/hooks';
+import type { ChordData } from '../../screens/Chords';
 
 type Props = {
-  data: any,
+  data: ChordData,
   negativeChordName: string,
   negativeChordNote: string,
 };
@@ -29,49 +23,39 @@ function ChordSounds(props: Props) {
   const { data } = props;
 
   useEffect(() => {
-    const resetPlay = () => {
-      timeoutRef.current = setTimeout(() => {
-        chords.chordsPause();
-        setChordPlaying(null);
-      }, secondsToMilliseconds(5));
-    };
+    chords.switchChords({
+      positive: data.positive,
+      negative: data.negative,
+    });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data.positive, data.negative]);
 
-    if (chordPlaying === 'both') {
-      chords.chordsPlay(data.positive, 'positive');
-      chords.chordsPlay(data.negative, 'negative');
-      resetPlay();
-    }
-
-    if (chordPlaying && includes(['negative', 'positive'], chordPlaying)) {
-      chords.chordsPlay(data[chordPlaying], chordPlaying);
-      resetPlay();
-    }
+  useEffect(() => {
+    timeoutRef.current = setTimeout(() => {
+      chords.pause();
+      setChordPlaying(null);
+    }, secondsToMilliseconds(5));
 
     return () => clearTimeout(timeoutRef.current);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [chordPlaying]);
 
   const handlePlayPause = (type: ChordPlaying) => {
+    if (chordPlaying) chords.pause();
     if (chordPlaying === type) {
-      chords.chordsPause();
       setChordPlaying(null);
 
       return;
     }
 
-    if (chordPlaying) {
-      chords.chordsPause();
-    }
-
+    chords.play(type);
     setChordPlaying(type);
   };
-
-  if (!data) return;
 
   return (
     <View style={chordsStyle.soundButtonWrapper}>
       <TouchableHighlight
-        onPress={() => handlePlayPause('both')}
+        onPress={() => handlePlayPause(ChordPlaying.both)}
         underlayColor={colors.blueTransparent}
         style={chordsStyle.soundButtonBoth}
       >
@@ -93,7 +77,7 @@ function ChordSounds(props: Props) {
       </TouchableHighlight>
       <View style={chordsStyle.soundButtonSplitWrapper}>
         <TouchableHighlight
-          onPress={() => handlePlayPause('positive')}
+          onPress={() => handlePlayPause(ChordPlaying.positive)}
           underlayColor={colors.blueTransparent}
           style={chordsStyle.soundButton}
         >
@@ -109,7 +93,7 @@ function ChordSounds(props: Props) {
                 { fontSize: 18 },
               ]}
             >
-              {data.positive[0].note}
+              {data.positive[0]?.note}
             </Text>
             <Text
               style={[
@@ -122,7 +106,7 @@ function ChordSounds(props: Props) {
           </>
         </TouchableHighlight>
         <TouchableHighlight
-          onPress={() => handlePlayPause('negative')}
+          onPress={() => handlePlayPause(ChordPlaying.negative)}
           underlayColor={colors.blueTransparent}
           style={chordsStyle.soundButton}
         >

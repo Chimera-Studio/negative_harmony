@@ -7,6 +7,29 @@ import { config } from '../tokens';
 import { isPromise } from '../utils';
 import type { Dispatch } from '@reduxjs/toolkit';
 
+const initialState = {
+  static: {
+    reviewMinutes: 2,
+    loadTime: Date.now(),
+  },
+  global: {
+    developerMode: false,
+    axis: {
+      status: false,
+      angle: 0,
+    },
+    activeKey: {
+      x: 0,
+      y: 0,
+      group: undefined,
+      field: undefined,
+    },
+    showAds: false,
+    personalisedAds: false,
+    unlocked: !config.ads,
+  },
+};
+
 function promiseMiddleware({ dispatch }: { dispatch: Dispatch }) {
   return (next: (arg0: any) => any) => (action: { payload: Promise<any>; type: any; }) => {
     if (action.payload && isPromise(action.payload)) {
@@ -49,28 +72,7 @@ export const createStore = () => configureStore({
     global: globalStoreReducer,
   },
   middleware: () => new Tuple(thunk, promiseMiddleware as any),
-  preloadedState: {
-    static: {
-      reviewMinutes: 2,
-      loadTime: Date.now(),
-    },
-    global: {
-      developerMode: false,
-      axis: {
-        status: false,
-        angle: 0,
-      },
-      activeKey: {
-        x: 0,
-        y: 0,
-        group: undefined,
-        field: undefined,
-      },
-      showAds: false,
-      personalisedAds: false,
-      unlocked: !config.ads,
-    },
-  },
+  preloadedState: initialState,
 });
 
 export const store = createStore();

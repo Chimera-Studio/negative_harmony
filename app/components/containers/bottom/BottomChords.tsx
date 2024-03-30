@@ -6,11 +6,10 @@ import colors from '../../../styles/colors';
 import mainStyle from '../../../styles/main';
 import ChordSounds from '../../elements/inputs/ChordSounds';
 import type { Note } from '../../../utils/hooks';
-
-export type ChordPlaying = 'positive' | 'negative' | 'both';
+import type { ChordData } from '../../screens/Chords';
 
 type Props = {
-  data: any,
+  data: ChordData | null,
 };
 
 function BottomChords(props: Props) {
@@ -50,7 +49,7 @@ function BottomChords(props: Props) {
             <View style={[bottomStyle.chord, { alignItems: 'flex-end' }]}>
               <View style={[bottomStyle.chordName, { alignItems: 'flex-end' }]}>
                 <Text style={[bottomStyle.tonic, { color: colors.positiveText }]}>
-                  {data.positive[0].note}
+                  {data.positive[0]?.note}
                 </Text>
                 <Text style={[bottomStyle.name, { color: colors.positiveText }]}>
                   {data.positiveName}
