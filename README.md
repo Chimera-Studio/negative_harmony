@@ -1,4 +1,4 @@
-![feature_graphic](.github/docs/feature_graphic.jpg)
+![feature_graphic](.github/docs/feature_graphic.png)
 
 # Negative Harmony - Simplified
 
@@ -15,7 +15,7 @@
 <!-- Hack to display images in a grid -->
 | | | |
 |-|-|-|
-| ![screen_1](.github/docs/screen_1.jpg) | ![screen_2](.github/docs/screen_2.jpg) | ![screen_3](.github/docs/screen_3.jpg)
+| ![screen_1](.github/docs/screen_1.png) | ![screen_2](.github/docs/screen_2.png) | ![screen_3](.github/docs/screen_3.png)
 | | | |
 
 ### Negative Harmony is an app made to make the musical theory of negative harmony easier to understand and visualise.
