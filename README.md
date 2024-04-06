@@ -10,7 +10,7 @@
 
 - [Google Play Store](https://play.google.com/store/apps/details?id=com.chimerastudio.negativeharmony)
 - [App Store](https://apps.apple.com/us/app/negative-harmony-simplified/id1561674380)
-- [Amazon Store](https://www.amazon.com/gp/product/B09QBMPTBJ)
+- [Amazon Store](https://www.amazon.com/Chimera-Studio-Negative-Harmony-Simplified/dp/B09QBMPTBJ)
 
 <!-- Hack to display images in a grid -->
 | | | |
@@ -20,10 +20,11 @@
 
 ### Negative Harmony is an app made to make the musical theory of negative harmony easier to understand and visualise.
 
+Easy to use, user-friendly interface:
+
 - Selection of all western scales and modes
 - Over 10 different chord types
 - Diatonic note detection / Indicator for notes/chords outside of the scale
-- Easy to understand UI design
 
 The app shows in a clear and easy way to understand what are the notes inside the chosen scale/mode and their relative negative harmony while also representing this inside the circle of fifths with the blue axis showing the relationship between each note.
 
