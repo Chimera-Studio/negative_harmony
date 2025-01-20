@@ -2,12 +2,12 @@ import React from 'react';
 import { SafeAreaView, ScrollView, View } from 'react-native';
 import JSONTree from 'react-native-json-tree';
 import { Link } from 'react-router-native';
+import Exit from '@assets/icons/Exit';
+import colors from '@styles/colors';
+import mainStyle from '@styles/main';
+import * as utils from '@utils';
+import { useAppSelector } from '@utils/hooks';
 import { includes, isEqual } from 'lodash';
-import Exit from '../../assets/icons/Exit';
-import colors from '../../styles/colors';
-import mainStyle from '../../styles/main';
-import * as utils from '../../utils';
-import { useAppSelector } from '../../utils/hooks';
 
 function StateTree() {
   const store = useAppSelector((state) => state, isEqual);

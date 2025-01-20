@@ -89,16 +89,3 @@ yarn release --android --apk
 
 **iOS**
 You have to build it using Xcode `archive` command
-
-### Deploying to CodePush (OTA updates)
-!!! `codepush-cli` needed !!!
-
-To deploy the app with CodePush
-
-Arguments:
-1. `--all` / `--android` / `--ios` (required)
-2. `--production` / `--promote` (optional)
-
-```sh
-yarn deploy ARG_1 ARG_2
-```

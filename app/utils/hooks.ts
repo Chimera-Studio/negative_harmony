@@ -7,17 +7,17 @@ import Sound from 'react-native-sound';
 import { useDispatch, useSelector } from 'react-redux';
 import type { TypedUseSelectorHook } from 'react-redux';
 import { useLocation } from 'react-router-native';
+import { PortalContext } from '@context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { localStorageKeys } from '@tokens';
+import { rewardedKeywords } from '@tokens/keywords';
+import { isPromise } from '@utils';
+import { symbolFlat, symbolSharp } from '@utils/patterns';
 import { addMonths, minutesToMilliseconds } from 'date-fns';
 import {
   flatten, forEach, isEqual, values,
 } from 'lodash';
-import { isPromise } from '.';
-import { symbolFlat, symbolSharp } from './patterns';
-import { PortalContext } from '../context';
-import { localStorageKeys } from '../tokens';
-import { rewardedKeywords } from '../tokens/keywords';
-import type { AppDispatch, RootState } from '../store';
+import type { AppDispatch, RootState } from '@store';
 
 export const getItem = async (key: string) => {
   try {

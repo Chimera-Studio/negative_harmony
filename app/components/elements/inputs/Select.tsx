@@ -3,10 +3,10 @@ import {
   Modal, ScrollView, Text, TouchableOpacity, TouchableWithoutFeedback, View,
 } from 'react-native';
 import { useNavigate } from 'react-router-native';
-import { map } from 'lodash';
-import Arrow from '../../../assets/icons/Arrow';
-import colors from '../../../styles/colors';
-import scalesChordsStyle from '../../../styles/scales_chords';
+import Arrow from '@assets/icons/Arrow';
+import colors from '@styles/colors';
+import scalesChordsStyle from '@styles/scales_chords';
+import map from 'lodash/map';
 
 export type Option = Object & {
   name: string,

@@ -1,17 +1,17 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Animated, Easing, View } from 'react-native';
-import { isEqual, times } from 'lodash';
-import useLocale from '../../locales';
-import { actions, selectors } from '../../store/globalStore';
-import scalesChordsStyle from '../../styles/scales_chords';
+import BottomScales from '@components/containers/bottom/BottomScales';
+import Circle from '@components/containers/circle/Circle';
+import Select from '@components/elements/inputs/Select';
+import Legend from '@components/elements/misc/Legend';
+import useLocale from '@locales';
+import { actions, selectors } from '@store/globalStore';
+import scalesChordsStyle from '@styles/scales_chords';
 import {
   useAppDispatch, useAppSelector, useReview, useTeleport,
-} from '../../utils/hooks';
-import { musicScale, scaleList } from '../../utils/patterns';
-import BottomScales from '../containers/bottom/BottomScales';
-import Circle from '../containers/circle/Circle';
-import Select from '../elements/inputs/Select';
-import Legend from '../elements/misc/Legend';
+} from '@utils/hooks';
+import { musicScale, scaleList } from '@utils/patterns';
+import { isEqual, times } from 'lodash';
 
 export function Scales() {
   const { t } = useLocale();

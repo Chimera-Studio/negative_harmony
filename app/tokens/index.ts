@@ -22,17 +22,6 @@ export const admob = {
   },
 };
 
-export const codepush = {
-  android: {
-    production: '4ijAnhf96jc8n0bXMofRN3ACQw_KxrG_TM8C8',
-    staging: 'AFWU_38JpHuG5zdhZUwXi1JExnDjREl2F6UL3',
-  },
-  ios: {
-    production: 'ysiNZaKV7hLp8M6utIr4qzMgviXGpaE4FGhON',
-    staging: 'ToO1rxsE1l9ljpn0FvCF2nGjXHdscr8tUCfHD',
-  },
-};
-
 export const localStorageKeys = {
   reviewTimestamp: 'reviewTimestamp',
   rewardedAt: 'rewardedAt',

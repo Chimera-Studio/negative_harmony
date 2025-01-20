@@ -1,10 +1,10 @@
 /* eslint-disable no-console */
 import { Tuple, configureStore } from '@reduxjs/toolkit';
+import { reducer as globalStoreReducer } from '@store/globalStore';
+import { reducer as staticStoreReducer } from '@store/staticStore';
+import { config } from '@tokens';
+import { isPromise } from '@utils';
 import { thunk } from 'redux-thunk';
-import { reducer as globalStoreReducer } from './globalStore';
-import { reducer as staticStoreReducer } from './staticStore';
-import { config } from '../tokens';
-import { isPromise } from '../utils';
 import type { Dispatch } from '@reduxjs/toolkit';
 
 const initialState = {

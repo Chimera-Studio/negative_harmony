@@ -3,16 +3,16 @@ import {
   Animated, Easing, ScrollView, Text, TouchableOpacity, View,
 } from 'react-native';
 import { Link } from 'react-router-native';
+import Exit from '@assets/icons/Exit';
+import Alert from '@components/elements/misc/Alert';
+import useLocale from '@locales';
+import { actions } from '@store/globalStore';
+import { Font } from '@styles';
+import colors from '@styles/colors';
+import infoStyle from '@styles/info';
+import mainStyle from '@styles/main';
+import { useAppDispatch, useTeleport } from '@utils/hooks';
 import { secondsToMilliseconds } from 'date-fns';
-import Exit from '../../assets/icons/Exit';
-import useLocale from '../../locales';
-import { actions } from '../../store/globalStore';
-import { Font } from '../../styles';
-import colors from '../../styles/colors';
-import infoStyle from '../../styles/info';
-import mainStyle from '../../styles/main';
-import { useAppDispatch, useTeleport } from '../../utils/hooks';
-import Alert from '../elements/misc/Alert';
 
 function Info() {
   const { t } = useLocale();

@@ -1,13 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Text, TouchableHighlight, View } from 'react-native';
+import Pause from '@assets/icons/Pause';
+import Play from '@assets/icons/Play';
+import useLocale from '@locales';
+import chordsStyle from '@styles/chords';
+import colors from '@styles/colors';
+import { ChordPlaying, useSoundChords } from '@utils/hooks';
 import { secondsToMilliseconds } from 'date-fns';
-import Pause from '../../../assets/icons/Pause';
-import Play from '../../../assets/icons/Play';
-import useLocale from '../../../locales';
-import chordsStyle from '../../../styles/chords';
-import colors from '../../../styles/colors';
-import { ChordPlaying, useSoundChords } from '../../../utils/hooks';
-import type { ChordData } from '../../screens/Chords';
+import type { ChordData } from '@components/screens/Chords';
 
 type Props = {
   data: ChordData,

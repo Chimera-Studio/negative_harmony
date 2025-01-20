@@ -1,7 +1,7 @@
-import { admob } from '../tokens';
-import { deviceInfo } from '../utils';
-import type { RootState } from '.';
-import type { ReduxAction } from '../types';
+import { admob } from '@tokens';
+import { deviceInfo } from '@utils';
+import type { RootState } from '@store';
+import type { ReduxAction } from '@types';
 
 export type State = {
   reviewMinutes: number,

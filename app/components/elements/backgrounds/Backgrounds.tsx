@@ -1,7 +1,7 @@
 import React from 'react';
+import { useLocationInfo } from '@utils/hooks';
 import GradientBackground from './GradientBackground';
 import WhiteBackground from './WhiteBackground';
-import { useLocationInfo } from '../../../utils/hooks';
 
 function Backgrounds() {
   const locationInfo = useLocationInfo();

@@ -1,7 +1,7 @@
 import { StyleSheet } from 'react-native';
-import { Font } from '.';
-import colors from './colors';
-import { isTablet, isiPhone } from '../utils';
+import { Font } from '@styles';
+import colors from '@styles/colors';
+import { isTablet, isiPhone } from '@utils';
 
 const navigationStyle = StyleSheet.create({
   navigation: {

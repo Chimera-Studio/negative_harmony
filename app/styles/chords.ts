@@ -1,6 +1,6 @@
 import { StyleSheet } from 'react-native';
-import { Font } from '.';
-import colors from './colors';
+import { Font } from '@styles';
+import colors from '@styles/colors';
 
 const chordsStyle = StyleSheet.create({
   soundButtonWrapper: {

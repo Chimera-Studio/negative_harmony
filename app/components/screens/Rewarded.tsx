@@ -9,15 +9,15 @@ import {
 } from 'react-native';
 import { RewardedAdEventType } from 'react-native-google-mobile-ads';
 import { Link, useNavigate } from 'react-router-native';
+import Exit from '@assets/icons/Exit';
+import useLocale from '@locales';
+import { actions } from '@store/globalStore';
+import { selectors } from '@store/staticStore';
+import colors from '@styles/colors';
+import mainStyle from '@styles/main';
+import rewardedStyle from '@styles/rewarded';
+import { useAppDispatch, useAppSelector, useRewardedAd } from '@utils/hooks';
 import { isEqual } from 'lodash';
-import Exit from '../../assets/icons/Exit';
-import useLocale from '../../locales';
-import { actions } from '../../store/globalStore';
-import { selectors } from '../../store/staticStore';
-import colors from '../../styles/colors';
-import mainStyle from '../../styles/main';
-import rewardedStyle from '../../styles/rewarded';
-import { useAppDispatch, useAppSelector, useRewardedAd } from '../../utils/hooks';
 
 function Rewarded() {
   const { t } = useLocale();

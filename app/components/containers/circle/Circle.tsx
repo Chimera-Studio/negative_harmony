@@ -3,10 +3,10 @@ import { View } from 'react-native';
 import {
   Circle as CircleSVG, G, Path, Polygon, Svg,
 } from 'react-native-svg';
-import colors from '../../../styles/colors';
-import scalesChordsStyle from '../../../styles/scales_chords';
-import Logo from '../../elements/misc/Logo';
-import type { ActiveKey, Axis } from '../../../store/globalStore';
+import Logo from '@components/elements/misc/Logo';
+import colors from '@styles/colors';
+import scalesChordsStyle from '@styles/scales_chords';
+import type { ActiveKey, Axis } from '@store/globalStore';
 
 type Props = {
   axis: Axis,
@@ -25,7 +25,7 @@ type Props = {
     keyG11: string,
     keyG12: string,
   },
-  handleKey: Function,
+  handleKey: (key: string, value: number, angle: number) => void,
 };
 
 function Circle(props: Props) {
@@ -49,7 +49,7 @@ function Circle(props: Props) {
             <G
               x={props.activeKey.group === props.keys.keyG1 ? props.activeKey.x : 0}
               y={props.activeKey.group === props.keys.keyG1 ? props.activeKey.y : 0}
-              onPress={() => props.handleKey(props.keys.keyG1, 9, 0)}
+              onPressIn={() => props.handleKey(props.keys.keyG1, 9, 0)}
             >
               <Path
                 fill={
@@ -85,7 +85,7 @@ function Circle(props: Props) {
             <G
               x={props.activeKey.group === props.keys.keyG2 ? props.activeKey.x : 0}
               y={props.activeKey.group === props.keys.keyG2 ? props.activeKey.y : 0}
-              onPress={() => props.handleKey(props.keys.keyG2, 2, 330)}
+              onPressIn={() => props.handleKey(props.keys.keyG2, 2, 330)}
             >
               <Path
                 fill={
@@ -121,7 +121,7 @@ function Circle(props: Props) {
             <G
               x={props.activeKey.group === props.keys.keyG3 ? props.activeKey.x : 0}
               y={props.activeKey.group === props.keys.keyG3 ? props.activeKey.y : 0}
-              onPress={() => props.handleKey(props.keys.keyG3, 7, 300)}
+              onPressIn={() => props.handleKey(props.keys.keyG3, 7, 300)}
             >
               <Path
                 fill={
@@ -157,7 +157,7 @@ function Circle(props: Props) {
             <G
               x={props.activeKey.group === props.keys.keyG4 ? props.activeKey.x : 0}
               y={props.activeKey.group === props.keys.keyG4 ? props.activeKey.y : 0}
-              onPress={() => props.handleKey(props.keys.keyG4, 0, 270)}
+              onPressIn={() => props.handleKey(props.keys.keyG4, 0, 270)}
             >
               <Path
                 fill={
@@ -183,7 +183,7 @@ function Circle(props: Props) {
             <G
               x={props.activeKey.group === props.keys.keyG5 ? props.activeKey.x : 0}
               y={props.activeKey.group === props.keys.keyG5 ? props.activeKey.y : 0}
-              onPress={() => props.handleKey(props.keys.keyG5, 5, 240)}
+              onPressIn={() => props.handleKey(props.keys.keyG5, 5, 240)}
             >
               <Path
                 fill={
@@ -209,7 +209,7 @@ function Circle(props: Props) {
             <G
               x={props.activeKey.group === props.keys.keyG6 ? props.activeKey.x : 0}
               y={props.activeKey.group === props.keys.keyG6 ? props.activeKey.y : 0}
-              onPress={() => props.handleKey(props.keys.keyG6, 10, 210)}
+              onPressIn={() => props.handleKey(props.keys.keyG6, 10, 210)}
             >
               <Path
                 fill={
@@ -305,7 +305,7 @@ function Circle(props: Props) {
             <G
               x={props.activeKey.group === props.keys.keyG7 ? props.activeKey.x : 0}
               y={props.activeKey.group === props.keys.keyG7 ? props.activeKey.y : 0}
-              onPress={() => props.handleKey(props.keys.keyG7, 3, 180)}
+              onPressIn={() => props.handleKey(props.keys.keyG7, 3, 180)}
             >
               <Path
                 fill={
@@ -401,7 +401,7 @@ function Circle(props: Props) {
             <G
               x={props.activeKey.group === props.keys.keyG8 ? props.activeKey.x : 0}
               y={props.activeKey.group === props.keys.keyG8 ? props.activeKey.y : 0}
-              onPress={() => props.handleKey(props.keys.keyG8, 8, 150)}
+              onPressIn={() => props.handleKey(props.keys.keyG8, 8, 150)}
             >
               <Path
                 fill={
@@ -497,7 +497,7 @@ function Circle(props: Props) {
             <G
               x={props.activeKey.group === props.keys.keyG9 ? props.activeKey.x : 0}
               y={props.activeKey.group === props.keys.keyG9 ? props.activeKey.y : 0}
-              onPress={() => props.handleKey(props.keys.keyG9, 1, 120)}
+              onPressIn={() => props.handleKey(props.keys.keyG9, 1, 120)}
             >
               <Path
                 fill={
@@ -583,7 +583,7 @@ function Circle(props: Props) {
             <G
               x={props.activeKey.group === props.keys.keyG10 ? props.activeKey.x : 0}
               y={props.activeKey.group === props.keys.keyG10 ? props.activeKey.y : 0}
-              onPress={() => props.handleKey(props.keys.keyG10, 6, 90)}
+              onPressIn={() => props.handleKey(props.keys.keyG10, 6, 90)}
             >
               <Path
                 fill={
@@ -669,7 +669,7 @@ function Circle(props: Props) {
             <G
               x={props.activeKey.group === props.keys.keyG11 ? props.activeKey.x : 0}
               y={props.activeKey.group === props.keys.keyG11 ? props.activeKey.y : 0}
-              onPress={() => props.handleKey(props.keys.keyG11, 11, 60)}
+              onPressIn={() => props.handleKey(props.keys.keyG11, 11, 60)}
             >
               <Path
                 fill={
@@ -705,7 +705,7 @@ function Circle(props: Props) {
             <G
               x={props.activeKey.group === props.keys.keyG12 ? props.activeKey.x : 0}
               y={props.activeKey.group === props.keys.keyG12 ? props.activeKey.y : 0}
-              onPress={() => props.handleKey(props.keys.keyG12, 4, 30)}
+              onPressIn={() => props.handleKey(props.keys.keyG12, 4, 30)}
             >
               <Path
                 fill={
@@ -741,7 +741,7 @@ function Circle(props: Props) {
             <G
               x={props.activeKey.group === props.keys.keyG1 ? props.activeKey.x : 0}
               y={props.activeKey.group === props.keys.keyG1 ? props.activeKey.y : 0}
-              onPress={() => props.handleKey(props.keys.keyG1, 0, 0)}
+              onPressIn={() => props.handleKey(props.keys.keyG1, 0, 0)}
             >
               <Path
                 fill={
@@ -767,7 +767,7 @@ function Circle(props: Props) {
             <G
               x={props.activeKey.group === props.keys.keyG2 ? props.activeKey.x : 0}
               y={props.activeKey.group === props.keys.keyG2 ? props.activeKey.y : 0}
-              onPress={() => props.handleKey(props.keys.keyG2, 5, 330)}
+              onPressIn={() => props.handleKey(props.keys.keyG2, 5, 330)}
             >
               <Path
                 fill={
@@ -792,7 +792,7 @@ function Circle(props: Props) {
             <G
               x={props.activeKey.group === props.keys.keyG3 ? props.activeKey.x : 0}
               y={props.activeKey.group === props.keys.keyG3 ? props.activeKey.y : 0}
-              onPress={() => props.handleKey(props.keys.keyG3, 10, 300)}
+              onPressIn={() => props.handleKey(props.keys.keyG3, 10, 300)}
             >
               <Polygon
                 fill={
@@ -897,7 +897,7 @@ function Circle(props: Props) {
             <G
               x={props.activeKey.group === props.keys.keyG4 ? props.activeKey.x : 0}
               y={props.activeKey.group === props.keys.keyG4 ? props.activeKey.y : 0}
-              onPress={() => props.handleKey(props.keys.keyG4, 3, 270)}
+              onPressIn={() => props.handleKey(props.keys.keyG4, 3, 270)}
             >
               <Path
                 fill={
@@ -982,7 +982,7 @@ function Circle(props: Props) {
             <G
               x={props.activeKey.group === props.keys.keyG5 ? props.activeKey.x : 0}
               y={props.activeKey.group === props.keys.keyG5 ? props.activeKey.y : 0}
-              onPress={() => props.handleKey(props.keys.keyG5, 8, 240)}
+              onPressIn={() => props.handleKey(props.keys.keyG5, 8, 240)}
             >
               <Path
                 fill={
@@ -1067,7 +1067,7 @@ function Circle(props: Props) {
             <G
               x={props.activeKey.group === props.keys.keyG6 ? props.activeKey.x : 0}
               y={props.activeKey.group === props.keys.keyG6 ? props.activeKey.y : 0}
-              onPress={() => props.handleKey(props.keys.keyG6, 1, 210)}
+              onPressIn={() => props.handleKey(props.keys.keyG6, 1, 210)}
             >
               <Path
                 fill={
@@ -1153,7 +1153,7 @@ function Circle(props: Props) {
             <G
               x={props.activeKey.group === props.keys.keyG7 ? props.activeKey.x : 0}
               y={props.activeKey.group === props.keys.keyG7 ? props.activeKey.y : 0}
-              onPress={() => props.handleKey(props.keys.keyG7, 6, 180)}
+              onPressIn={() => props.handleKey(props.keys.keyG7, 6, 180)}
             >
               <Path
                 fill={
@@ -1228,7 +1228,7 @@ function Circle(props: Props) {
             <G
               x={props.activeKey.group === props.keys.keyG8 ? props.activeKey.x : 0}
               y={props.activeKey.group === props.keys.keyG8 ? props.activeKey.y : 0}
-              onPress={() => props.handleKey(props.keys.keyG8, 11, 150)}
+              onPressIn={() => props.handleKey(props.keys.keyG8, 11, 150)}
             >
               <Path
                 fill={
@@ -1274,7 +1274,7 @@ function Circle(props: Props) {
             <G
               x={props.activeKey.group === props.keys.keyG9 ? props.activeKey.x : 0}
               y={props.activeKey.group === props.keys.keyG9 ? props.activeKey.y : 0}
-              onPress={() => props.handleKey(props.keys.keyG9, 4, 120)}
+              onPressIn={() => props.handleKey(props.keys.keyG9, 4, 120)}
             >
               <Path
                 fill={
@@ -1299,7 +1299,7 @@ function Circle(props: Props) {
             <G
               x={props.activeKey.group === props.keys.keyG10 ? props.activeKey.x : 0}
               y={props.activeKey.group === props.keys.keyG10 ? props.activeKey.y : 0}
-              onPress={() => props.handleKey(props.keys.keyG10, 9, 90)}
+              onPressIn={() => props.handleKey(props.keys.keyG10, 9, 90)}
             >
               <Path
                 fill={
@@ -1334,7 +1334,7 @@ function Circle(props: Props) {
             <G
               x={props.activeKey.group === props.keys.keyG11 ? props.activeKey.x : 0}
               y={props.activeKey.group === props.keys.keyG11 ? props.activeKey.y : 0}
-              onPress={() => props.handleKey(props.keys.keyG11, 2, 60)}
+              onPressIn={() => props.handleKey(props.keys.keyG11, 2, 60)}
             >
               <Path
                 fill={
@@ -1370,7 +1370,7 @@ function Circle(props: Props) {
             <G
               x={props.activeKey.group === props.keys.keyG12 ? props.activeKey.x : 0}
               y={props.activeKey.group === props.keys.keyG12 ? props.activeKey.y : 0}
-              onPress={() => props.handleKey(props.keys.keyG12, 7, 30)}
+              onPressIn={() => props.handleKey(props.keys.keyG12, 7, 30)}
             >
               <Path
                 fill={

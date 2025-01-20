@@ -5,11 +5,11 @@ import {
   Text,
   View,
 } from 'react-native';
+import bottomStyle from '@styles/bottom';
+import colors from '@styles/colors';
+import mainStyle from '@styles/main';
+import { deviceHeight } from '@utils';
 import { map } from 'lodash';
-import bottomStyle from '../../../styles/bottom';
-import colors from '../../../styles/colors';
-import mainStyle from '../../../styles/main';
-import { deviceHeight } from '../../../utils';
 
 type Props = {
   data: any,

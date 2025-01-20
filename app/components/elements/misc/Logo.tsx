@@ -1,8 +1,8 @@
 import React, { useEffect, useRef } from 'react';
 import { Animated, Easing } from 'react-native';
+import Icon from '@assets/icons/Icon';
+import scalesChordsStyles from '@styles/scales_chords';
 import { secondsToMilliseconds } from 'date-fns';
-import Icon from '../../../assets/icons/Icon';
-import scalesChordsStyles from '../../../styles/scales_chords';
 
 type Props = {
   animationSpeed?: number,

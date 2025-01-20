@@ -1,16 +1,15 @@
 /* eslint-disable no-console */
 import React from 'react';
 import {
-  SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity,
+  SafeAreaView, ScrollView, StyleSheet, Text,
 } from 'react-native';
-import CodePush from 'react-native-code-push';
+import Emoji from '@assets/icons/Emoji';
+import WhiteBackground from '@components/elements/backgrounds/WhiteBackground';
+import Hr from '@components/elements/misc/Hr';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import Emoji from '../../../assets/icons/Emoji';
-import { Font } from '../../../styles';
-import colors from '../../../styles/colors';
-import { deviceInfo } from '../../../utils';
-import WhiteBackground from '../../elements/backgrounds/WhiteBackground';
-import Hr from '../../elements/misc/Hr';
+import { Font } from '@styles';
+import colors from '@styles/colors';
+import { deviceInfo } from '@utils';
 
 const styles = StyleSheet.create({
   safe: {
@@ -46,24 +45,6 @@ const styles = StyleSheet.create({
   emoji: {
     height: 14,
     width: 14,
-  },
-  button: {
-    alignItems: 'center',
-    backgroundColor: colors.blue,
-    borderRadius: 30,
-    display: 'flex',
-    height: 60,
-    justifyContent: 'center',
-    marginLeft: 'auto',
-    marginRight: 'auto',
-    marginTop: 'auto',
-    paddingHorizontal: 40,
-  },
-  buttonText: {
-    color: colors.white,
-    fontFamily: Font.bold,
-    fontSize: 16,
-    textAlign: 'center',
   },
   error: {
     color: colors.red,
@@ -105,12 +86,9 @@ class ErrorBoundary extends React.Component<Props, State> {
     console.log('-------------');
     console.error(errorInfo.componentStack);
     console.log('----ERROR----');
-  }
 
-  handleRestart = async () => {
-    await AsyncStorage.clear();
-    CodePush.restartApp();
-  };
+    AsyncStorage.clear().catch(() => {});
+  }
 
   override render() {
     if (!this.state.hasError) return this.props.children;
@@ -139,7 +117,7 @@ class ErrorBoundary extends React.Component<Props, State> {
             chimerastudiotm@gmail.com
           </Text>
           <Text style={styles.text}>
-            You can reopen the app manually or by pressing the button below.
+            You can try closing and reopening the app.
           </Text>
           {!deviceInfo.isRealDevice && (
             <>
@@ -158,13 +136,6 @@ class ErrorBoundary extends React.Component<Props, State> {
               )}
             </>
           )}
-          <TouchableOpacity
-            style={styles.button}
-            activeOpacity={0.6}
-            onPress={this.handleRestart}
-          >
-            <Text style={styles.buttonText}>Restart the App</Text>
-          </TouchableOpacity>
         </SafeAreaView>
       </ScrollView>
     );

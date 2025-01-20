@@ -1,8 +1,6 @@
-import { get } from 'lodash';
-import * as API from '../api';
-import type { RootState } from '.';
-import type { Option } from '../components/elements/inputs/Select';
-import type { ReduxAction } from '../types';
+import type { Option } from '@components/elements/inputs/Select';
+import type { RootState } from '@store';
+import type { ReduxAction } from '@types';
 
 export type Axis = {
   status: boolean,
@@ -16,14 +14,8 @@ export type ActiveKey = {
   field: number | undefined,
 };
 
-export type CodePushData = Object & {
-  environment: 'Production' | 'Staging',
-  deploymentKey: string,
-};
-
 export type State = {
   developerMode: boolean,
-  codepushData?: CodePushData,
   scales?: Object[],
   chords?: Object[],
   selectedScale?: Option,
@@ -50,15 +42,9 @@ export enum GlobalTypes {
   GP_STORE_ACTIVE_KEY = 'GP/STORE_ACTIVE_KEY',
   GP_SHOW_LEGEND = 'GP/SHOW_LEGEND',
   GP_UNLOCK_CHORDS = 'GP/UNLOCK_CHORDS',
-
-  GB_GET_DEPLOYMENT_DATA = 'GB/GET_DEPLOYMENT_DATA',
-  GB_GET_DEPLOYMENT_DATA_PENDING = 'GB/GET_DEPLOYMENT_DATA_PENDING',
-  GB_GET_DEPLOYMENT_DATA_REJECTED = 'GB/GET_DEPLOYMENT_DATA_REJECTED',
-  GB_GET_DEPLOYMENT_DATA_FULFILLED = 'GB/GET_DEPLOYMENT_DATA_FULFILLED',
 }
 
 export const selectors = {
-  getCodepushEnvironment: (state: RootState): 'Production' | 'Staging' => get(state.global.codepushData, 'environment', 'Production'),
   getGlobal: (state: RootState): State => state.global,
   getScales: (state: RootState): any => state.global.scales,
   getChords: (state: RootState): any => state.global.chords,
@@ -66,10 +52,6 @@ export const selectors = {
 };
 
 export const actions = {
-  getDeploymentData: () => ({
-    type: GlobalTypes.GB_GET_DEPLOYMENT_DATA,
-    payload: API.getDeploymentData(),
-  }),
   showPersonalisedAds: (personalisedAds: boolean) => ({
     type: GlobalTypes.GB_SHOW_PERSONALISED_ADS,
     payload: { personalisedAds },
@@ -116,16 +98,6 @@ export const actions = {
   }),
 };
 
-const setCodePushData = (state: State, payload: CodePushData) => {
-  const developerMode: boolean = state.developerMode || get(payload, 'environment', 'Production') === 'Staging';
-
-  return {
-    ...state,
-    developerMode,
-    codepushData: payload,
-  };
-};
-
 export const reducer = (state: State, action: ReduxAction) => {
   switch (action.type) {
     case GlobalTypes.GP_STORE_SELECTED_SCALE:
@@ -142,9 +114,6 @@ export const reducer = (state: State, action: ReduxAction) => {
 
     case GlobalTypes.GB_TOGGLE_DEVELOPER_MODE:
       return { ...state, developerMode: action.payload };
-
-    case GlobalTypes.GB_GET_DEPLOYMENT_DATA_FULFILLED:
-      return setCodePushData(state, action.payload);
 
     default:
       return state || {};

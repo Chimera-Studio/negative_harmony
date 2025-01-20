@@ -1,27 +1,24 @@
 import React, { useEffect, useRef, useState } from 'react';
 import {
-  Animated,
-  Easing,
-  Text,
-  View,
+  Animated, Easing, Text, View,
 } from 'react-native';
 import { Link } from 'react-router-native';
+import Disclaimer from '@assets/icons/Disclaimer';
+import BottomChords from '@components/containers/bottom/BottomChords';
+import TonicSlider from '@components/containers/tonic-slider/TonicSlider';
+import Select from '@components/elements/inputs/Select';
+import Legend from '@components/elements/misc/Legend';
+import LegendExtra from '@components/elements/misc/LegendExtra';
+import useLocale from '@locales';
+import { selectors } from '@store/globalStore';
+import colors from '@styles/colors';
+import scalesChordsStyle from '@styles/scales_chords';
+import { useAppSelector, useReview } from '@utils/hooks';
+import { chordList, scaleList } from '@utils/patterns';
 import {
   forEach, get, includes, indexOf, isEqual, sortBy, times,
 } from 'lodash';
-import Disclaimer from '../../assets/icons/Disclaimer';
-import useLocale from '../../locales';
-import { selectors } from '../../store/globalStore';
-import colors from '../../styles/colors';
-import scalesChordsStyle from '../../styles/scales_chords';
-import { useAppSelector, useReview } from '../../utils/hooks';
-import { chordList, scaleList } from '../../utils/patterns';
-import BottomChords from '../containers/bottom/BottomChords';
-import TonicSlider from '../containers/tonic-slider/TonicSlider';
-import Select from '../elements/inputs/Select';
-import Legend from '../elements/misc/Legend';
-import LegendExtra from '../elements/misc/LegendExtra';
-import type { Note } from '../../utils/hooks';
+import type { Note } from '@utils/hooks';
 
 export type ChordData = {
   positive: Note[]

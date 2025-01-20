@@ -1,8 +1,8 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import colors from '../../../styles/colors';
-import { isiPhone } from '../../../utils';
+import colors from '@styles/colors';
+import { isiPhone } from '@utils';
 
 const styles = StyleSheet.create({
   background: {

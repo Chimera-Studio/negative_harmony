@@ -1,8 +1,8 @@
 import React from 'react';
 import type { ReactNode } from 'react';
 import { KeyboardAvoidingView } from 'react-native';
+import { isApple } from '@utils';
 import DismissKeyboard from './DismissKeyboard';
-import { isApple } from '../../../utils';
 
 type Props = {
   children: ReactNode,

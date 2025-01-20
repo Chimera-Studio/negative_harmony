@@ -1,15 +1,12 @@
 import React, { useRef, useState } from 'react';
 import {
-  ScrollView,
-  Text,
-  TouchableHighlight,
-  View,
+  ScrollView, Text, TouchableHighlight, View,
 } from 'react-native';
 import { Link } from 'react-router-native';
-import { map } from 'lodash';
-import useLocale from '../../../locales';
-import colors from '../../../styles/colors';
-import scalesChordsStyle from '../../../styles/scales_chords';
+import useLocale from '@locales';
+import colors from '@styles/colors';
+import scalesChordsStyle from '@styles/scales_chords';
+import map from 'lodash/map';
 
 type Props = {
   scales: {

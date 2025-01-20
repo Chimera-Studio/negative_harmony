@@ -6,12 +6,6 @@
   },
   "alert": {
     "no_key": "You need to tap on a field!",
-    "codepush_syncing": {
-      "text_1": "Switching to ",
-      "text_2": ", this could take a while...",
-      "Production": "Staging",
-      "Staging": "Production"
-    },
     "developer": "Developer mode turned on!"
   },
   "select": {

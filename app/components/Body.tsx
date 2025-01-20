@@ -1,20 +1,20 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { SafeAreaView, StatusBar, View } from 'react-native';
 import { NativeRouter, Route, Routes } from 'react-router-native';
+import Navigation from '@components/containers/navigation/Navigation';
+import Backgrounds from '@components/elements/backgrounds/Backgrounds';
+import AdmobBanner from '@components/elements/misc/AdmobBanner';
+import Chords from '@components/screens/Chords';
+import Info from '@components/screens/Info';
+import Loading from '@components/screens/Loading';
+import Rewarded from '@components/screens/Rewarded';
+import Scales from '@components/screens/Scales';
+import StateTree from '@components/screens/StateTree';
+import { actions } from '@store/globalStore';
+import mainStyle from '@styles/main';
+import { initializeAds } from '@utils';
+import { useAppDispatch } from '@utils/hooks';
 import { secondsToMilliseconds } from 'date-fns';
-import Navigation from './containers/navigation/Navigation';
-import Backgrounds from './elements/backgrounds/Backgrounds';
-import AdmobBanner from './elements/misc/AdmobBanner';
-import Chords from './screens/Chords';
-import Info from './screens/Info';
-import Loading from './screens/Loading';
-import Rewarded from './screens/Rewarded';
-import Scales from './screens/Scales';
-import StateTree from './screens/StateTree';
-import { actions, actions as globalActions } from '../store/globalStore';
-import mainStyle from '../styles/main';
-import { initializeAds } from '../utils';
-import { useAppDispatch } from '../utils/hooks';
 
 function Body() {
   const dispatch = useAppDispatch();
@@ -25,7 +25,6 @@ function Body() {
   useEffect(() => {
     if (initLoad.current) {
       initLoad.current = false;
-      dispatch(globalActions.getDeploymentData());
 
       timeoutRef.current = setTimeout(() => {
         initializeAds().then((response) => {

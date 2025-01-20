@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import type { ReactNode } from 'react';
 import { Animated } from 'react-native';
-import mainStyle from '../../../styles/main';
-import { useTeleport } from '../../../utils/hooks';
+import mainStyle from '@styles/main';
+import { useTeleport } from '@utils/hooks';
 
 type Props = {
   children: ReactNode,

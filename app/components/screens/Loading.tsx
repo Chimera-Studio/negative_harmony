@@ -2,12 +2,12 @@ import React from 'react';
 import {
   SafeAreaView, StatusBar, StyleSheet, Text,
 } from 'react-native';
+import GradientBG from '@components/elements/backgrounds/GradientBackground';
+import Logo from '@components/elements/misc/Logo';
+import useLocale from '@locales';
+import { Font } from '@styles';
+import colors from '@styles/colors';
 import { secondsToMilliseconds } from 'date-fns';
-import useLocale from '../../locales';
-import { Font } from '../../styles';
-import colors from '../../styles/colors';
-import GradientBG from '../elements/backgrounds/GradientBackground';
-import Logo from '../elements/misc/Logo';
 
 const styles = StyleSheet.create({
   container: {

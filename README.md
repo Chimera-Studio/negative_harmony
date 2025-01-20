@@ -36,9 +36,9 @@ The second-page "Chords" is made available after selecting the key and scale on 
 
 ## The Chimera Team
 
-- [Dario Dumlijan - Full-stack Developer](https://www.linkedin.com/in/dariodumlijan/)
-- [Damjan Gazibaric - UI/UX Designer](https://www.linkedin.com/in/damjangazibaric/)
-- [Boris Vida - Assets Designer](https://www.linkedin.com/in/bvida48/)
+- [Dario Dumlijan - Application Engineer](https://www.linkedin.com/in/dariodumlijan)
+- [Damjan Gazibaric - UI/UX Designer](https://www.linkedin.com/in/damjangazibaric)
+- [Studio Lumistra - Assets Designer](https://studiolumistra.com)
 
 [More by Chimera Studio](https://linktr.ee/chimerastudiotm)
 
