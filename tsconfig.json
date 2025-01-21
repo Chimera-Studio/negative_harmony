@@ -1,6 +1,7 @@
 {
   "extends": "@react-native/typescript-config/tsconfig.json",
   "compilerOptions": {
+    // mirror babel.config.js
     "baseUrl": "./app",
     "paths": {
       "@assets/*": [

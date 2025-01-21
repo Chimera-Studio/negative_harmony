@@ -1,15 +1,12 @@
 import React, { useEffect, useRef } from 'react';
 import {
-  Animated,
-  Easing,
-  Text,
-  View,
+  Animated, Easing, Text, View,
 } from 'react-native';
 import bottomStyle from '@styles/bottom';
 import colors from '@styles/colors';
 import mainStyle from '@styles/main';
 import { deviceHeight } from '@utils';
-import { map } from 'lodash';
+import map from 'lodash/map';
 
 type Props = {
   data: any,
@@ -17,27 +14,30 @@ type Props = {
 
 function BottomScales(props: Props) {
   const slideUp = useRef(new Animated.Value(deviceHeight / 2)).current;
+  const isFirstLoad = useRef(true);
+  const animateBottom = { transform: [{ translateY: slideUp }] };
   const { data } = props;
-  const animateBottom = {
-    transform: [{ translateY: slideUp }],
-  };
 
   useEffect(() => {
-    if (data) {
-      Animated.timing(slideUp, {
-        toValue: 0,
-        duration: 300,
-        useNativeDriver: true,
-        easing: Easing.linear,
-      }).start();
+    if (isFirstLoad.current) {
+      isFirstLoad.current = false;
+
+      if (!data) return;
+
+      slideUp.setValue(0);
+
+      return;
     }
+
+    Animated.timing(slideUp, {
+      toValue: 0,
+      duration: 300,
+      useNativeDriver: true,
+      easing: Easing.linear,
+    }).start();
+
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
-
-  useEffect(() => {
-    if (data) slideUp.setValue(0);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   return (
     <View style={bottomStyle.space}>

@@ -6,26 +6,13 @@ import {
 import Logo from '@components/elements/misc/Logo';
 import colors from '@styles/colors';
 import scalesChordsStyle from '@styles/scales_chords';
+import { ScaleKeys } from '@utils/patterns';
 import type { ActiveKey, Axis } from '@store/globalStore';
 
 type Props = {
   axis: Axis,
   activeKey: ActiveKey,
-  keys: {
-    keyG1: string,
-    keyG2: string,
-    keyG3: string,
-    keyG4: string,
-    keyG5: string,
-    keyG6: string,
-    keyG7: string,
-    keyG8: string,
-    keyG9: string,
-    keyG10: string,
-    keyG11: string,
-    keyG12: string,
-  },
-  handleKey: (key: string, value: number, angle: number) => void,
+  handleKey: (key: ScaleKeys, value: number, angle: number) => void,
 };
 
 function Circle(props: Props) {
@@ -47,13 +34,13 @@ function Circle(props: Props) {
         <G>
           <G>
             <G
-              x={props.activeKey.group === props.keys.keyG1 ? props.activeKey.x : 0}
-              y={props.activeKey.group === props.keys.keyG1 ? props.activeKey.y : 0}
-              onPressIn={() => props.handleKey(props.keys.keyG1, 9, 0)}
+              x={props.activeKey.group === ScaleKeys.keyG1 ? props.activeKey.x : 0}
+              y={props.activeKey.group === ScaleKeys.keyG1 ? props.activeKey.y : 0}
+              onPressIn={() => props.handleKey(ScaleKeys.keyG1, 9, 0)}
             >
               <Path
                 fill={
-                    props.activeKey.group === props.keys.keyG1
+                    props.activeKey.group === ScaleKeys.keyG1
                     && props.activeKey.field === 9
                       ? activeKeyColorBG
                       : keyColorBG
@@ -63,7 +50,7 @@ function Circle(props: Props) {
               />
               <Path
                 fill={
-                    props.activeKey.group === props.keys.keyG1
+                    props.activeKey.group === ScaleKeys.keyG1
                     && props.activeKey.field === 9
                       ? activeKeyColorBG
                       : keyColorBG
@@ -73,7 +60,7 @@ function Circle(props: Props) {
               />
               <Path
                 fill={
-                    props.activeKey.group === props.keys.keyG1
+                    props.activeKey.group === ScaleKeys.keyG1
                     && props.activeKey.field === 9
                       ? activeKeyColorText
                       : keyColorText
@@ -83,13 +70,13 @@ function Circle(props: Props) {
               />
             </G>
             <G
-              x={props.activeKey.group === props.keys.keyG2 ? props.activeKey.x : 0}
-              y={props.activeKey.group === props.keys.keyG2 ? props.activeKey.y : 0}
-              onPressIn={() => props.handleKey(props.keys.keyG2, 2, 330)}
+              x={props.activeKey.group === ScaleKeys.keyG2 ? props.activeKey.x : 0}
+              y={props.activeKey.group === ScaleKeys.keyG2 ? props.activeKey.y : 0}
+              onPressIn={() => props.handleKey(ScaleKeys.keyG2, 2, 330)}
             >
               <Path
                 fill={
-                    props.activeKey.group === props.keys.keyG2
+                    props.activeKey.group === ScaleKeys.keyG2
                     && props.activeKey.field === 2
                       ? activeKeyColorBG
                       : keyColorBG
@@ -99,7 +86,7 @@ function Circle(props: Props) {
               />
               <Path
                 fill={
-                    props.activeKey.group === props.keys.keyG2
+                    props.activeKey.group === ScaleKeys.keyG2
                     && props.activeKey.field === 2
                       ? activeKeyColorBG
                       : keyColorBG
@@ -109,7 +96,7 @@ function Circle(props: Props) {
               />
               <Path
                 fill={
-                    props.activeKey.group === props.keys.keyG2
+                    props.activeKey.group === ScaleKeys.keyG2
                     && props.activeKey.field === 2
                       ? activeKeyColorText
                       : keyColorText
@@ -119,13 +106,13 @@ function Circle(props: Props) {
               />
             </G>
             <G
-              x={props.activeKey.group === props.keys.keyG3 ? props.activeKey.x : 0}
-              y={props.activeKey.group === props.keys.keyG3 ? props.activeKey.y : 0}
-              onPressIn={() => props.handleKey(props.keys.keyG3, 7, 300)}
+              x={props.activeKey.group === ScaleKeys.keyG3 ? props.activeKey.x : 0}
+              y={props.activeKey.group === ScaleKeys.keyG3 ? props.activeKey.y : 0}
+              onPressIn={() => props.handleKey(ScaleKeys.keyG3, 7, 300)}
             >
               <Path
                 fill={
-                    props.activeKey.group === props.keys.keyG3
+                    props.activeKey.group === ScaleKeys.keyG3
                     && props.activeKey.field === 7
                       ? activeKeyColorBG
                       : keyColorBG
@@ -135,7 +122,7 @@ function Circle(props: Props) {
               />
               <Path
                 fill={
-                    props.activeKey.group === props.keys.keyG3
+                    props.activeKey.group === ScaleKeys.keyG3
                     && props.activeKey.field === 7
                       ? activeKeyColorBG
                       : keyColorBG
@@ -145,7 +132,7 @@ function Circle(props: Props) {
               />
               <Path
                 fill={
-                    props.activeKey.group === props.keys.keyG3
+                    props.activeKey.group === ScaleKeys.keyG3
                     && props.activeKey.field === 7
                       ? activeKeyColorText
                       : keyColorText
@@ -155,13 +142,13 @@ function Circle(props: Props) {
               />
             </G>
             <G
-              x={props.activeKey.group === props.keys.keyG4 ? props.activeKey.x : 0}
-              y={props.activeKey.group === props.keys.keyG4 ? props.activeKey.y : 0}
-              onPressIn={() => props.handleKey(props.keys.keyG4, 0, 270)}
+              x={props.activeKey.group === ScaleKeys.keyG4 ? props.activeKey.x : 0}
+              y={props.activeKey.group === ScaleKeys.keyG4 ? props.activeKey.y : 0}
+              onPressIn={() => props.handleKey(ScaleKeys.keyG4, 0, 270)}
             >
               <Path
                 fill={
-                    props.activeKey.group === props.keys.keyG4
+                    props.activeKey.group === ScaleKeys.keyG4
                     && props.activeKey.field === 0
                       ? activeKeyColorBG
                       : keyColorBG
@@ -171,7 +158,7 @@ function Circle(props: Props) {
               />
               <Path
                 fill={
-                    props.activeKey.group === props.keys.keyG4
+                    props.activeKey.group === ScaleKeys.keyG4
                     && props.activeKey.field === 0
                       ? activeKeyColorText
                       : keyColorText
@@ -181,13 +168,13 @@ function Circle(props: Props) {
               />
             </G>
             <G
-              x={props.activeKey.group === props.keys.keyG5 ? props.activeKey.x : 0}
-              y={props.activeKey.group === props.keys.keyG5 ? props.activeKey.y : 0}
-              onPressIn={() => props.handleKey(props.keys.keyG5, 5, 240)}
+              x={props.activeKey.group === ScaleKeys.keyG5 ? props.activeKey.x : 0}
+              y={props.activeKey.group === ScaleKeys.keyG5 ? props.activeKey.y : 0}
+              onPressIn={() => props.handleKey(ScaleKeys.keyG5, 5, 240)}
             >
               <Path
                 fill={
-                    props.activeKey.group === props.keys.keyG5
+                    props.activeKey.group === ScaleKeys.keyG5
                     && props.activeKey.field === 5
                       ? activeKeyColorBG
                       : keyColorBG
@@ -197,7 +184,7 @@ function Circle(props: Props) {
               />
               <Path
                 fill={
-                    props.activeKey.group === props.keys.keyG5
+                    props.activeKey.group === ScaleKeys.keyG5
                     && props.activeKey.field === 5
                       ? activeKeyColorText
                       : keyColorText
@@ -207,13 +194,13 @@ function Circle(props: Props) {
               />
             </G>
             <G
-              x={props.activeKey.group === props.keys.keyG6 ? props.activeKey.x : 0}
-              y={props.activeKey.group === props.keys.keyG6 ? props.activeKey.y : 0}
-              onPressIn={() => props.handleKey(props.keys.keyG6, 10, 210)}
+              x={props.activeKey.group === ScaleKeys.keyG6 ? props.activeKey.x : 0}
+              y={props.activeKey.group === ScaleKeys.keyG6 ? props.activeKey.y : 0}
+              onPressIn={() => props.handleKey(ScaleKeys.keyG6, 10, 210)}
             >
               <Path
                 fill={
-                    props.activeKey.group === props.keys.keyG6
+                    props.activeKey.group === ScaleKeys.keyG6
                     && props.activeKey.field === 10
                       ? activeKeyColorBG
                       : keyColorBG
@@ -223,7 +210,7 @@ function Circle(props: Props) {
               />
               <Path
                 fill={
-                    props.activeKey.group === props.keys.keyG6
+                    props.activeKey.group === ScaleKeys.keyG6
                     && props.activeKey.field === 10
                       ? activeKeyColorBG
                       : keyColorBG
@@ -233,7 +220,7 @@ function Circle(props: Props) {
               />
               <Path
                 fill={
-                    props.activeKey.group === props.keys.keyG6
+                    props.activeKey.group === ScaleKeys.keyG6
                     && props.activeKey.field === 10
                       ? activeKeyColorBG
                       : keyColorBG
@@ -243,7 +230,7 @@ function Circle(props: Props) {
               />
               <Path
                 fill={
-                    props.activeKey.group === props.keys.keyG6
+                    props.activeKey.group === ScaleKeys.keyG6
                     && props.activeKey.field === 10
                       ? activeKeyColorBG
                       : keyColorBG
@@ -253,7 +240,7 @@ function Circle(props: Props) {
               />
               <Path
                 fill={
-                    props.activeKey.group === props.keys.keyG6
+                    props.activeKey.group === ScaleKeys.keyG6
                     && props.activeKey.field === 10
                       ? activeKeyColorBG
                       : keyColorBG
@@ -263,7 +250,7 @@ function Circle(props: Props) {
               />
               <Path
                 fill={
-                    props.activeKey.group === props.keys.keyG6
+                    props.activeKey.group === ScaleKeys.keyG6
                     && props.activeKey.field === 10
                       ? activeKeyColorSymbol
                       : keyColorSymbol
@@ -273,7 +260,7 @@ function Circle(props: Props) {
               />
               <Path
                 fill={
-                    props.activeKey.group === props.keys.keyG6
+                    props.activeKey.group === ScaleKeys.keyG6
                     && props.activeKey.field === 10
                       ? activeKeyColorSymbol
                       : keyColorSymbol
@@ -283,7 +270,7 @@ function Circle(props: Props) {
               />
               <Path
                 fill={
-                    props.activeKey.group === props.keys.keyG6
+                    props.activeKey.group === ScaleKeys.keyG6
                     && props.activeKey.field === 10
                       ? activeKeyColorText
                       : keyColorText
@@ -293,7 +280,7 @@ function Circle(props: Props) {
               />
               <Path
                 fill={
-                    props.activeKey.group === props.keys.keyG6
+                    props.activeKey.group === ScaleKeys.keyG6
                     && props.activeKey.field === 10
                       ? activeKeyColorText
                       : keyColorText
@@ -303,13 +290,13 @@ function Circle(props: Props) {
               />
             </G>
             <G
-              x={props.activeKey.group === props.keys.keyG7 ? props.activeKey.x : 0}
-              y={props.activeKey.group === props.keys.keyG7 ? props.activeKey.y : 0}
-              onPressIn={() => props.handleKey(props.keys.keyG7, 3, 180)}
+              x={props.activeKey.group === ScaleKeys.keyG7 ? props.activeKey.x : 0}
+              y={props.activeKey.group === ScaleKeys.keyG7 ? props.activeKey.y : 0}
+              onPressIn={() => props.handleKey(ScaleKeys.keyG7, 3, 180)}
             >
               <Path
                 fill={
-                    props.activeKey.group === props.keys.keyG7
+                    props.activeKey.group === ScaleKeys.keyG7
                     && props.activeKey.field === 3
                       ? activeKeyColorBG
                       : keyColorBG
@@ -319,7 +306,7 @@ function Circle(props: Props) {
               />
               <Path
                 fill={
-                    props.activeKey.group === props.keys.keyG7
+                    props.activeKey.group === ScaleKeys.keyG7
                     && props.activeKey.field === 3
                       ? activeKeyColorBG
                       : keyColorBG
@@ -329,7 +316,7 @@ function Circle(props: Props) {
               />
               <Path
                 fill={
-                    props.activeKey.group === props.keys.keyG7
+                    props.activeKey.group === ScaleKeys.keyG7
                     && props.activeKey.field === 3
                       ? activeKeyColorBG
                       : keyColorBG
@@ -339,7 +326,7 @@ function Circle(props: Props) {
               />
               <Path
                 fill={
-                    props.activeKey.group === props.keys.keyG7
+                    props.activeKey.group === ScaleKeys.keyG7
                     && props.activeKey.field === 3
                       ? activeKeyColorBG
                       : keyColorBG
@@ -349,7 +336,7 @@ function Circle(props: Props) {
               />
               <Path
                 fill={
-                    props.activeKey.group === props.keys.keyG7
+                    props.activeKey.group === ScaleKeys.keyG7
                     && props.activeKey.field === 3
                       ? activeKeyColorBG
                       : keyColorBG
@@ -359,7 +346,7 @@ function Circle(props: Props) {
               />
               <Path
                 fill={
-                    props.activeKey.group === props.keys.keyG7
+                    props.activeKey.group === ScaleKeys.keyG7
                     && props.activeKey.field === 3
                       ? activeKeyColorSymbol
                       : keyColorSymbol
@@ -369,7 +356,7 @@ function Circle(props: Props) {
               />
               <Path
                 fill={
-                    props.activeKey.group === props.keys.keyG7
+                    props.activeKey.group === ScaleKeys.keyG7
                     && props.activeKey.field === 3
                       ? activeKeyColorSymbol
                       : keyColorSymbol
@@ -379,7 +366,7 @@ function Circle(props: Props) {
               />
               <Path
                 fill={
-                    props.activeKey.group === props.keys.keyG7
+                    props.activeKey.group === ScaleKeys.keyG7
                     && props.activeKey.field === 3
                       ? activeKeyColorText
                       : keyColorText
@@ -389,7 +376,7 @@ function Circle(props: Props) {
               />
               <Path
                 fill={
-                    props.activeKey.group === props.keys.keyG7
+                    props.activeKey.group === ScaleKeys.keyG7
                     && props.activeKey.field === 3
                       ? activeKeyColorText
                       : keyColorText
@@ -399,13 +386,13 @@ function Circle(props: Props) {
               />
             </G>
             <G
-              x={props.activeKey.group === props.keys.keyG8 ? props.activeKey.x : 0}
-              y={props.activeKey.group === props.keys.keyG8 ? props.activeKey.y : 0}
-              onPressIn={() => props.handleKey(props.keys.keyG8, 8, 150)}
+              x={props.activeKey.group === ScaleKeys.keyG8 ? props.activeKey.x : 0}
+              y={props.activeKey.group === ScaleKeys.keyG8 ? props.activeKey.y : 0}
+              onPressIn={() => props.handleKey(ScaleKeys.keyG8, 8, 150)}
             >
               <Path
                 fill={
-                    props.activeKey.group === props.keys.keyG8
+                    props.activeKey.group === ScaleKeys.keyG8
                     && props.activeKey.field === 8
                       ? activeKeyColorBG
                       : keyColorBG
@@ -415,7 +402,7 @@ function Circle(props: Props) {
               />
               <Path
                 fill={
-                    props.activeKey.group === props.keys.keyG8
+                    props.activeKey.group === ScaleKeys.keyG8
                     && props.activeKey.field === 8
                       ? activeKeyColorBG
                       : keyColorBG
@@ -425,7 +412,7 @@ function Circle(props: Props) {
               />
               <Path
                 fill={
-                    props.activeKey.group === props.keys.keyG8
+                    props.activeKey.group === ScaleKeys.keyG8
                     && props.activeKey.field === 8
                       ? activeKeyColorBG
                       : keyColorBG
@@ -435,7 +422,7 @@ function Circle(props: Props) {
               />
               <Path
                 fill={
-                    props.activeKey.group === props.keys.keyG8
+                    props.activeKey.group === ScaleKeys.keyG8
                     && props.activeKey.field === 8
                       ? activeKeyColorBG
                       : keyColorBG
@@ -445,7 +432,7 @@ function Circle(props: Props) {
               />
               <Path
                 fill={
-                    props.activeKey.group === props.keys.keyG8
+                    props.activeKey.group === ScaleKeys.keyG8
                     && props.activeKey.field === 8
                       ? activeKeyColorBG
                       : keyColorBG
@@ -455,7 +442,7 @@ function Circle(props: Props) {
               />
               <Path
                 fill={
-                    props.activeKey.group === props.keys.keyG8
+                    props.activeKey.group === ScaleKeys.keyG8
                     && props.activeKey.field === 8
                       ? activeKeyColorSymbol
                       : keyColorSymbol
@@ -465,7 +452,7 @@ function Circle(props: Props) {
               />
               <Path
                 fill={
-                    props.activeKey.group === props.keys.keyG8
+                    props.activeKey.group === ScaleKeys.keyG8
                     && props.activeKey.field === 8
                       ? activeKeyColorSymbol
                       : keyColorSymbol
@@ -475,7 +462,7 @@ function Circle(props: Props) {
               />
               <Path
                 fill={
-                    props.activeKey.group === props.keys.keyG8
+                    props.activeKey.group === ScaleKeys.keyG8
                     && props.activeKey.field === 8
                       ? activeKeyColorText
                       : keyColorText
@@ -485,7 +472,7 @@ function Circle(props: Props) {
               />
               <Path
                 fill={
-                    props.activeKey.group === props.keys.keyG8
+                    props.activeKey.group === ScaleKeys.keyG8
                     && props.activeKey.field === 8
                       ? activeKeyColorText
                       : keyColorText
@@ -495,13 +482,13 @@ function Circle(props: Props) {
               />
             </G>
             <G
-              x={props.activeKey.group === props.keys.keyG9 ? props.activeKey.x : 0}
-              y={props.activeKey.group === props.keys.keyG9 ? props.activeKey.y : 0}
-              onPressIn={() => props.handleKey(props.keys.keyG9, 1, 120)}
+              x={props.activeKey.group === ScaleKeys.keyG9 ? props.activeKey.x : 0}
+              y={props.activeKey.group === ScaleKeys.keyG9 ? props.activeKey.y : 0}
+              onPressIn={() => props.handleKey(ScaleKeys.keyG9, 1, 120)}
             >
               <Path
                 fill={
-                    props.activeKey.group === props.keys.keyG9
+                    props.activeKey.group === ScaleKeys.keyG9
                     && props.activeKey.field === 1
                       ? activeKeyColorBG
                       : keyColorBG
@@ -511,7 +498,7 @@ function Circle(props: Props) {
               />
               <Path
                 fill={
-                    props.activeKey.group === props.keys.keyG9
+                    props.activeKey.group === ScaleKeys.keyG9
                     && props.activeKey.field === 1
                       ? activeKeyColorBG
                       : keyColorBG
@@ -521,7 +508,7 @@ function Circle(props: Props) {
               />
               <Path
                 fill={
-                    props.activeKey.group === props.keys.keyG9
+                    props.activeKey.group === ScaleKeys.keyG9
                     && props.activeKey.field === 1
                       ? activeKeyColorBG
                       : keyColorBG
@@ -531,7 +518,7 @@ function Circle(props: Props) {
               />
               <Path
                 fill={
-                    props.activeKey.group === props.keys.keyG9
+                    props.activeKey.group === ScaleKeys.keyG9
                     && props.activeKey.field === 1
                       ? activeKeyColorBG
                       : keyColorBG
@@ -541,7 +528,7 @@ function Circle(props: Props) {
               />
               <Path
                 fill={
-                    props.activeKey.group === props.keys.keyG9
+                    props.activeKey.group === ScaleKeys.keyG9
                     && props.activeKey.field === 1
                       ? activeKeyColorSymbol
                       : keyColorSymbol
@@ -551,7 +538,7 @@ function Circle(props: Props) {
               />
               <Path
                 fill={
-                    props.activeKey.group === props.keys.keyG9
+                    props.activeKey.group === ScaleKeys.keyG9
                     && props.activeKey.field === 1
                       ? activeKeyColorSymbol
                       : keyColorSymbol
@@ -561,7 +548,7 @@ function Circle(props: Props) {
               />
               <Path
                 fill={
-                    props.activeKey.group === props.keys.keyG9
+                    props.activeKey.group === ScaleKeys.keyG9
                     && props.activeKey.field === 1
                       ? activeKeyColorText
                       : keyColorText
@@ -571,7 +558,7 @@ function Circle(props: Props) {
               />
               <Path
                 fill={
-                    props.activeKey.group === props.keys.keyG9
+                    props.activeKey.group === ScaleKeys.keyG9
                     && props.activeKey.field === 1
                       ? activeKeyColorText
                       : keyColorText
@@ -581,13 +568,13 @@ function Circle(props: Props) {
               />
             </G>
             <G
-              x={props.activeKey.group === props.keys.keyG10 ? props.activeKey.x : 0}
-              y={props.activeKey.group === props.keys.keyG10 ? props.activeKey.y : 0}
-              onPressIn={() => props.handleKey(props.keys.keyG10, 6, 90)}
+              x={props.activeKey.group === ScaleKeys.keyG10 ? props.activeKey.x : 0}
+              y={props.activeKey.group === ScaleKeys.keyG10 ? props.activeKey.y : 0}
+              onPressIn={() => props.handleKey(ScaleKeys.keyG10, 6, 90)}
             >
               <Path
                 fill={
-                    props.activeKey.group === props.keys.keyG10
+                    props.activeKey.group === ScaleKeys.keyG10
                     && props.activeKey.field === 6
                       ? activeKeyColorBG
                       : keyColorBG
@@ -597,7 +584,7 @@ function Circle(props: Props) {
               />
               <Path
                 fill={
-                    props.activeKey.group === props.keys.keyG10
+                    props.activeKey.group === ScaleKeys.keyG10
                     && props.activeKey.field === 6
                       ? activeKeyColorBG
                       : keyColorBG
@@ -607,7 +594,7 @@ function Circle(props: Props) {
               />
               <Path
                 fill={
-                    props.activeKey.group === props.keys.keyG10
+                    props.activeKey.group === ScaleKeys.keyG10
                     && props.activeKey.field === 6
                       ? activeKeyColorBG
                       : keyColorBG
@@ -617,7 +604,7 @@ function Circle(props: Props) {
               />
               <Path
                 fill={
-                    props.activeKey.group === props.keys.keyG10
+                    props.activeKey.group === ScaleKeys.keyG10
                     && props.activeKey.field === 6
                       ? activeKeyColorBG
                       : keyColorBG
@@ -627,7 +614,7 @@ function Circle(props: Props) {
               />
               <Path
                 fill={
-                    props.activeKey.group === props.keys.keyG10
+                    props.activeKey.group === ScaleKeys.keyG10
                     && props.activeKey.field === 6
                       ? activeKeyColorSymbol
                       : keyColorSymbol
@@ -637,7 +624,7 @@ function Circle(props: Props) {
               />
               <Path
                 fill={
-                    props.activeKey.group === props.keys.keyG10
+                    props.activeKey.group === ScaleKeys.keyG10
                     && props.activeKey.field === 6
                       ? activeKeyColorSymbol
                       : keyColorSymbol
@@ -647,7 +634,7 @@ function Circle(props: Props) {
               />
               <Path
                 fill={
-                    props.activeKey.group === props.keys.keyG10
+                    props.activeKey.group === ScaleKeys.keyG10
                     && props.activeKey.field === 6
                       ? activeKeyColorText
                       : keyColorText
@@ -657,7 +644,7 @@ function Circle(props: Props) {
               />
               <Path
                 fill={
-                    props.activeKey.group === props.keys.keyG10
+                    props.activeKey.group === ScaleKeys.keyG10
                     && props.activeKey.field === 6
                       ? activeKeyColorText
                       : keyColorText
@@ -667,13 +654,13 @@ function Circle(props: Props) {
               />
             </G>
             <G
-              x={props.activeKey.group === props.keys.keyG11 ? props.activeKey.x : 0}
-              y={props.activeKey.group === props.keys.keyG11 ? props.activeKey.y : 0}
-              onPressIn={() => props.handleKey(props.keys.keyG11, 11, 60)}
+              x={props.activeKey.group === ScaleKeys.keyG11 ? props.activeKey.x : 0}
+              y={props.activeKey.group === ScaleKeys.keyG11 ? props.activeKey.y : 0}
+              onPressIn={() => props.handleKey(ScaleKeys.keyG11, 11, 60)}
             >
               <Path
                 fill={
-                    props.activeKey.group === props.keys.keyG11
+                    props.activeKey.group === ScaleKeys.keyG11
                     && props.activeKey.field === 11
                       ? activeKeyColorBG
                       : keyColorBG
@@ -683,7 +670,7 @@ function Circle(props: Props) {
               />
               <Path
                 fill={
-                    props.activeKey.group === props.keys.keyG11
+                    props.activeKey.group === ScaleKeys.keyG11
                     && props.activeKey.field === 11
                       ? activeKeyColorBG
                       : keyColorBG
@@ -693,7 +680,7 @@ function Circle(props: Props) {
               />
               <Path
                 fill={
-                    props.activeKey.group === props.keys.keyG11
+                    props.activeKey.group === ScaleKeys.keyG11
                     && props.activeKey.field === 11
                       ? activeKeyColorText
                       : keyColorText
@@ -703,13 +690,13 @@ function Circle(props: Props) {
               />
             </G>
             <G
-              x={props.activeKey.group === props.keys.keyG12 ? props.activeKey.x : 0}
-              y={props.activeKey.group === props.keys.keyG12 ? props.activeKey.y : 0}
-              onPressIn={() => props.handleKey(props.keys.keyG12, 4, 30)}
+              x={props.activeKey.group === ScaleKeys.keyG12 ? props.activeKey.x : 0}
+              y={props.activeKey.group === ScaleKeys.keyG12 ? props.activeKey.y : 0}
+              onPressIn={() => props.handleKey(ScaleKeys.keyG12, 4, 30)}
             >
               <Path
                 fill={
-                    props.activeKey.group === props.keys.keyG12
+                    props.activeKey.group === ScaleKeys.keyG12
                     && props.activeKey.field === 4
                       ? activeKeyColorBG
                       : keyColorBG
@@ -719,7 +706,7 @@ function Circle(props: Props) {
               />
               <Path
                 fill={
-                    props.activeKey.group === props.keys.keyG12
+                    props.activeKey.group === ScaleKeys.keyG12
                     && props.activeKey.field === 4
                       ? activeKeyColorBG
                       : keyColorBG
@@ -729,7 +716,7 @@ function Circle(props: Props) {
               />
               <Path
                 fill={
-                    props.activeKey.group === props.keys.keyG12
+                    props.activeKey.group === ScaleKeys.keyG12
                     && props.activeKey.field === 4
                       ? activeKeyColorText
                       : keyColorText
@@ -739,13 +726,13 @@ function Circle(props: Props) {
               />
             </G>
             <G
-              x={props.activeKey.group === props.keys.keyG1 ? props.activeKey.x : 0}
-              y={props.activeKey.group === props.keys.keyG1 ? props.activeKey.y : 0}
-              onPressIn={() => props.handleKey(props.keys.keyG1, 0, 0)}
+              x={props.activeKey.group === ScaleKeys.keyG1 ? props.activeKey.x : 0}
+              y={props.activeKey.group === ScaleKeys.keyG1 ? props.activeKey.y : 0}
+              onPressIn={() => props.handleKey(ScaleKeys.keyG1, 0, 0)}
             >
               <Path
                 fill={
-                    props.activeKey.group === props.keys.keyG1
+                    props.activeKey.group === ScaleKeys.keyG1
                     && props.activeKey.field === 0
                       ? activeKeyColorBG
                       : keyColorBG
@@ -755,7 +742,7 @@ function Circle(props: Props) {
               />
               <Path
                 fill={
-                    props.activeKey.group === props.keys.keyG1
+                    props.activeKey.group === ScaleKeys.keyG1
                     && props.activeKey.field === 0
                       ? activeKeyColorText
                       : keyColorText
@@ -765,13 +752,13 @@ function Circle(props: Props) {
               />
             </G>
             <G
-              x={props.activeKey.group === props.keys.keyG2 ? props.activeKey.x : 0}
-              y={props.activeKey.group === props.keys.keyG2 ? props.activeKey.y : 0}
-              onPressIn={() => props.handleKey(props.keys.keyG2, 5, 330)}
+              x={props.activeKey.group === ScaleKeys.keyG2 ? props.activeKey.x : 0}
+              y={props.activeKey.group === ScaleKeys.keyG2 ? props.activeKey.y : 0}
+              onPressIn={() => props.handleKey(ScaleKeys.keyG2, 5, 330)}
             >
               <Path
                 fill={
-                    props.activeKey.group === props.keys.keyG2
+                    props.activeKey.group === ScaleKeys.keyG2
                     && props.activeKey.field === 5
                       ? activeKeyColorBG
                       : keyColorBG
@@ -781,7 +768,7 @@ function Circle(props: Props) {
               />
               <Polygon
                 fill={
-                    props.activeKey.group === props.keys.keyG2
+                    props.activeKey.group === ScaleKeys.keyG2
                     && props.activeKey.field === 5
                       ? activeKeyColorText
                       : keyColorText
@@ -790,13 +777,13 @@ function Circle(props: Props) {
               />
             </G>
             <G
-              x={props.activeKey.group === props.keys.keyG3 ? props.activeKey.x : 0}
-              y={props.activeKey.group === props.keys.keyG3 ? props.activeKey.y : 0}
-              onPressIn={() => props.handleKey(props.keys.keyG3, 10, 300)}
+              x={props.activeKey.group === ScaleKeys.keyG3 ? props.activeKey.x : 0}
+              y={props.activeKey.group === ScaleKeys.keyG3 ? props.activeKey.y : 0}
+              onPressIn={() => props.handleKey(ScaleKeys.keyG3, 10, 300)}
             >
               <Polygon
                 fill={
-                    props.activeKey.group === props.keys.keyG3
+                    props.activeKey.group === ScaleKeys.keyG3
                     && props.activeKey.field === 10
                       ? activeKeyColorBG
                       : keyColorBG
@@ -805,7 +792,7 @@ function Circle(props: Props) {
               />
               <Path
                 fill={
-                    props.activeKey.group === props.keys.keyG3
+                    props.activeKey.group === ScaleKeys.keyG3
                     && props.activeKey.field === 10
                       ? activeKeyColorBG
                       : keyColorBG
@@ -815,7 +802,7 @@ function Circle(props: Props) {
               />
               <Path
                 fill={
-                    props.activeKey.group === props.keys.keyG3
+                    props.activeKey.group === ScaleKeys.keyG3
                     && props.activeKey.field === 10
                       ? activeKeyColorBG
                       : keyColorBG
@@ -825,7 +812,7 @@ function Circle(props: Props) {
               />
               <Path
                 fill={
-                    props.activeKey.group === props.keys.keyG3
+                    props.activeKey.group === ScaleKeys.keyG3
                     && props.activeKey.field === 10
                       ? activeKeyColorBG
                       : keyColorBG
@@ -835,7 +822,7 @@ function Circle(props: Props) {
               />
               <Path
                 fill={
-                    props.activeKey.group === props.keys.keyG3
+                    props.activeKey.group === ScaleKeys.keyG3
                     && props.activeKey.field === 10
                       ? activeKeyColorBG
                       : keyColorBG
@@ -845,7 +832,7 @@ function Circle(props: Props) {
               />
               <Path
                 fill={
-                    props.activeKey.group === props.keys.keyG3
+                    props.activeKey.group === ScaleKeys.keyG3
                     && props.activeKey.field === 10
                       ? activeKeyColorBG
                       : keyColorBG
@@ -855,7 +842,7 @@ function Circle(props: Props) {
               />
               <Path
                 fill={
-                    props.activeKey.group === props.keys.keyG3
+                    props.activeKey.group === ScaleKeys.keyG3
                     && props.activeKey.field === 10
                       ? activeKeyColorSymbol
                       : keyColorSymbol
@@ -865,7 +852,7 @@ function Circle(props: Props) {
               />
               <Path
                 fill={
-                    props.activeKey.group === props.keys.keyG3
+                    props.activeKey.group === ScaleKeys.keyG3
                     && props.activeKey.field === 10
                       ? activeKeyColorSymbol
                       : keyColorSymbol
@@ -875,7 +862,7 @@ function Circle(props: Props) {
               />
               <Path
                 fill={
-                    props.activeKey.group === props.keys.keyG3
+                    props.activeKey.group === ScaleKeys.keyG3
                     && props.activeKey.field === 10
                       ? activeKeyColorText
                       : keyColorText
@@ -885,7 +872,7 @@ function Circle(props: Props) {
               />
               <Path
                 fill={
-                    props.activeKey.group === props.keys.keyG3
+                    props.activeKey.group === ScaleKeys.keyG3
                     && props.activeKey.field === 10
                       ? activeKeyColorText
                       : keyColorText
@@ -895,13 +882,13 @@ function Circle(props: Props) {
               />
             </G>
             <G
-              x={props.activeKey.group === props.keys.keyG4 ? props.activeKey.x : 0}
-              y={props.activeKey.group === props.keys.keyG4 ? props.activeKey.y : 0}
-              onPressIn={() => props.handleKey(props.keys.keyG4, 3, 270)}
+              x={props.activeKey.group === ScaleKeys.keyG4 ? props.activeKey.x : 0}
+              y={props.activeKey.group === ScaleKeys.keyG4 ? props.activeKey.y : 0}
+              onPressIn={() => props.handleKey(ScaleKeys.keyG4, 3, 270)}
             >
               <Path
                 fill={
-                    props.activeKey.group === props.keys.keyG4
+                    props.activeKey.group === ScaleKeys.keyG4
                     && props.activeKey.field === 3
                       ? activeKeyColorBG
                       : keyColorBG
@@ -911,7 +898,7 @@ function Circle(props: Props) {
               />
               <Path
                 fill={
-                    props.activeKey.group === props.keys.keyG4
+                    props.activeKey.group === ScaleKeys.keyG4
                     && props.activeKey.field === 3
                       ? activeKeyColorBG
                       : keyColorBG
@@ -921,7 +908,7 @@ function Circle(props: Props) {
               />
               <Path
                 fill={
-                    props.activeKey.group === props.keys.keyG4
+                    props.activeKey.group === ScaleKeys.keyG4
                     && props.activeKey.field === 3
                       ? activeKeyColorBG
                       : keyColorBG
@@ -931,7 +918,7 @@ function Circle(props: Props) {
               />
               <Path
                 fill={
-                    props.activeKey.group === props.keys.keyG4
+                    props.activeKey.group === ScaleKeys.keyG4
                     && props.activeKey.field === 3
                       ? activeKeyColorBG
                       : keyColorBG
@@ -941,7 +928,7 @@ function Circle(props: Props) {
               />
               <Path
                 fill={
-                    props.activeKey.group === props.keys.keyG4
+                    props.activeKey.group === ScaleKeys.keyG4
                     && props.activeKey.field === 3
                       ? activeKeyColorSymbol
                       : keyColorSymbol
@@ -951,7 +938,7 @@ function Circle(props: Props) {
               />
               <Path
                 fill={
-                    props.activeKey.group === props.keys.keyG4
+                    props.activeKey.group === ScaleKeys.keyG4
                     && props.activeKey.field === 3
                       ? activeKeyColorSymbol
                       : keyColorSymbol
@@ -961,7 +948,7 @@ function Circle(props: Props) {
               />
               <Polygon
                 fill={
-                    props.activeKey.group === props.keys.keyG4
+                    props.activeKey.group === ScaleKeys.keyG4
                     && props.activeKey.field === 3
                       ? activeKeyColorText
                       : keyColorText
@@ -970,7 +957,7 @@ function Circle(props: Props) {
               />
               <Path
                 fill={
-                    props.activeKey.group === props.keys.keyG4
+                    props.activeKey.group === ScaleKeys.keyG4
                     && props.activeKey.field === 3
                       ? activeKeyColorText
                       : keyColorText
@@ -980,13 +967,13 @@ function Circle(props: Props) {
               />
             </G>
             <G
-              x={props.activeKey.group === props.keys.keyG5 ? props.activeKey.x : 0}
-              y={props.activeKey.group === props.keys.keyG5 ? props.activeKey.y : 0}
-              onPressIn={() => props.handleKey(props.keys.keyG5, 8, 240)}
+              x={props.activeKey.group === ScaleKeys.keyG5 ? props.activeKey.x : 0}
+              y={props.activeKey.group === ScaleKeys.keyG5 ? props.activeKey.y : 0}
+              onPressIn={() => props.handleKey(ScaleKeys.keyG5, 8, 240)}
             >
               <Path
                 fill={
-                    props.activeKey.group === props.keys.keyG5
+                    props.activeKey.group === ScaleKeys.keyG5
                     && props.activeKey.field === 8
                       ? activeKeyColorBG
                       : keyColorBG
@@ -996,7 +983,7 @@ function Circle(props: Props) {
               />
               <Polygon
                 fill={
-                    props.activeKey.group === props.keys.keyG5
+                    props.activeKey.group === ScaleKeys.keyG5
                     && props.activeKey.field === 8
                       ? activeKeyColorBG
                       : keyColorBG
@@ -1005,7 +992,7 @@ function Circle(props: Props) {
               />
               <Path
                 fill={
-                    props.activeKey.group === props.keys.keyG5
+                    props.activeKey.group === ScaleKeys.keyG5
                     && props.activeKey.field === 8
                       ? activeKeyColorBG
                       : keyColorBG
@@ -1015,7 +1002,7 @@ function Circle(props: Props) {
               />
               <Path
                 fill={
-                    props.activeKey.group === props.keys.keyG5
+                    props.activeKey.group === ScaleKeys.keyG5
                     && props.activeKey.field === 8
                       ? activeKeyColorBG
                       : keyColorBG
@@ -1025,7 +1012,7 @@ function Circle(props: Props) {
               />
               <Path
                 fill={
-                    props.activeKey.group === props.keys.keyG5
+                    props.activeKey.group === ScaleKeys.keyG5
                     && props.activeKey.field === 8
                       ? activeKeyColorSymbol
                       : keyColorSymbol
@@ -1035,7 +1022,7 @@ function Circle(props: Props) {
               />
               <Path
                 fill={
-                    props.activeKey.group === props.keys.keyG5
+                    props.activeKey.group === ScaleKeys.keyG5
                     && props.activeKey.field === 8
                       ? activeKeyColorSymbol
                       : keyColorSymbol
@@ -1045,7 +1032,7 @@ function Circle(props: Props) {
               />
               <Path
                 fill={
-                    props.activeKey.group === props.keys.keyG5
+                    props.activeKey.group === ScaleKeys.keyG5
                     && props.activeKey.field === 8
                       ? activeKeyColorText
                       : keyColorText
@@ -1055,7 +1042,7 @@ function Circle(props: Props) {
               />
               <Path
                 fill={
-                    props.activeKey.group === props.keys.keyG5
+                    props.activeKey.group === ScaleKeys.keyG5
                     && props.activeKey.field === 8
                       ? activeKeyColorText
                       : keyColorText
@@ -1065,13 +1052,13 @@ function Circle(props: Props) {
               />
             </G>
             <G
-              x={props.activeKey.group === props.keys.keyG6 ? props.activeKey.x : 0}
-              y={props.activeKey.group === props.keys.keyG6 ? props.activeKey.y : 0}
-              onPressIn={() => props.handleKey(props.keys.keyG6, 1, 210)}
+              x={props.activeKey.group === ScaleKeys.keyG6 ? props.activeKey.x : 0}
+              y={props.activeKey.group === ScaleKeys.keyG6 ? props.activeKey.y : 0}
+              onPressIn={() => props.handleKey(ScaleKeys.keyG6, 1, 210)}
             >
               <Path
                 fill={
-                    props.activeKey.group === props.keys.keyG6
+                    props.activeKey.group === ScaleKeys.keyG6
                     && props.activeKey.field === 1
                       ? activeKeyColorBG
                       : keyColorBG
@@ -1081,7 +1068,7 @@ function Circle(props: Props) {
               />
               <Path
                 fill={
-                    props.activeKey.group === props.keys.keyG6
+                    props.activeKey.group === ScaleKeys.keyG6
                     && props.activeKey.field === 1
                       ? activeKeyColorBG
                       : keyColorBG
@@ -1091,7 +1078,7 @@ function Circle(props: Props) {
               />
               <Path
                 fill={
-                    props.activeKey.group === props.keys.keyG6
+                    props.activeKey.group === ScaleKeys.keyG6
                     && props.activeKey.field === 1
                       ? activeKeyColorBG
                       : keyColorBG
@@ -1101,7 +1088,7 @@ function Circle(props: Props) {
               />
               <Path
                 fill={
-                    props.activeKey.group === props.keys.keyG6
+                    props.activeKey.group === ScaleKeys.keyG6
                     && props.activeKey.field === 1
                       ? activeKeyColorBG
                       : keyColorBG
@@ -1111,7 +1098,7 @@ function Circle(props: Props) {
               />
               <Path
                 fill={
-                    props.activeKey.group === props.keys.keyG6
+                    props.activeKey.group === ScaleKeys.keyG6
                     && props.activeKey.field === 1
                       ? activeKeyColorSymbol
                       : keyColorSymbol
@@ -1121,7 +1108,7 @@ function Circle(props: Props) {
               />
               <Path
                 fill={
-                    props.activeKey.group === props.keys.keyG6
+                    props.activeKey.group === ScaleKeys.keyG6
                     && props.activeKey.field === 1
                       ? activeKeyColorSymbol
                       : keyColorSymbol
@@ -1131,7 +1118,7 @@ function Circle(props: Props) {
               />
               <Path
                 fill={
-                    props.activeKey.group === props.keys.keyG6
+                    props.activeKey.group === ScaleKeys.keyG6
                     && props.activeKey.field === 1
                       ? activeKeyColorText
                       : keyColorText
@@ -1141,7 +1128,7 @@ function Circle(props: Props) {
               />
               <Path
                 fill={
-                    props.activeKey.group === props.keys.keyG6
+                    props.activeKey.group === ScaleKeys.keyG6
                     && props.activeKey.field === 1
                       ? activeKeyColorText
                       : keyColorText
@@ -1151,13 +1138,13 @@ function Circle(props: Props) {
               />
             </G>
             <G
-              x={props.activeKey.group === props.keys.keyG7 ? props.activeKey.x : 0}
-              y={props.activeKey.group === props.keys.keyG7 ? props.activeKey.y : 0}
-              onPressIn={() => props.handleKey(props.keys.keyG7, 6, 180)}
+              x={props.activeKey.group === ScaleKeys.keyG7 ? props.activeKey.x : 0}
+              y={props.activeKey.group === ScaleKeys.keyG7 ? props.activeKey.y : 0}
+              onPressIn={() => props.handleKey(ScaleKeys.keyG7, 6, 180)}
             >
               <Path
                 fill={
-                    props.activeKey.group === props.keys.keyG7
+                    props.activeKey.group === ScaleKeys.keyG7
                     && props.activeKey.field === 6
                       ? activeKeyColorBG
                       : keyColorBG
@@ -1167,7 +1154,7 @@ function Circle(props: Props) {
               />
               <Path
                 fill={
-                    props.activeKey.group === props.keys.keyG7
+                    props.activeKey.group === ScaleKeys.keyG7
                     && props.activeKey.field === 6
                       ? activeKeyColorBG
                       : keyColorBG
@@ -1177,7 +1164,7 @@ function Circle(props: Props) {
               />
               <Path
                 fill={
-                    props.activeKey.group === props.keys.keyG7
+                    props.activeKey.group === ScaleKeys.keyG7
                     && props.activeKey.field === 6
                       ? activeKeyColorBG
                       : keyColorBG
@@ -1187,7 +1174,7 @@ function Circle(props: Props) {
               />
               <Path
                 fill={
-                    props.activeKey.group === props.keys.keyG7
+                    props.activeKey.group === ScaleKeys.keyG7
                     && props.activeKey.field === 6
                       ? activeKeyColorSymbol
                       : keyColorSymbol
@@ -1197,7 +1184,7 @@ function Circle(props: Props) {
               />
               <Path
                 fill={
-                    props.activeKey.group === props.keys.keyG7
+                    props.activeKey.group === ScaleKeys.keyG7
                     && props.activeKey.field === 6
                       ? activeKeyColorSymbol
                       : keyColorSymbol
@@ -1207,7 +1194,7 @@ function Circle(props: Props) {
               />
               <Path
                 fill={
-                    props.activeKey.group === props.keys.keyG7
+                    props.activeKey.group === ScaleKeys.keyG7
                     && props.activeKey.field === 6
                       ? activeKeyColorText
                       : keyColorText
@@ -1217,7 +1204,7 @@ function Circle(props: Props) {
               />
               <Polygon
                 fill={
-                    props.activeKey.group === props.keys.keyG7
+                    props.activeKey.group === ScaleKeys.keyG7
                     && props.activeKey.field === 6
                       ? activeKeyColorText
                       : keyColorText
@@ -1226,13 +1213,13 @@ function Circle(props: Props) {
               />
             </G>
             <G
-              x={props.activeKey.group === props.keys.keyG8 ? props.activeKey.x : 0}
-              y={props.activeKey.group === props.keys.keyG8 ? props.activeKey.y : 0}
-              onPressIn={() => props.handleKey(props.keys.keyG8, 11, 150)}
+              x={props.activeKey.group === ScaleKeys.keyG8 ? props.activeKey.x : 0}
+              y={props.activeKey.group === ScaleKeys.keyG8 ? props.activeKey.y : 0}
+              onPressIn={() => props.handleKey(ScaleKeys.keyG8, 11, 150)}
             >
               <Path
                 fill={
-                    props.activeKey.group === props.keys.keyG8
+                    props.activeKey.group === ScaleKeys.keyG8
                     && props.activeKey.field === 11
                       ? activeKeyColorBG
                       : keyColorBG
@@ -1242,7 +1229,7 @@ function Circle(props: Props) {
               />
               <Path
                 fill={
-                    props.activeKey.group === props.keys.keyG8
+                    props.activeKey.group === ScaleKeys.keyG8
                     && props.activeKey.field === 11
                       ? activeKeyColorBG
                       : keyColorBG
@@ -1252,7 +1239,7 @@ function Circle(props: Props) {
               />
               <Path
                 fill={
-                    props.activeKey.group === props.keys.keyG8
+                    props.activeKey.group === ScaleKeys.keyG8
                     && props.activeKey.field === 11
                       ? activeKeyColorBG
                       : keyColorBG
@@ -1262,7 +1249,7 @@ function Circle(props: Props) {
               />
               <Path
                 fill={
-                    props.activeKey.group === props.keys.keyG8
+                    props.activeKey.group === ScaleKeys.keyG8
                     && props.activeKey.field === 11
                       ? activeKeyColorText
                       : keyColorText
@@ -1272,13 +1259,13 @@ function Circle(props: Props) {
               />
             </G>
             <G
-              x={props.activeKey.group === props.keys.keyG9 ? props.activeKey.x : 0}
-              y={props.activeKey.group === props.keys.keyG9 ? props.activeKey.y : 0}
-              onPressIn={() => props.handleKey(props.keys.keyG9, 4, 120)}
+              x={props.activeKey.group === ScaleKeys.keyG9 ? props.activeKey.x : 0}
+              y={props.activeKey.group === ScaleKeys.keyG9 ? props.activeKey.y : 0}
+              onPressIn={() => props.handleKey(ScaleKeys.keyG9, 4, 120)}
             >
               <Path
                 fill={
-                    props.activeKey.group === props.keys.keyG9
+                    props.activeKey.group === ScaleKeys.keyG9
                     && props.activeKey.field === 4
                       ? activeKeyColorBG
                       : keyColorBG
@@ -1288,7 +1275,7 @@ function Circle(props: Props) {
               />
               <Polygon
                 fill={
-                    props.activeKey.group === props.keys.keyG9
+                    props.activeKey.group === ScaleKeys.keyG9
                     && props.activeKey.field === 4
                       ? activeKeyColorText
                       : keyColorText
@@ -1297,13 +1284,13 @@ function Circle(props: Props) {
               />
             </G>
             <G
-              x={props.activeKey.group === props.keys.keyG10 ? props.activeKey.x : 0}
-              y={props.activeKey.group === props.keys.keyG10 ? props.activeKey.y : 0}
-              onPressIn={() => props.handleKey(props.keys.keyG10, 9, 90)}
+              x={props.activeKey.group === ScaleKeys.keyG10 ? props.activeKey.x : 0}
+              y={props.activeKey.group === ScaleKeys.keyG10 ? props.activeKey.y : 0}
+              onPressIn={() => props.handleKey(ScaleKeys.keyG10, 9, 90)}
             >
               <Path
                 fill={
-                    props.activeKey.group === props.keys.keyG10
+                    props.activeKey.group === ScaleKeys.keyG10
                     && props.activeKey.field === 9
                       ? activeKeyColorBG
                       : keyColorBG
@@ -1313,7 +1300,7 @@ function Circle(props: Props) {
               />
               <Polygon
                 fill={
-                    props.activeKey.group === props.keys.keyG10
+                    props.activeKey.group === ScaleKeys.keyG10
                     && props.activeKey.field === 9
                       ? activeKeyColorBG
                       : keyColorBG
@@ -1322,7 +1309,7 @@ function Circle(props: Props) {
               />
               <Path
                 fill={
-                    props.activeKey.group === props.keys.keyG10
+                    props.activeKey.group === ScaleKeys.keyG10
                     && props.activeKey.field === 9
                       ? activeKeyColorText
                       : keyColorText
@@ -1332,13 +1319,13 @@ function Circle(props: Props) {
               />
             </G>
             <G
-              x={props.activeKey.group === props.keys.keyG11 ? props.activeKey.x : 0}
-              y={props.activeKey.group === props.keys.keyG11 ? props.activeKey.y : 0}
-              onPressIn={() => props.handleKey(props.keys.keyG11, 2, 60)}
+              x={props.activeKey.group === ScaleKeys.keyG11 ? props.activeKey.x : 0}
+              y={props.activeKey.group === ScaleKeys.keyG11 ? props.activeKey.y : 0}
+              onPressIn={() => props.handleKey(ScaleKeys.keyG11, 2, 60)}
             >
               <Path
                 fill={
-                    props.activeKey.group === props.keys.keyG11
+                    props.activeKey.group === ScaleKeys.keyG11
                     && props.activeKey.field === 2
                       ? activeKeyColorBG
                       : keyColorBG
@@ -1348,7 +1335,7 @@ function Circle(props: Props) {
               />
               <Path
                 fill={
-                    props.activeKey.group === props.keys.keyG11
+                    props.activeKey.group === ScaleKeys.keyG11
                     && props.activeKey.field === 2
                       ? activeKeyColorBG
                       : keyColorBG
@@ -1358,7 +1345,7 @@ function Circle(props: Props) {
               />
               <Path
                 fill={
-                    props.activeKey.group === props.keys.keyG11
+                    props.activeKey.group === ScaleKeys.keyG11
                     && props.activeKey.field === 2
                       ? activeKeyColorText
                       : keyColorText
@@ -1368,13 +1355,13 @@ function Circle(props: Props) {
               />
             </G>
             <G
-              x={props.activeKey.group === props.keys.keyG12 ? props.activeKey.x : 0}
-              y={props.activeKey.group === props.keys.keyG12 ? props.activeKey.y : 0}
-              onPressIn={() => props.handleKey(props.keys.keyG12, 7, 30)}
+              x={props.activeKey.group === ScaleKeys.keyG12 ? props.activeKey.x : 0}
+              y={props.activeKey.group === ScaleKeys.keyG12 ? props.activeKey.y : 0}
+              onPressIn={() => props.handleKey(ScaleKeys.keyG12, 7, 30)}
             >
               <Path
                 fill={
-                    props.activeKey.group === props.keys.keyG12
+                    props.activeKey.group === ScaleKeys.keyG12
                     && props.activeKey.field === 7
                       ? activeKeyColorBG
                       : keyColorBG
@@ -1384,7 +1371,7 @@ function Circle(props: Props) {
               />
               <Path
                 fill={
-                    props.activeKey.group === props.keys.keyG12
+                    props.activeKey.group === ScaleKeys.keyG12
                     && props.activeKey.field === 7
                       ? activeKeyColorText
                       : keyColorText

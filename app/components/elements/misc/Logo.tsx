@@ -11,8 +11,12 @@ type Props = {
 
 function Logo(props: Props) {
   const rotate = useRef(new Animated.Value(0)).current;
+  const isFirstLoad = useRef(true);
 
   useEffect(() => {
+    if (!isFirstLoad.current) return;
+    isFirstLoad.current = false;
+
     const startAnimation = () => {
       Animated.timing(rotate, {
         toValue: 1,

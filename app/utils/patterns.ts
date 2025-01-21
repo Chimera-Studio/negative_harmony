@@ -15,6 +15,21 @@ export const musicScale = [
   'B',
 ];
 
+export enum ScaleKeys {
+  keyG1 = 'G1',
+  keyG2 = 'G2',
+  keyG3 = 'G3',
+  keyG4 = 'G4',
+  keyG5 = 'G5',
+  keyG6 = 'G6',
+  keyG7 = 'G7',
+  keyG8 = 'G8',
+  keyG9 = 'G9',
+  keyG10 = 'G10',
+  keyG11 = 'G11',
+  keyG12 = 'G12',
+}
+
 export const scales = {
   major: [0, 2, 4, 5, 7, 9, 11, 0],
   /* major Pattern: R + 2 + 2 + 1 + 2 + 2 + 2 + R */

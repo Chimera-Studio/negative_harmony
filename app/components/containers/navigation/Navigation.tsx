@@ -61,7 +61,10 @@ function Navigation() {
           {t(locationInfo.isScales ? 'links.scales' : 'links.chords')}
         </Text>
       </Link>
-      <TouchableOpacity onPress={() => dispatch(actions.showLegend(!showLegend))} onLongPress={handleAdminRedirect}>
+      <TouchableOpacity
+        onPress={() => dispatch(actions.showLegend(!showLegend))}
+        onLongPress={handleAdminRedirect}
+      >
         <Info style={navigationStyle.info} />
       </TouchableOpacity>
     </View>

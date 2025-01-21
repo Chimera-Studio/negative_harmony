@@ -15,6 +15,7 @@ function AdmobBanner() {
     showAds: state.global.showAds,
     personalisedAds: state.global.personalisedAds,
   }), isEqual);
+  const shouldShowBanner = config.ads && showAds && banner;
 
   const handleBannerSize = (): string => {
     if (isTablet) return BannerAdSize.FULL_BANNER;
@@ -25,8 +26,8 @@ function AdmobBanner() {
   if (locationInfo.isRewarded) return null;
 
   return (
-    <View style={mainStyle.ads}>
-      {config.ads && showAds && banner && (
+    <View style={{ ...mainStyle.ads, zIndex: shouldShowBanner ? 999 : 0 }}>
+      {shouldShowBanner && (
         <BannerAd
           unitId={banner}
           size={handleBannerSize()}

@@ -19,7 +19,7 @@ const styles = StyleSheet.create({
   },
   logo: {
     aspectRatio: 1 / 1,
-    width: '80%',
+    width: '40%',
   },
   text: {
     bottom: '10%',

@@ -207,6 +207,10 @@ module.exports = {
       },
     },
   ],
+  ignorePatterns: [
+    'node_modules/*',
+    'babel.config.js',
+  ],
   globals: {
     window: true,
     document: true,

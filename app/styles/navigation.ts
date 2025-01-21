@@ -1,11 +1,12 @@
 import { StyleSheet } from 'react-native';
 import { Font } from '@styles';
 import colors from '@styles/colors';
-import { isTablet, isiPhone } from '@utils';
+import { isiPhone } from '@utils';
 
 const navigationStyle = StyleSheet.create({
   navigation: {
     alignItems: 'center',
+    display: 'flex',
     flexDirection: 'row',
     height: 40,
     justifyContent: 'space-between',
@@ -31,23 +32,6 @@ const navigationStyle = StyleSheet.create({
   info: {
     width: 30,
     height: 30,
-  },
-  appEnvironment: {
-    alignItems: 'center',
-    backgroundColor: colors.white,
-    borderRadius: 15,
-    display: 'flex',
-    height: 30,
-    justifyContent: 'center',
-    left: '50%',
-    position: 'absolute',
-    transform: [{ translateX: -50 }],
-    width: 100,
-  },
-  appEnvironmentText: {
-    color: colors.black,
-    fontFamily: Font.regular,
-    fontSize: isTablet ? 14 : 12,
   },
 });
 

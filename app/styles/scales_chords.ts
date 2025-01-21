@@ -146,7 +146,7 @@ const scalesChordsStyle = StyleSheet.create({
     marginRight: '40%',
     marginTop: '40%',
     position: 'absolute',
-    width: isTablet ? '18%' : '10%',
+    width: '18%',
     zIndex: 4,
   },
   circleKeys: {

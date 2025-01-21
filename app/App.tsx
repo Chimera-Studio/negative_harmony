@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import SplashScreen from 'react-native-splash-screen';
 import { Provider } from 'react-redux';
-import Body from '@components/Body';
+import Body from '@components/Body.tsx';
 import ErrorBoundary from '@components/containers/errors/ErrorBoundary';
 import PortalProvider from '@components/containers/portal/PortalProvider';
 import { store } from '@store';

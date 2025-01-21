@@ -10,7 +10,7 @@ import scalesChordsStyle from '@styles/scales_chords';
 import {
   useAppDispatch, useAppSelector, useReview, useTeleport,
 } from '@utils/hooks';
-import { musicScale, scaleList } from '@utils/patterns';
+import { ScaleKeys, musicScale, scaleList } from '@utils/patterns';
 import { isEqual, times } from 'lodash';
 
 export function Scales() {
@@ -39,20 +39,6 @@ export function Scales() {
   }, []);
 
   const selectedScale = global.selectedScale || scaleList[0];
-  const keys = {
-    keyG1: 'G1',
-    keyG2: 'G2',
-    keyG3: 'G3',
-    keyG4: 'G4',
-    keyG5: 'G5',
-    keyG6: 'G6',
-    keyG7: 'G7',
-    keyG8: 'G8',
-    keyG9: 'G9',
-    keyG10: 'G10',
-    keyG11: 'G11',
-    keyG12: 'G12',
-  };
 
   const handleScales = (shift: any, scale: any) => {
     const positive: any = [];
@@ -88,46 +74,51 @@ export function Scales() {
     setOpenSelect(false);
   };
 
-  const handleKey = (key: string, value: number, angle: number) => {
-    let x = 0;
-    let y = 0;
-    if (key === keys.keyG1) {
-      x = -15;
-      y = -30;
-    } else if (key === keys.keyG2) {
-      x = -30;
-      y = -20;
-    } else if (key === keys.keyG3) {
-      x = -30;
-      y = 0;
-    } else if (key === keys.keyG4) {
-      x = -30;
-      y = 15;
-    } else if (key === keys.keyG5) {
-      x = -20;
-      y = 30;
-    } else if (key === keys.keyG6) {
-      x = 0;
-      y = 30;
-    } else if (key === keys.keyG7) {
-      x = 15;
-      y = 30;
-    } else if (key === keys.keyG8) {
-      x = 30;
-      y = 20;
-    } else if (key === keys.keyG9) {
-      x = 30;
-      y = 0;
-    } else if (key === keys.keyG10) {
-      x = 30;
-      y = -15;
-    } else if (key === keys.keyG11) {
-      x = 20;
-      y = -30;
-    } else if (key === keys.keyG12) {
-      x = 0;
-      y = -30;
+  const getKeyPosition = (key: ScaleKeys): [x: number, y: number] => {
+    switch (key) {
+      case ScaleKeys.keyG1:
+        return [-15, -30];
+
+      case ScaleKeys.keyG2:
+        return [-30, -20];
+
+      case ScaleKeys.keyG3:
+        return [-30, 0];
+
+      case ScaleKeys.keyG4:
+        return [-30, 15];
+
+      case ScaleKeys.keyG5:
+        return [-20, 30];
+
+      case ScaleKeys.keyG6:
+        return [0, 30];
+
+      case ScaleKeys.keyG7:
+        return [15, 30];
+
+      case ScaleKeys.keyG8:
+        return [30, 20];
+
+      case ScaleKeys.keyG9:
+        return [30, 0];
+
+      case ScaleKeys.keyG10:
+        return [30, -15];
+
+      case ScaleKeys.keyG11:
+        return [20, -30];
+
+      case ScaleKeys.keyG12:
+        return [0, -30];
+
+      default:
+        return [0, 0];
     }
+  };
+
+  const handleKey = (key: ScaleKeys, value: number, angle: number) => {
+    const [x, y] = getKeyPosition(key);
 
     dispatch(actions.storeAxis({ status: true, angle }));
     dispatch(actions.storeActiveKey({
@@ -162,7 +153,6 @@ export function Scales() {
       <Circle
         axis={global.axis}
         activeKey={global.activeKey}
-        keys={keys}
         handleKey={handleKey}
       />
       <BottomScales data={global.scales} />
