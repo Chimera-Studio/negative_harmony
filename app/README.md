@@ -56,21 +56,6 @@ Add `env.json` file to root directory
         "RELEASE_KEYSTORE_PASSWORD": "<secret>",
         "RELEASE_KEYSTORE_KEY_PASSWORD": "<secret>",
         "RELEASE_KEYSTORE_KEY_ALIAS": "<secret>"
-    },
-    "CONFIG": {
-        "KEEP_REWARDS": 6, // hours
-        "RESET_REWARDS": 24, // hours
-        "ADS": true,
-        "AD_IDS": {
-            "BANNER": {
-                "IOS": "<secret>",
-                "ANDROID": "<secret>"
-            },
-            "REWARDED": {
-                "IOS": "<secret>",
-                "ANDROID": "<secret>"
-            }
-        }
     }
 }
 ```

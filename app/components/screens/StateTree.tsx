@@ -1,5 +1,5 @@
 import React from 'react';
-import { SafeAreaView, ScrollView, View } from 'react-native';
+import { SafeAreaView, ScrollView } from 'react-native';
 import JSONTree from 'react-native-json-tree';
 import { Link } from 'react-router-native';
 import Exit from '@assets/icons/Exit';
@@ -31,6 +31,13 @@ function StateTree() {
     base0F: colors.white, // ???
   };
 
+  const data = {
+    deviceHeight: utils.deviceHeight,
+    deviceWidth: utils.deviceWidth,
+    deviceInfo: utils.deviceInfo,
+    redux: store,
+  };
+
   return (
     <SafeAreaView style={mainStyle.safe}>
       <Link to="/" style={mainStyle.exit} underlayColor={colors.transparent}>
@@ -48,21 +55,13 @@ function StateTree() {
         showsVerticalScrollIndicator
       >
         <JSONTree
-          data={{
-            utils: {
-              ...utils.deviceInfo,
-              deviceHeight: utils.deviceHeight,
-              deviceWidth: utils.deviceWidth,
-            },
-            redux: store,
-          }}
+          data={data}
           theme={theme}
           invertTheme={false}
-          shouldExpandNode={(key) => includes(key, 'utils')}
+          shouldExpandNode={(key) => includes(key, 'deviceInfo')}
           hideRoot
         />
       </ScrollView>
-      <View style={mainStyle.adSpace} />
     </SafeAreaView>
   );
 }

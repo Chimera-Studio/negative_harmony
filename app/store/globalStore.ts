@@ -2,67 +2,62 @@ import type { Option } from '@components/elements/inputs/Select';
 import type { RootState } from '@store';
 import type { ReduxAction } from '@types';
 
+export enum InputType {
+  circle,
+  grid,
+}
+
 export type Axis = {
-  status: boolean,
   angle: number,
+  status: boolean,
 };
 
 export type ActiveKey = {
+  field: number | undefined,
+  group: string | undefined,
   x: number,
   y: number,
-  group: string | undefined,
-  field: number | undefined,
 };
 
 export type State = {
-  developerMode: boolean,
-  scales?: Object[],
-  chords?: Object[],
-  selectedScale?: Option,
-  selectedChord?: Option,
-  axis: Axis,
   activeKey: ActiveKey,
-  unlocked: boolean,
-  showAds: boolean,
-  personalisedAds?: boolean,
+  axis: Axis,
+  chords?: Object[],
+  developerMode: boolean,
+  inputType: InputType,
+  scales?: Object[],
+  selectedChord?: Option,
+  selectedScale?: Option,
   showLegend?: boolean,
-  rewardedAt?: number,
 };
 
 export enum GlobalTypes {
-  GB_SHOW_PERSONALISED_ADS = 'GB/SHOW_PERSONALISED_ADS',
-  GB_SHOW_ADS = 'GB/SHOW_ADS',
-
   GB_TOGGLE_DEVELOPER_MODE = 'GB/TOGGLE_DEVELOPER_MODE',
-  GP_STORE_SELECTED_SCALE = 'GP/STORE_SELECTED_SCALE',
-  GP_STORE_SELECTED_CHORD = 'GP/STORE_SELECTED_CHORD',
-  GP_STORE_SCALES = 'GP/STORE_SCALES',
-  GP_STORE_CHORDS = 'GP/STORE_CHORDS',
-  GP_STORE_AXIS = 'GP/STORE_AXIS',
-  GP_STORE_ACTIVE_KEY = 'GP/STORE_ACTIVE_KEY',
+
   GP_SHOW_LEGEND = 'GP/SHOW_LEGEND',
-  GP_UNLOCK_CHORDS = 'GP/UNLOCK_CHORDS',
+  GP_STORE_ACTIVE_KEY = 'GP/STORE_ACTIVE_KEY',
+  GP_STORE_AXIS = 'GP/STORE_AXIS',
+  GP_STORE_CHORDS = 'GP/STORE_CHORDS',
+  GP_STORE_INPUT_TYPE = 'GP/STORE_INPUT_TYPE',
+  GP_STORE_SCALES = 'GP/STORE_SCALES',
+  GP_STORE_SELECTED_CHORD = 'GP/STORE_SELECTED_CHORD',
+  GP_STORE_SELECTED_SCALE = 'GP/STORE_SELECTED_SCALE',
 }
 
 export const selectors = {
   getGlobal: (state: RootState): State => state.global,
-  getScales: (state: RootState): any => state.global.scales,
   getChords: (state: RootState): any => state.global.chords,
-  getUnlocked: (state: RootState): boolean => state.global.unlocked,
+  getScales: (state: RootState): any => state.global.scales,
 };
 
 export const actions = {
-  showPersonalisedAds: (personalisedAds: boolean) => ({
-    type: GlobalTypes.GB_SHOW_PERSONALISED_ADS,
-    payload: { personalisedAds },
-  }),
-  showAds: (showAds: boolean) => ({
-    type: GlobalTypes.GB_SHOW_ADS,
-    payload: { showAds },
-  }),
   showLegend: (showLegend: boolean) => ({
     type: GlobalTypes.GP_SHOW_LEGEND,
     payload: { showLegend },
+  }),
+  switchInputType: (inputType: InputType) => ({
+    type: GlobalTypes.GP_STORE_INPUT_TYPE,
+    payload: { inputType },
   }),
   storeSelectedScale: (selectedScale: any) => ({
     type: GlobalTypes.GP_STORE_SELECTED_SCALE,
@@ -88,10 +83,6 @@ export const actions = {
     type: GlobalTypes.GP_STORE_ACTIVE_KEY,
     payload: { activeKey },
   }),
-  unlockChords: () => ({
-    type: GlobalTypes.GP_UNLOCK_CHORDS,
-    payload: { unlocked: true },
-  }),
   toggleDeveloperMode: (bool: boolean) => ({
     type: GlobalTypes.GB_TOGGLE_DEVELOPER_MODE,
     payload: bool,
@@ -100,16 +91,14 @@ export const actions = {
 
 export const reducer = (state: State, action: ReduxAction) => {
   switch (action.type) {
-    case GlobalTypes.GP_STORE_SELECTED_SCALE:
-    case GlobalTypes.GP_STORE_SELECTED_CHORD:
-    case GlobalTypes.GP_STORE_SCALES:
-    case GlobalTypes.GP_STORE_CHORDS:
-    case GlobalTypes.GP_STORE_AXIS:
-    case GlobalTypes.GP_STORE_ACTIVE_KEY:
-    case GlobalTypes.GP_UNLOCK_CHORDS:
-    case GlobalTypes.GB_SHOW_PERSONALISED_ADS:
-    case GlobalTypes.GB_SHOW_ADS:
     case GlobalTypes.GP_SHOW_LEGEND:
+    case GlobalTypes.GP_STORE_ACTIVE_KEY:
+    case GlobalTypes.GP_STORE_AXIS:
+    case GlobalTypes.GP_STORE_CHORDS:
+    case GlobalTypes.GP_STORE_INPUT_TYPE:
+    case GlobalTypes.GP_STORE_SCALES:
+    case GlobalTypes.GP_STORE_SELECTED_CHORD:
+    case GlobalTypes.GP_STORE_SELECTED_SCALE:
       return { ...state, ...action.payload };
 
     case GlobalTypes.GB_TOGGLE_DEVELOPER_MODE:

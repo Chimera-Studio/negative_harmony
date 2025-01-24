@@ -1,10 +1,4 @@
 {
   "name": "NegativeHarmony",
-  "displayName": "Negative Harmony",
-  "react-native-google-mobile-ads": {
-    "android_app_id": "ca-app-pub-6627549364207364~2581509658",
-    "ios_app_id": "ca-app-pub-6627549364207364~2906193696",
-    "delay_app_measurement_init": true,
-    "user_tracking_usage_description": "We use Tracking to fix bugs and improve your experience while using our App. This identifier will also be used to deliver personalized ads to you."
-  }
+  "displayName": "Negative Harmony"
 }

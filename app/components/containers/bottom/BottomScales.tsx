@@ -4,7 +4,6 @@ import {
 } from 'react-native';
 import bottomStyle from '@styles/bottom';
 import colors from '@styles/colors';
-import mainStyle from '@styles/main';
 import { deviceHeight } from '@utils';
 import map from 'lodash/map';
 
@@ -66,7 +65,6 @@ function BottomScales(props: Props) {
               </Text>
             ))}
           </View>
-          <View style={mainStyle.adSpace} />
         </Animated.View>
       )}
     </View>

@@ -78,4 +78,3 @@ yarn-error.log
 
 # Secrets
 env.json
-!/__mocks__/env.json

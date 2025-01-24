@@ -1,6 +1,5 @@
 import { Dimensions, Platform } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
-import Admob, { AdsConsent, AdsConsentStatus, MaxAdContentRating } from 'react-native-google-mobile-ads';
 
 type DeviceInfoType = {
   isApple: boolean,
@@ -28,79 +27,3 @@ export const getDeviceInfo = async (): Promise<DeviceInfoType> => {
 };
 
 export const isPromise = (p: any) => !!p && typeof p.then === 'function';
-
-type AdsResponse = {
-  showAds: boolean,
-  personalisedAds: boolean,
-};
-
-export const checkAdsConsent = async (): Promise<AdsResponse> => {
-  try {
-    const { selectPersonalisedAds, storeAndAccessInformationOnDevice } = await AdsConsent.getUserChoices();
-
-    return {
-      showAds: storeAndAccessInformationOnDevice,
-      personalisedAds: selectPersonalisedAds,
-    };
-  } catch {
-    return {
-      showAds: false,
-      personalisedAds: false,
-    };
-  }
-};
-
-export const handleAdsConsent = async (): Promise<AdsResponse> => {
-  try {
-    const consentInfo = await AdsConsent.requestInfoUpdate();
-    const consentObtained = consentInfo.status === AdsConsentStatus.OBTAINED;
-    const consentRequired = consentInfo.status === AdsConsentStatus.REQUIRED;
-
-    if (consentObtained) {
-      const { showAds, personalisedAds } = await checkAdsConsent();
-
-      return {
-        showAds,
-        personalisedAds,
-      };
-    }
-
-    if (consentInfo.isConsentFormAvailable && consentRequired) {
-      await AdsConsent.showForm();
-      const { showAds, personalisedAds } = await checkAdsConsent();
-
-      return {
-        showAds,
-        personalisedAds,
-      };
-    }
-
-    return {
-      showAds: false,
-      personalisedAds: false,
-    };
-  } catch {
-    return {
-      showAds: false,
-      personalisedAds: false,
-    };
-  }
-};
-
-export const initializeAds = async (): Promise<AdsResponse> => {
-  try {
-    await Admob().setRequestConfiguration({
-      maxAdContentRating: MaxAdContentRating.G,
-      tagForUnderAgeOfConsent: true,
-    });
-    await Admob().initialize();
-    const response = await handleAdsConsent();
-
-    return response;
-  } catch {
-    return {
-      showAds: false,
-      personalisedAds: false,
-    };
-  }
-};

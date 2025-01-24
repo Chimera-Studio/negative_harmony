@@ -1,32 +1,29 @@
 /* eslint-disable no-console */
 import { Tuple, configureStore } from '@reduxjs/toolkit';
-import { reducer as globalStoreReducer } from '@store/globalStore';
+import { InputType, reducer as globalStoreReducer } from '@store/globalStore';
 import { reducer as staticStoreReducer } from '@store/staticStore';
-import { config } from '@tokens';
 import { isPromise } from '@utils';
 import { thunk } from 'redux-thunk';
 import type { Dispatch } from '@reduxjs/toolkit';
 
 const initialState = {
   static: {
-    reviewMinutes: 2,
     loadTime: Date.now(),
+    reviewMinutes: 2,
   },
   global: {
     developerMode: false,
+    inputType: InputType.circle,
     axis: {
-      status: false,
       angle: 0,
+      status: false,
     },
     activeKey: {
+      field: undefined,
+      group: undefined,
       x: 0,
       y: 0,
-      group: undefined,
-      field: undefined,
     },
-    showAds: false,
-    personalisedAds: false,
-    unlocked: !config.ads,
   },
 };
 

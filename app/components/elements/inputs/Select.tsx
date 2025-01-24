@@ -2,7 +2,6 @@ import React from 'react';
 import {
   Modal, ScrollView, Text, TouchableOpacity, TouchableWithoutFeedback, View,
 } from 'react-native';
-import { useNavigate } from 'react-router-native';
 import Arrow from '@assets/icons/Arrow';
 import colors from '@styles/colors';
 import scalesChordsStyle from '@styles/scales_chords';
@@ -18,22 +17,13 @@ type Props = {
   value: Option | undefined,
   options: Option[],
   isOpen: boolean,
-  unlocked: boolean,
   onSelect: (option: Option) => void,
   onOpen: () => void,
   onClose: () => void,
 };
 
 function Select(props: Props) {
-  const navigate = useNavigate();
-
-  const handleSelect = (option: Option, index: number) => {
-    if (!props.unlocked && index !== 0) {
-      navigate('/rewarded');
-
-      return;
-    }
-
+  const handleSelect = (option: Option) => {
     props.onSelect(option);
   };
 
@@ -80,13 +70,12 @@ function Select(props: Props) {
                     ? scalesChordsStyle.selectItemNoBorder
                     : scalesChordsStyle.selectItem
                 }
-                onPress={() => handleSelect(option, index)}
+                onPress={() => handleSelect(option)}
               >
                 <Text
-                  style={[props.unlocked || index === 0 ? scalesChordsStyle.selectText : scalesChordsStyle.selectDisabledText,
+                  style={[scalesChordsStyle.selectText,
                     {
-                      color: colors.whiteGray,
-                      ...(props.unlocked && { color: colors.black }),
+                      color: colors.black,
                       ...(props.value?.name === option.name && { color: colors.blue }),
                     },
                   ]}

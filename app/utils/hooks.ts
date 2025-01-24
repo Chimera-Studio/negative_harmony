@@ -1,7 +1,4 @@
-import {
-  useContext, useEffect, useRef, useState,
-} from 'react';
-import { RewardedAd } from 'react-native-google-mobile-ads';
+import { useContext, useRef } from 'react';
 import InAppReview from 'react-native-in-app-review';
 import Sound from 'react-native-sound';
 import { useDispatch, useSelector } from 'react-redux';
@@ -10,8 +7,6 @@ import { useLocation } from 'react-router-native';
 import { PortalContext } from '@context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { localStorageKeys } from '@tokens';
-import { rewardedKeywords } from '@tokens/keywords';
-import { isPromise } from '@utils';
 import { symbolFlat, symbolSharp } from '@utils/patterns';
 import { addMonths, minutesToMilliseconds } from 'date-fns';
 import {
@@ -58,14 +53,9 @@ export const useAppDispatch: () => AppDispatch = useDispatch;
 export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
 
 export const useReview = () => {
-  const { loadTime, reviewMinutes, unlocked }: {
-    loadTime: number,
-    reviewMinutes: number,
-    unlocked: boolean,
-  } = useAppSelector((state) => ({
+  const { loadTime, reviewMinutes }: { loadTime: number, reviewMinutes: number } = useAppSelector((state) => ({
     loadTime: state.static.loadTime,
     reviewMinutes: state.static.reviewMinutes,
-    unlocked: state.global.unlocked,
   }), isEqual);
   const isAvailable = InAppReview.isAvailable();
 
@@ -75,7 +65,7 @@ export const useReview = () => {
 
     if (!isAvailable) return;
 
-    if (unlocked && reviewEnabled) {
+    if (reviewEnabled) {
       const reviewTimestamp = await localStorage.getItem(localStorageKeys.reviewTimestamp);
 
       if (!reviewTimestamp || Number(reviewTimestamp) <= currentTime) {
@@ -96,38 +86,17 @@ export const useLocationInfo = () => {
   const location = useLocation();
   const isScales = location.pathname === '/';
   const isChords = location.pathname === '/chords';
-  const isRewarded = location.pathname === '/rewarded';
   const isInfo = location.pathname === '/info';
 
   return {
     current: location.pathname,
     isScales,
     isChords,
-    isRewarded,
     isInfo,
   };
 };
 
 export const useTeleport = () => useContext(PortalContext);
-
-export const useRewardedAd = (rewardedId: string, showPersonalisedAds: boolean) => {
-  const [rewardedAd, setRewardedAd] = useState<RewardedAd | null>(null);
-
-  useEffect(() => {
-    const handleNewAd = () => {
-      const response = RewardedAd.createForAdRequest(rewardedId, {
-        requestNonPersonalizedAdsOnly: !showPersonalisedAds,
-        keywords: rewardedKeywords,
-      });
-      setRewardedAd(response);
-    };
-
-    if (!rewardedAd || !isPromise(rewardedAd)) handleNewAd();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  return rewardedAd;
-};
 
 export enum ChordPlaying {
   positive = 'positive',

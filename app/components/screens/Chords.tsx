@@ -5,7 +5,7 @@ import {
 import { Link } from 'react-router-native';
 import Disclaimer from '@assets/icons/Disclaimer';
 import BottomChords from '@components/containers/bottom/BottomChords';
-import TonicSlider from '@components/containers/tonic-slider/TonicSlider';
+import TonicSlider from '@components/containers/notes/TonicSlider';
 import Select from '@components/elements/inputs/Select';
 import Legend from '@components/elements/misc/Legend';
 import LegendExtra from '@components/elements/misc/LegendExtra';
@@ -197,7 +197,6 @@ function Chords() {
             value={selectedChord}
             options={lists.chords}
             isOpen={openSelect}
-            unlocked={global.unlocked}
             onSelect={handleSelect}
             onOpen={() => setOpenSelect(true)}
             onClose={() => setOpenSelect(false)}
@@ -216,7 +215,6 @@ function Chords() {
 
       <TonicSlider
         scales={global.scales as any}
-        unlocked={global.unlocked}
         value={tonic}
         onPress={handleTonic}
       />

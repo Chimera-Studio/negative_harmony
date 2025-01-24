@@ -3,7 +3,6 @@ import { Text, View } from 'react-native';
 import ChordSounds from '@components/elements/inputs/ChordSounds';
 import bottomStyle from '@styles/bottom';
 import colors from '@styles/colors';
-import mainStyle from '@styles/main';
 import { includes, map } from 'lodash';
 import type { ChordData } from '@components/screens/Chords';
 import type { Note } from '@utils/hooks';
@@ -115,7 +114,6 @@ function BottomChords(props: Props) {
                 ))}
               </View>
             </View>
-            <View style={mainStyle.adSpace} />
           </View>
         )}
       </View>

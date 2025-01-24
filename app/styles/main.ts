@@ -67,22 +67,6 @@ const mainStyle = StyleSheet.create({
     top: isiPhone ? 0 : 10,
     width: 25,
   },
-  ads: {
-    alignItems: 'center',
-    // backgroundColor: colors.black,
-    bottom: isiPhone ? '4.5%' : '2%',
-    display: 'flex',
-    height: '10%',
-    justifyContent: 'flex-end',
-    position: 'absolute',
-    width: '100%',
-    zIndex: 999,
-  },
-  adSpace: {
-    // backgroundColor: colors.black,
-    height: deviceHeight * (isApple ? 0.1 : 0.14),
-    width: '100%',
-  },
 });
 
 export default mainStyle;

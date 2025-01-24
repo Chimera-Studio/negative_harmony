@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import {
-  Animated, Easing, ScrollView, Text, TouchableOpacity, View,
+  Animated, Easing, ScrollView, Text, TouchableOpacity,
 } from 'react-native';
 import { Link } from 'react-router-native';
 import Exit from '@assets/icons/Exit';
@@ -92,7 +92,6 @@ function Info() {
           {t('info.email')}
         </Text>
       </ScrollView>
-      <View style={mainStyle.adSpace} />
     </Animated.View>
   );
 }

@@ -19,17 +19,6 @@ jest.doMock('react-native', () => Object.setPrototypeOf(
         eventsAddListener: jest.fn(),
         eventsNotifyReady: jest.fn(),
       },
-      RNGoogleMobileAdsModule: {
-        addListener: jest.fn(),
-        removeListeners: jest.fn(),
-        eventsAddListener: jest.fn(),
-        eventsNotifyReady: jest.fn(),
-      },
-      RNGoogleMobileAdsInterstitialModule: {
-        interstitialLoad: jest.fn(),
-      },
-      RNGoogleMobileAdsRewardedModule: {},
-      RNGoogleMobileAdsConsentModule: {},
     },
     TurboModuleRegistry: {
       getEnforcing: () => ({

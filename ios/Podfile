@@ -31,8 +31,6 @@ target 'NegativeHarmony' do
   # CUSTOM DEPS - START
   pod 'RNCAsyncStorage', :path => '../node_modules/@react-native-async-storage/async-storage'
 
-  pod 'RNGoogleMobileAds', :path => '../node_modules/react-native-google-mobile-ads'
-
   pod 'RNDeviceInfo', :path => '../node_modules/react-native-device-info'
 
   pod 'RNSound', :path => '../node_modules/react-native-sound'
