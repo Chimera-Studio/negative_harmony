@@ -5,14 +5,14 @@ import {
 } from 'react-native-svg';
 import Logo from '@components/elements/misc/Logo';
 import colors from '@styles/colors';
-import scalesChordsStyle from '@styles/scales_chords';
+import scalesStyle from '@styles/scales';
 import { ScaleKeys } from '@utils/patterns';
 import type { ActiveKey, Axis } from '@store/globalStore';
 
 type Props = {
   axis: Axis,
   activeKey: ActiveKey,
-  handleKey: (key: ScaleKeys, value: number, angle: number) => void,
+  handleKey: (group: ScaleKeys, noteIndex: number, angle: number) => void,
 };
 
 function Circle(props: Props) {
@@ -24,10 +24,10 @@ function Circle(props: Props) {
   const activeKeyColorSymbol = colors.whiteGray;
 
   return (
-    <View style={scalesChordsStyle.circleWrapper}>
+    <View style={scalesStyle.circleWrapper}>
       <Svg
         viewBox="-30 -30 690 690"
-        style={scalesChordsStyle.circleKeys}
+        style={scalesStyle.circleKeys}
         height="90%"
         width="90%"
       >

@@ -4,7 +4,7 @@ import {
 } from 'react-native';
 import Arrow from '@assets/icons/Arrow';
 import colors from '@styles/colors';
-import scalesChordsStyle from '@styles/scales_chords';
+import selectStyle from '@styles/select';
 import map from 'lodash/map';
 
 export type Option = Object & {
@@ -30,20 +30,20 @@ function Select(props: Props) {
   return (
     <>
       <View style={{ width: '100%' }}>
-        <Text style={scalesChordsStyle.selectTextExp}>
+        <Text style={selectStyle.selectTextExp}>
           {props.title}
         </Text>
         {props.children}
 
         <TouchableOpacity
           activeOpacity={0.6}
-          style={scalesChordsStyle.selectInput}
+          style={selectStyle.selectInput}
           onPress={() => props.onOpen()}
         >
-          <Text style={scalesChordsStyle.selectInputText}>
+          <Text style={selectStyle.selectInputText}>
             {props.value?.name}
           </Text>
-          <Arrow style={scalesChordsStyle.selectListArrow} />
+          <Arrow style={selectStyle.selectListArrow} />
         </TouchableOpacity>
       </View>
 
@@ -55,25 +55,25 @@ function Select(props: Props) {
         transparent
       >
         <TouchableWithoutFeedback onPress={props.onClose}>
-          <View style={scalesChordsStyle.selectListOverlay} />
+          <View style={selectStyle.selectListOverlay} />
         </TouchableWithoutFeedback>
-        <View style={scalesChordsStyle.selectListWrapper}>
+        <View style={selectStyle.selectListWrapper}>
           <ScrollView
             showsVerticalScrollIndicator={false}
-            style={scalesChordsStyle.selectList}
+            style={selectStyle.selectList}
           >
             {map(props.options, (option: Option, index) => (
               <TouchableOpacity
                 key={option.name}
                 style={
                   index === props.options.length - 1
-                    ? scalesChordsStyle.selectItemNoBorder
-                    : scalesChordsStyle.selectItem
+                    ? selectStyle.selectItemNoBorder
+                    : selectStyle.selectItem
                 }
                 onPress={() => handleSelect(option)}
               >
                 <Text
-                  style={[scalesChordsStyle.selectText,
+                  style={[selectStyle.selectText,
                     {
                       color: colors.black,
                       ...(props.value?.name === option.name && { color: colors.blue }),

@@ -1,3 +1,18 @@
+export enum ScaleKeys {
+  keyG1 = 'G1',
+  keyG2 = 'G2',
+  keyG3 = 'G3',
+  keyG4 = 'G4',
+  keyG5 = 'G5',
+  keyG6 = 'G6',
+  keyG7 = 'G7',
+  keyG8 = 'G8',
+  keyG9 = 'G9',
+  keyG10 = 'G10',
+  keyG11 = 'G11',
+  keyG12 = 'G12',
+}
+
 export const symbolSharp = '♯';
 export const symbolFlat = '♭';
 export const musicScale = [
@@ -15,20 +30,68 @@ export const musicScale = [
   'B',
 ];
 
-export enum ScaleKeys {
-  keyG1 = 'G1',
-  keyG2 = 'G2',
-  keyG3 = 'G3',
-  keyG4 = 'G4',
-  keyG5 = 'G5',
-  keyG6 = 'G6',
-  keyG7 = 'G7',
-  keyG8 = 'G8',
-  keyG9 = 'G9',
-  keyG10 = 'G10',
-  keyG11 = 'G11',
-  keyG12 = 'G12',
-}
+export const gridScale = [
+  {
+    angle: 0,
+    group: ScaleKeys.keyG1,
+    noteIndex: 0,
+  },
+  {
+    angle: 210,
+    group: ScaleKeys.keyG6,
+    noteIndex: 1,
+  },
+  {
+    angle: 60,
+    group: ScaleKeys.keyG11,
+    noteIndex: 2,
+  },
+  {
+    angle: 270,
+    group: ScaleKeys.keyG4,
+    noteIndex: 3,
+  },
+  {
+    angle: 120,
+    group: ScaleKeys.keyG9,
+    noteIndex: 4,
+  },
+  {
+    angle: 330,
+    group: ScaleKeys.keyG2,
+    noteIndex: 5,
+  },
+  {
+    angle: 180,
+    group: ScaleKeys.keyG7,
+    noteIndex: 6,
+  },
+  {
+    angle: 30,
+    group: ScaleKeys.keyG12,
+    noteIndex: 7,
+  },
+  {
+    angle: 240,
+    group: ScaleKeys.keyG5,
+    noteIndex: 8,
+  },
+  {
+    angle: 90,
+    group: ScaleKeys.keyG10,
+    noteIndex: 9,
+  },
+  {
+    angle: 300,
+    group: ScaleKeys.keyG3,
+    noteIndex: 10,
+  },
+  {
+    angle: 150,
+    group: ScaleKeys.keyG8,
+    noteIndex: 11,
+  },
+];
 
 export const scales = {
   major: [0, 2, 4, 5, 7, 9, 11, 0],

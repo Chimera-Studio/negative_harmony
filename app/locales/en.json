@@ -7,6 +7,7 @@
   "legend": {
     "switch_input": {
       "prompt": "If you can't tap on a field in the circle",
+      "prompt_alt": "If you want to view the circle of fifths",
       "cta": "Click here to switch input type"
     }
   },

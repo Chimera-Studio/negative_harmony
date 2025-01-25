@@ -11,8 +11,11 @@ import Legend from '@components/elements/misc/Legend';
 import LegendExtra from '@components/elements/misc/LegendExtra';
 import useLocale from '@locales';
 import { selectors } from '@store/globalStore';
+import chordsStyle from '@styles/chords';
 import colors from '@styles/colors';
-import scalesChordsStyle from '@styles/scales_chords';
+import legendStyle from '@styles/legend';
+import scalesStyle from '@styles/scales';
+import selectStyle from '@styles/select';
 import { useAppSelector, useReview } from '@utils/hooks';
 import { chordList, scaleList } from '@utils/patterns';
 import {
@@ -173,21 +176,21 @@ function Chords() {
 
   return (
     <Animated.View
-      style={[scalesChordsStyle.wrapper, { opacity: screenOpacity }]}
+      style={[chordsStyle.wrapper, { opacity: screenOpacity }]}
     >
-      <View style={scalesChordsStyle.selectChordsWrapper}>
+      <View style={selectStyle.selectChordsWrapper}>
         {global.showLegend ? (
-          <View style={scalesChordsStyle.legendContainer}>
-            <Legend style={scalesChordsStyle.legend} />
+          <View style={legendStyle.legendContainer}>
+            <Legend style={legendStyle.legend} />
 
-            <View style={scalesChordsStyle.legendExtra}>
+            <View style={legendStyle.legendExtra}>
               <LegendExtra style={{ flexShrink: 1 }} />
               <Link
                 to="/info"
                 underlayColor={colors.transparent}
-                style={scalesChordsStyle.disclaimerBtn}
+                style={legendStyle.disclaimerBtn}
               >
-                <Disclaimer style={scalesChordsStyle.disclaimer} />
+                <Disclaimer style={legendStyle.disclaimer} />
               </Link>
             </View>
           </View>
@@ -201,11 +204,11 @@ function Chords() {
             onOpen={() => setOpenSelect(true)}
             onClose={() => setOpenSelect(false)}
           >
-            <View style={scalesChordsStyle.selectedScaleNameWrapper}>
-              <Text style={scalesChordsStyle.selectedScaleKey}>
+            <View style={scalesStyle.selectedScaleNameWrapper}>
+              <Text style={scalesStyle.selectedScaleKey}>
                 {get(global, 'scales.positive[0]', '')}
               </Text>
-              <Text style={scalesChordsStyle.selectedScaleName}>
+              <Text style={scalesStyle.selectedScaleName}>
                 {selectedScale?.name}
               </Text>
             </View>
