@@ -53,7 +53,7 @@ function TonicSlider(props: Props) {
             <React.Fragment key={note + index}>
               {props.scales.positive.length - 1 !== index && (
               <TouchableHighlight
-                style={index === props.value ? chordsStyle.scrollChordsNoteSelected : chordsStyle.scrollChordsNote}
+                style={[chordsStyle.scrollChordsNote, index === props.value && chordsStyle.scrollChordsNoteSelected]}
                 underlayColor={colors.lightBlue}
                 activeOpacity={1}
                 onPress={() => handlePress(index)}
