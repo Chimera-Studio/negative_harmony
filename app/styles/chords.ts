@@ -35,11 +35,12 @@ const chordsStyle = StyleSheet.create({
     marginBottom: 24,
   },
   scrollChordsSpace: {
-    backgroundColor: colors.white,
+    backgroundColor: colors.transparent,
     height: 90,
   },
   scrollChordsNoteSelected: {
     backgroundColor: colors.blue,
+    borderColor: colors.blue,
   },
   scrollChordsNote: {
     alignItems: 'center',

@@ -1515,7 +1515,7 @@ PODS:
     - React-logger (= 0.76.6)
     - React-perflogger (= 0.76.6)
     - React-utils (= 0.76.6)
-  - RNCAsyncStorage (1.24.0):
+  - RNCAsyncStorage (2.1.0):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -1536,7 +1536,7 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - RNDeviceInfo (10.14.0):
+  - RNDeviceInfo (14.0.2):
     - React-Core
   - RNSound (0.11.2):
     - React-Core
@@ -1876,8 +1876,8 @@ SPEC CHECKSUMS:
   React-utils: e6697b03f21c7ac57b075d848cda7882662cabf7
   ReactCodegen: 484b223748d7489d7036db1cbf79896d297e33a7
   ReactCommon: 832cdd669aeecd430d9ca1975d15676b38d0b263
-  RNCAsyncStorage: 3ad840f7b17b45ca7ebbbb0e80948564a9513315
-  RNDeviceInfo: 59344c19152c4b2b32283005f9737c5c64b42fba
+  RNCAsyncStorage: fe98f1b459a87b80f12207da80c50b3a3abb6081
+  RNDeviceInfo: 3f2e5fcca3637f75c6d30ba287293c2f97206781
   RNSound: 6c156f925295bdc83e8e422e7d8b38d33bc71852
   RNSVG: ea3e35f0375ac20449384fa89ce056ee0e0690ee
   SocketRocket: d4aabe649be1e368d1318fdf28a022d714d65748

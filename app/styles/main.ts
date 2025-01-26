@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native';
+import { StatusBar, StyleSheet } from 'react-native';
 import { Font } from '@styles';
 import colors from '@styles/colors';
 import {
@@ -17,6 +17,7 @@ const mainStyle = StyleSheet.create({
     marginLeft: 'auto',
     marginRight: 'auto',
     maxWidth: 500,
+    paddingTop: isApple ? 0 : StatusBar.currentHeight,
     position: 'relative',
     width: '90%',
   },
