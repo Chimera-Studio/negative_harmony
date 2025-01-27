@@ -1,9 +1,8 @@
-import React, { useEffect, useRef, useState } from 'react';
-import {
-  Animated, Easing, ScrollView, Text, TouchableOpacity,
-} from 'react-native';
+import React, { useState } from 'react';
+import { ScrollView, Text, TouchableOpacity } from 'react-native';
 import { Link } from 'react-router-native';
 import Exit from '@assets/icons/Exit';
+import Main from '@components/containers/Main';
 import Alert from '@components/elements/misc/Alert';
 import useLocale from '@locales';
 import { actions } from '@store/globalStore';
@@ -19,7 +18,6 @@ function Info() {
   const dispatch = useAppDispatch();
   const { teleport } = useTeleport();
   const [secretDeviceIdTap, setSecretDeviceIdTap] = useState(0);
-  const screenOpacity = useRef(new Animated.Value(0)).current;
 
   const handleDeveloperModeToggle = () => {
     const tapCount = secretDeviceIdTap + 1;
@@ -37,24 +35,8 @@ function Info() {
     setSecretDeviceIdTap(tapCount);
   };
 
-  useEffect(() => {
-    const handleScreenAnimation = (to: any) => {
-      Animated.timing(screenOpacity, {
-        toValue: to,
-        duration: 500,
-        useNativeDriver: true,
-        easing: Easing.linear,
-      }).start();
-    };
-
-    handleScreenAnimation(1);
-
-    return () => handleScreenAnimation(0);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   return (
-    <Animated.View style={[infoStyle.wrapper, { opacity: screenOpacity }]}>
+    <Main style={infoStyle.wrapper}>
       <Link
         to="/chords"
         underlayColor={colors.transparent}
@@ -63,7 +45,7 @@ function Info() {
         <Exit color={colors.blue} />
       </Link>
       <Text style={infoStyle.title}>{t('info.title')}</Text>
-      <ScrollView showsVerticalScrollIndicator={false}>
+      <ScrollView contentContainerStyle={infoStyle.container} showsVerticalScrollIndicator={false}>
         <Text style={infoStyle.text}>
           {t('info.disclaimer_1')}{' '}
           <Text
@@ -92,7 +74,7 @@ function Info() {
           {t('info.email')}
         </Text>
       </ScrollView>
-    </Animated.View>
+    </Main>
   );
 }
 

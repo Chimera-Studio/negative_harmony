@@ -1,10 +1,9 @@
-import React, { useEffect, useRef, useState } from 'react';
-import {
-  Animated, Easing, Text, View,
-} from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { Text, View } from 'react-native';
 import { Link } from 'react-router-native';
 import Disclaimer from '@assets/icons/Disclaimer';
 import BottomChords from '@components/containers/bottom/BottomChords';
+import Main from '@components/containers/Main';
 import TonicSlider from '@components/containers/notes/TonicSlider';
 import Select from '@components/elements/inputs/Select';
 import Legend from '@components/elements/misc/Legend';
@@ -39,7 +38,6 @@ function Chords() {
   const [chords, setChords] = useState<ChordData | null>(null);
   const [tonic, setTonic] = useState(0);
   const [openSelect, setOpenSelect] = useState(false);
-  const screenOpacity = useRef(new Animated.Value(0)).current;
   const selectedScale = global.selectedScale || lists.scales[0];
 
   const handleChords = (selected: Object | undefined, tonicIndex: number) => {
@@ -146,19 +144,7 @@ function Chords() {
   };
 
   useEffect(() => {
-    const handleScreenAnimation = (to: any) => {
-      Animated.timing(screenOpacity, {
-        toValue: to,
-        duration: 500,
-        useNativeDriver: true,
-        easing: Easing.linear,
-      }).start();
-    };
-
-    handleScreenAnimation(1);
     handleChords(selectedChord, tonic);
-
-    return () => handleScreenAnimation(0);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -175,9 +161,7 @@ function Chords() {
   };
 
   return (
-    <Animated.View
-      style={[chordsStyle.wrapper, { opacity: screenOpacity }]}
-    >
+    <Main style={chordsStyle.wrapper}>
       <View style={selectStyle.selectChordsWrapper}>
         {global.showLegend ? (
           <View style={legendStyle.legendContainer}>
@@ -216,13 +200,9 @@ function Chords() {
         )}
       </View>
 
-      <TonicSlider
-        scales={global.scales as any}
-        value={tonic}
-        onPress={handleTonic}
-      />
+      <TonicSlider scales={global.scales as any} value={tonic} onPress={handleTonic} />
       <BottomChords data={chords} />
-    </Animated.View>
+    </Main>
   );
 }
 

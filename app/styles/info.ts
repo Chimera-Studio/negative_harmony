@@ -10,6 +10,9 @@ const infoStyle = StyleSheet.create({
     flex: 1,
     marginTop: isiPhone ? 0 : 10,
   },
+  container: {
+    paddingBottom: 100,
+  },
   title: {
     color: colors.black,
     fontFamily: Font.bold,

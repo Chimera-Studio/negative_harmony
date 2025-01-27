@@ -1,8 +1,7 @@
-import React, { useEffect, useRef, useState } from 'react';
-import {
-  Animated, Easing, Text, TouchableOpacity, View,
-} from 'react-native';
+import React, { useState } from 'react';
+import { Text, TouchableOpacity, View } from 'react-native';
 import BottomScales from '@components/containers/bottom/BottomScales';
+import Main from '@components/containers/Main';
 import Circle from '@components/containers/notes/Circle';
 import Grid from '@components/containers/notes/Grid';
 import Select from '@components/elements/inputs/Select';
@@ -18,31 +17,14 @@ import {
 import { ScaleKeys, musicScale, scaleList } from '@utils/patterns';
 import { isEqual, times } from 'lodash';
 
-export function Scales() {
+function Scales() {
   const { t } = useLocale();
   const { close } = useTeleport();
   const reviewApp = useReview();
   const dispatch = useAppDispatch();
   const global = useAppSelector(selectors.getGlobal, isEqual);
   const [openSelect, setOpenSelect] = useState(false);
-  const screenOpacity = useRef(new Animated.Value(0)).current;
   const selectedScale = global.selectedScale || scaleList[0];
-
-  useEffect(() => {
-    const handleScreenAnimation = (to: any) => {
-      Animated.timing(screenOpacity, {
-        toValue: to,
-        duration: 500,
-        useNativeDriver: true,
-        easing: Easing.linear,
-      }).start();
-    };
-
-    handleScreenAnimation(1);
-
-    return () => handleScreenAnimation(0);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   const toggleInputType = () => {
     const type = global.inputType === InputType.circle ? InputType.grid : InputType.circle;
@@ -141,9 +123,7 @@ export function Scales() {
   };
 
   return (
-    <Animated.View
-      style={[scalesStyle.wrapper, { opacity: screenOpacity }]}
-    >
+    <Main style={scalesStyle.wrapper}>
       <View style={selectStyle.selectWrapper}>
         {global.showLegend ? (
           <View style={[legendStyle.legendContainer, legendStyle.legendContainerOffset]}>
@@ -179,7 +159,7 @@ export function Scales() {
         <Grid activeKey={global.activeKey} handleKey={handleKey} />
       )}
       <BottomScales data={global.scales} />
-    </Animated.View>
+    </Main>
   );
 }
 
