@@ -4,14 +4,15 @@
     "scales": "Scales",
     "chords": "Chords"
   },
+  "legend": {
+    "switch_input": {
+      "prompt": "If you can't tap on a field in the circle",
+      "prompt_alt": "If you want to view the circle of fifths",
+      "cta": "Click here to switch input type"
+    }
+  },
   "alert": {
     "no_key": "You need to tap on a field!",
-    "codepush_syncing": {
-      "text_1": "Switching to ",
-      "text_2": ", this could take a while...",
-      "Production": "Staging",
-      "Staging": "Production"
-    },
     "developer": "Developer mode turned on!"
   },
   "select": {
@@ -19,18 +20,9 @@
     "chords": "Select a chord from a key of:",
     "tonics": "Choose a tonic:"
   },
-  "cta": {
-    "chords": "Unlock negative chords"
-  },
   "chords": {
     "no_match": "???",
     "play_both": "Play both Chords"
-  },
-  "rewarded": {
-    "paragraph_1": "To unlock chords",
-    "paragraph_2": "watch this Advert:",
-    "cta": "Watch the Ad",
-    "disclaimer": "If no Advert is shown come back a bit later"
   },
   "info": {
     "title": "Information",

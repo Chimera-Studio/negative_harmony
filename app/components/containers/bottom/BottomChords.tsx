@@ -1,12 +1,11 @@
 import React from 'react';
 import { Text, View } from 'react-native';
+import ChordSounds from '@components/elements/inputs/ChordSounds';
+import bottomStyle from '@styles/bottom';
+import colors from '@styles/colors';
 import { includes, map } from 'lodash';
-import bottomStyle from '../../../styles/bottom';
-import colors from '../../../styles/colors';
-import mainStyle from '../../../styles/main';
-import ChordSounds from '../../elements/inputs/ChordSounds';
-import type { Note } from '../../../utils/hooks';
-import type { ChordData } from '../../screens/Chords';
+import type { ChordData } from '@components/screens/Chords';
+import type { Note } from '@utils/hooks';
 
 type Props = {
   data: ChordData | null,
@@ -115,7 +114,6 @@ function BottomChords(props: Props) {
                 ))}
               </View>
             </View>
-            <View style={mainStyle.adSpace} />
           </View>
         )}
       </View>

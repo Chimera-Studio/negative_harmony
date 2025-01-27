@@ -1,7 +1,7 @@
 import { StyleSheet } from 'react-native';
-import { Font } from '.';
-import colors from './colors';
-import { isiPhone } from '../utils';
+import { Font } from '@styles';
+import colors from '@styles/colors';
+import { isiPhone } from '@utils';
 
 const infoStyle = StyleSheet.create({
   wrapper: {
@@ -9,6 +9,9 @@ const infoStyle = StyleSheet.create({
     display: 'flex',
     flex: 1,
     marginTop: isiPhone ? 0 : 10,
+  },
+  container: {
+    paddingBottom: 100,
   },
   title: {
     color: colors.black,

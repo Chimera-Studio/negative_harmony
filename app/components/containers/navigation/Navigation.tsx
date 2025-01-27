@@ -1,23 +1,18 @@
-import React, { useState } from 'react';
-import {
-  Modal, Text, TouchableOpacity, View,
-} from 'react-native';
-import CodePush from 'react-native-code-push';
+import React from 'react';
+import { Text, TouchableOpacity, View } from 'react-native';
 import { Link, useNavigate } from 'react-router-native';
-import { secondsToMilliseconds } from 'date-fns';
-import { isEmpty, isEqual } from 'lodash';
-import Info from '../../../assets/icons/Info';
-import useLocale from '../../../locales';
-import { actions, selectors } from '../../../store/globalStore';
-import colors from '../../../styles/colors';
-import mainStyle from '../../../styles/main';
-import navigationStyle from '../../../styles/navigation';
-import { codepush } from '../../../tokens';
-import { deviceInfo } from '../../../utils';
+import Info from '@assets/icons/Info';
+import Alert from '@components/elements/misc/Alert';
+import useLocale from '@locales';
+import { actions, selectors } from '@store/globalStore';
+import colors from '@styles/colors';
+import mainStyle from '@styles/main';
+import navigationStyle from '@styles/navigation';
 import {
   useAppDispatch, useAppSelector, useLocationInfo, useTeleport,
-} from '../../../utils/hooks';
-import Alert from '../../elements/misc/Alert';
+} from '@utils/hooks';
+import { secondsToMilliseconds } from 'date-fns';
+import { isEmpty, isEqual } from 'lodash';
 
 function Navigation() {
   const dispatch = useAppDispatch();
@@ -30,9 +25,6 @@ function Navigation() {
     scales: selectors.getScales(state),
     showLegend: state.global.showLegend,
   }), isEqual);
-  const codepushEnvironment = useAppSelector(selectors.getCodepushEnvironment, isEqual);
-  const [codepushSyncing, setCodepushSyncing] = useState(false);
-  const isProduction = codepushEnvironment === 'Production';
 
   const handleAlert = (e: any) => {
     if (isEmpty(scales)) {
@@ -43,19 +35,6 @@ function Navigation() {
         </Alert>,
       );
     }
-  };
-
-  const handleAppEnvironment = () => {
-    const key = isProduction ? codepush[deviceInfo.isApple ? 'ios' : 'android'].staging : codepush[deviceInfo.isApple ? 'ios' : 'android'].production;
-
-    setCodepushSyncing(true);
-    CodePush.clearUpdates();
-    CodePush.sync({
-      deploymentKey: key,
-      installMode: CodePush.InstallMode.IMMEDIATE,
-    }).finally(() => {
-      setCodepushSyncing(false);
-    });
   };
 
   const handleAdminRedirect = () => {
@@ -82,24 +61,12 @@ function Navigation() {
           {t(locationInfo.isScales ? 'links.scales' : 'links.chords')}
         </Text>
       </Link>
-      {developerMode && (
-        <TouchableOpacity style={navigationStyle.appEnvironment} activeOpacity={0.8} onPress={handleAppEnvironment}>
-          <Text style={navigationStyle.appEnvironmentText}>{codepushEnvironment}</Text>
-        </TouchableOpacity>
-      )}
-      <TouchableOpacity onPress={() => dispatch(actions.showLegend(!showLegend))} onLongPress={handleAdminRedirect}>
+      <TouchableOpacity
+        onPress={() => dispatch(actions.showLegend(!showLegend))}
+        onLongPress={handleAdminRedirect}
+      >
         <Info style={navigationStyle.info} />
       </TouchableOpacity>
-
-      <Modal animationType="fade" visible={codepushSyncing} statusBarTranslucent transparent>
-        <Alert>
-          <Text style={[mainStyle.alertText, { fontSize: 14 }]}>
-            {t('alert.codepush_syncing.text_1')}
-            {t('alert.codepush_syncing.' + codepushEnvironment)}
-            {t('alert.codepush_syncing.text_2')}
-          </Text>
-        </Alert>
-      </Modal>
     </View>
   );
 }

@@ -18,14 +18,14 @@ if ARGV[0] != '--android' && ARGV[0] != '--ios'
 end
 
 if ARGV[0] == '--android'
-  ENV["RELEASE_KEYSTORE_PASSWORD"] = SECRETS['RELEASE_SECRETS']['RELEASE_KEYSTORE_PASSWORD']
-  ENV["RELEASE_KEYSTORE_KEY_PASSWORD"] = SECRETS['RELEASE_SECRETS']['RELEASE_KEYSTORE_KEY_PASSWORD']
   ENV["RELEASE_KEYSTORE_KEY_ALIAS"] = SECRETS['RELEASE_SECRETS']['RELEASE_KEYSTORE_KEY_ALIAS']
+  ENV["RELEASE_KEYSTORE_KEY_PASSWORD"] = SECRETS['RELEASE_SECRETS']['RELEASE_KEYSTORE_KEY_PASSWORD']
+  ENV["RELEASE_KEYSTORE_PASSWORD"] = SECRETS['RELEASE_SECRETS']['RELEASE_KEYSTORE_PASSWORD']
 
   puts
-  puts "Keystore Password: #{ENV["RELEASE_KEYSTORE_PASSWORD"]}"
-  puts "Key Password: #{ENV["RELEASE_KEYSTORE_KEY_PASSWORD"]}"
   puts "Key Alias: #{ENV["RELEASE_KEYSTORE_KEY_ALIAS"]}"
+  puts "Key Password: #{ENV["RELEASE_KEYSTORE_KEY_PASSWORD"]}"
+  puts "Keystore Password: #{ENV["RELEASE_KEYSTORE_PASSWORD"]}"
   puts
 
   # Compile the JS code & assets
@@ -37,6 +37,13 @@ if ARGV[0] == '--android'
     system("cd android && ./gradlew assembleRelease && cd ..")
   else
     system("cd android && ./gradlew bundleRelease && cd ..")
+  end
+
+  puts
+  if ARGV[1] == '--apk'
+    puts "Build path: ./android/app/build/outputs/apk/release/app-release.apk"
+  else
+    puts "Build path: ./android/app/build/outputs/bundle/release/app-release.aab"
   end
   puts
   exit

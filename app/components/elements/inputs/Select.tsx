@@ -2,11 +2,10 @@ import React from 'react';
 import {
   Modal, ScrollView, Text, TouchableOpacity, TouchableWithoutFeedback, View,
 } from 'react-native';
-import { useNavigate } from 'react-router-native';
-import { map } from 'lodash';
-import Arrow from '../../../assets/icons/Arrow';
-import colors from '../../../styles/colors';
-import scalesChordsStyle from '../../../styles/scales_chords';
+import Arrow from '@assets/icons/Arrow';
+import colors from '@styles/colors';
+import selectStyle from '@styles/select';
+import map from 'lodash/map';
 
 export type Option = Object & {
   name: string,
@@ -18,42 +17,33 @@ type Props = {
   value: Option | undefined,
   options: Option[],
   isOpen: boolean,
-  unlocked: boolean,
   onSelect: (option: Option) => void,
   onOpen: () => void,
   onClose: () => void,
 };
 
 function Select(props: Props) {
-  const navigate = useNavigate();
-
-  const handleSelect = (option: Option, index: number) => {
-    if (!props.unlocked && index !== 0) {
-      navigate('/rewarded');
-
-      return;
-    }
-
+  const handleSelect = (option: Option) => {
     props.onSelect(option);
   };
 
   return (
     <>
       <View style={{ width: '100%' }}>
-        <Text style={scalesChordsStyle.selectTextExp}>
+        <Text style={selectStyle.selectTextExp}>
           {props.title}
         </Text>
         {props.children}
 
         <TouchableOpacity
           activeOpacity={0.6}
-          style={scalesChordsStyle.selectInput}
+          style={selectStyle.selectInput}
           onPress={() => props.onOpen()}
         >
-          <Text style={scalesChordsStyle.selectInputText}>
+          <Text style={selectStyle.selectInputText}>
             {props.value?.name}
           </Text>
-          <Arrow style={scalesChordsStyle.selectListArrow} />
+          <Arrow style={selectStyle.selectListArrow} />
         </TouchableOpacity>
       </View>
 
@@ -65,28 +55,27 @@ function Select(props: Props) {
         transparent
       >
         <TouchableWithoutFeedback onPress={props.onClose}>
-          <View style={scalesChordsStyle.selectListOverlay} />
+          <View style={selectStyle.selectListOverlay} />
         </TouchableWithoutFeedback>
-        <View style={scalesChordsStyle.selectListWrapper}>
+        <View style={selectStyle.selectListWrapper}>
           <ScrollView
             showsVerticalScrollIndicator={false}
-            style={scalesChordsStyle.selectList}
+            style={selectStyle.selectList}
           >
             {map(props.options, (option: Option, index) => (
               <TouchableOpacity
                 key={option.name}
                 style={
                   index === props.options.length - 1
-                    ? scalesChordsStyle.selectItemNoBorder
-                    : scalesChordsStyle.selectItem
+                    ? selectStyle.selectItemNoBorder
+                    : selectStyle.selectItem
                 }
-                onPress={() => handleSelect(option, index)}
+                onPress={() => handleSelect(option)}
               >
                 <Text
-                  style={[props.unlocked || index === 0 ? scalesChordsStyle.selectText : scalesChordsStyle.selectDisabledText,
+                  style={[selectStyle.selectText,
                     {
-                      color: colors.whiteGray,
-                      ...(props.unlocked && { color: colors.black }),
+                      color: colors.black,
                       ...(props.value?.name === option.name && { color: colors.blue }),
                     },
                   ]}

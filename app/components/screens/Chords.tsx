@@ -1,27 +1,26 @@
-import React, { useEffect, useRef, useState } from 'react';
-import {
-  Animated,
-  Easing,
-  Text,
-  View,
-} from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { Text, View } from 'react-native';
 import { Link } from 'react-router-native';
+import Disclaimer from '@assets/icons/Disclaimer';
+import BottomChords from '@components/containers/bottom/BottomChords';
+import Main from '@components/containers/Main';
+import TonicSlider from '@components/containers/notes/TonicSlider';
+import Select from '@components/elements/inputs/Select';
+import Legend from '@components/elements/misc/Legend';
+import LegendExtra from '@components/elements/misc/LegendExtra';
+import useLocale from '@locales';
+import { selectors } from '@store/globalStore';
+import chordsStyle from '@styles/chords';
+import colors from '@styles/colors';
+import legendStyle from '@styles/legend';
+import scalesStyle from '@styles/scales';
+import selectStyle from '@styles/select';
+import { useAppSelector, useReview } from '@utils/hooks';
+import { chordList, scaleList } from '@utils/patterns';
 import {
   forEach, get, includes, indexOf, isEqual, sortBy, times,
 } from 'lodash';
-import Disclaimer from '../../assets/icons/Disclaimer';
-import useLocale from '../../locales';
-import { selectors } from '../../store/globalStore';
-import colors from '../../styles/colors';
-import scalesChordsStyle from '../../styles/scales_chords';
-import { useAppSelector, useReview } from '../../utils/hooks';
-import { chordList, scaleList } from '../../utils/patterns';
-import BottomChords from '../containers/bottom/BottomChords';
-import TonicSlider from '../containers/tonic-slider/TonicSlider';
-import Select from '../elements/inputs/Select';
-import Legend from '../elements/misc/Legend';
-import LegendExtra from '../elements/misc/LegendExtra';
-import type { Note } from '../../utils/hooks';
+import type { Note } from '@utils/hooks';
 
 export type ChordData = {
   positive: Note[]
@@ -39,7 +38,6 @@ function Chords() {
   const [chords, setChords] = useState<ChordData | null>(null);
   const [tonic, setTonic] = useState(0);
   const [openSelect, setOpenSelect] = useState(false);
-  const screenOpacity = useRef(new Animated.Value(0)).current;
   const selectedScale = global.selectedScale || lists.scales[0];
 
   const handleChords = (selected: Object | undefined, tonicIndex: number) => {
@@ -146,19 +144,7 @@ function Chords() {
   };
 
   useEffect(() => {
-    const handleScreenAnimation = (to: any) => {
-      Animated.timing(screenOpacity, {
-        toValue: to,
-        duration: 500,
-        useNativeDriver: true,
-        easing: Easing.linear,
-      }).start();
-    };
-
-    handleScreenAnimation(1);
     handleChords(selectedChord, tonic);
-
-    return () => handleScreenAnimation(0);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -175,22 +161,20 @@ function Chords() {
   };
 
   return (
-    <Animated.View
-      style={[scalesChordsStyle.wrapper, { opacity: screenOpacity }]}
-    >
-      <View style={scalesChordsStyle.selectChordsWrapper}>
+    <Main style={chordsStyle.wrapper}>
+      <View style={selectStyle.selectChordsWrapper}>
         {global.showLegend ? (
-          <View style={scalesChordsStyle.legendContainer}>
-            <Legend style={scalesChordsStyle.legend} />
+          <View style={legendStyle.legendContainer}>
+            <Legend style={legendStyle.legend} />
 
-            <View style={scalesChordsStyle.legendExtra}>
+            <View style={legendStyle.legendExtra}>
               <LegendExtra style={{ flexShrink: 1 }} />
               <Link
                 to="/info"
                 underlayColor={colors.transparent}
-                style={scalesChordsStyle.disclaimerBtn}
+                style={legendStyle.disclaimerBtn}
               >
-                <Disclaimer style={scalesChordsStyle.disclaimer} />
+                <Disclaimer style={legendStyle.disclaimer} />
               </Link>
             </View>
           </View>
@@ -200,16 +184,15 @@ function Chords() {
             value={selectedChord}
             options={lists.chords}
             isOpen={openSelect}
-            unlocked={global.unlocked}
             onSelect={handleSelect}
             onOpen={() => setOpenSelect(true)}
             onClose={() => setOpenSelect(false)}
           >
-            <View style={scalesChordsStyle.selectedScaleNameWrapper}>
-              <Text style={scalesChordsStyle.selectedScaleKey}>
+            <View style={scalesStyle.selectedScaleNameWrapper}>
+              <Text style={scalesStyle.selectedScaleKey}>
                 {get(global, 'scales.positive[0]', '')}
               </Text>
-              <Text style={scalesChordsStyle.selectedScaleName}>
+              <Text style={scalesStyle.selectedScaleName}>
                 {selectedScale?.name}
               </Text>
             </View>
@@ -217,14 +200,9 @@ function Chords() {
         )}
       </View>
 
-      <TonicSlider
-        scales={global.scales as any}
-        unlocked={global.unlocked}
-        value={tonic}
-        onPress={handleTonic}
-      />
+      <TonicSlider scales={global.scales as any} value={tonic} onPress={handleTonic} />
       <BottomChords data={chords} />
-    </Animated.View>
+    </Main>
   );
 }
 

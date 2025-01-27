@@ -1,6 +1,6 @@
 import React from 'react';
 import { Path, Svg } from 'react-native-svg';
-import colors from '../../styles/colors';
+import colors from '@styles/colors';
 
 type Props = {
   style?: Object,

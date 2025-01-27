@@ -1,9 +1,9 @@
-import { StyleSheet } from 'react-native';
-import { Font } from '.';
-import colors from './colors';
+import { StatusBar, StyleSheet } from 'react-native';
+import { Font } from '@styles';
+import colors from '@styles/colors';
 import {
   deviceHeight, deviceWidth, isApple, isiPhone,
-} from '../utils';
+} from '@utils';
 
 const mainStyle = StyleSheet.create({
   container: {
@@ -17,6 +17,7 @@ const mainStyle = StyleSheet.create({
     marginLeft: 'auto',
     marginRight: 'auto',
     maxWidth: 500,
+    paddingTop: isApple ? 0 : StatusBar.currentHeight,
     position: 'relative',
     width: '90%',
   },
@@ -66,22 +67,6 @@ const mainStyle = StyleSheet.create({
     right: 0,
     top: isiPhone ? 0 : 10,
     width: 25,
-  },
-  ads: {
-    alignItems: 'center',
-    // backgroundColor: colors.black,
-    bottom: isiPhone ? '4.5%' : '2%',
-    display: 'flex',
-    height: '10%',
-    justifyContent: 'flex-end',
-    position: 'absolute',
-    width: '100%',
-    zIndex: 999,
-  },
-  adSpace: {
-    // backgroundColor: colors.black,
-    height: deviceHeight * (isApple ? 0.1 : 0.14),
-    width: '100%',
   },
 });
 

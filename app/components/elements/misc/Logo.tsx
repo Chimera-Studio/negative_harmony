@@ -1,8 +1,8 @@
 import React, { useEffect, useRef } from 'react';
 import { Animated, Easing } from 'react-native';
+import Icon from '@assets/icons/Icon';
+import scalesStyle from '@styles/scales';
 import { secondsToMilliseconds } from 'date-fns';
-import Icon from '../../../assets/icons/Icon';
-import scalesChordsStyles from '../../../styles/scales_chords';
 
 type Props = {
   animationSpeed?: number,
@@ -11,8 +11,12 @@ type Props = {
 
 function Logo(props: Props) {
   const rotate = useRef(new Animated.Value(0)).current;
+  const isFirstLoad = useRef(true);
 
   useEffect(() => {
+    if (!isFirstLoad.current) return;
+    isFirstLoad.current = false;
+
     const startAnimation = () => {
       Animated.timing(rotate, {
         toValue: 1,
@@ -32,7 +36,7 @@ function Logo(props: Props) {
   return (
     <Animated.View
       style={[
-        scalesChordsStyles.icon,
+        scalesStyle.icon,
         {
           ...props.style,
           transform: [

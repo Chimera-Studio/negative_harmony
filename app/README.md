@@ -56,21 +56,6 @@ Add `env.json` file to root directory
         "RELEASE_KEYSTORE_PASSWORD": "<secret>",
         "RELEASE_KEYSTORE_KEY_PASSWORD": "<secret>",
         "RELEASE_KEYSTORE_KEY_ALIAS": "<secret>"
-    },
-    "CONFIG": {
-        "KEEP_REWARDS": 6, // hours
-        "RESET_REWARDS": 24, // hours
-        "ADS": true,
-        "AD_IDS": {
-            "BANNER": {
-                "IOS": "<secret>",
-                "ANDROID": "<secret>"
-            },
-            "REWARDED": {
-                "IOS": "<secret>",
-                "ANDROID": "<secret>"
-            }
-        }
     }
 }
 ```
@@ -89,16 +74,3 @@ yarn release --android --apk
 
 **iOS**
 You have to build it using Xcode `archive` command
-
-### Deploying to CodePush (OTA updates)
-!!! `codepush-cli` needed !!!
-
-To deploy the app with CodePush
-
-Arguments:
-1. `--all` / `--android` / `--ios` (required)
-2. `--production` / `--promote` (optional)
-
-```sh
-yarn deploy ARG_1 ARG_2
-```

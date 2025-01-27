@@ -30,9 +30,6 @@ jobs:
       - name: Install dependencies
         run: yarn install
 
-      - name: Create mock ENV
-        run: cp __mocks__/env.json env.json
-
       # Run tests
       - run: yarn tsc
       - run: yarn lint

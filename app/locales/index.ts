@@ -1,28 +1,22 @@
 import { useState } from 'react';
+import en from '@locales/en.json';
 import get from 'lodash/get';
-import en from './en.json';
 
-type AvailableLanguages = {
-  en: Object,
-};
-
-const availableLanguages: AvailableLanguages = {
-  en,
-};
+const availableLanguages = { en };
 
 type Props = {
-  t: Function,
-  setLanguage: Function,
+  t: (path: string) => string,
+  setLanguage: (key: string) => void,
 };
 
-export const t = (key: string, lng: string = 'en'): string => get(availableLanguages, `${lng}.${key}`, String(key));
+export const t = (path: string, lng: string = 'en'): string => get(availableLanguages, `${lng}.${path}`, path);
 
 const useLocale = (): Props => {
   const [lng, setLng] = useState('en');
 
   return {
-    t: (key: string) => t(key, lng),
-    setLanguage: (key: any) => setLng(key),
+    t: (path: string) => t(path, lng),
+    setLanguage: setLng,
   };
 };
 

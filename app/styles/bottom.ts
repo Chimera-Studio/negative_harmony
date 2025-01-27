@@ -1,7 +1,7 @@
 import { StyleSheet } from 'react-native';
-import { Font } from '.';
-import colors from './colors';
-import { deviceHeight } from '../utils';
+import { Font } from '@styles';
+import colors from '@styles/colors';
+import { deviceHeight } from '@utils';
 
 const smallScreenHeight = deviceHeight <= 700;
 
