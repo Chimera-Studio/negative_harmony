@@ -33,17 +33,10 @@ target 'NegativeHarmony' do
 
   pod 'RNDeviceInfo', :path => '../node_modules/react-native-device-info'
 
-  pod 'RNSound', :path => '../node_modules/react-native-sound'
-
   pod 'react-native-in-app-review', :path => '../node_modules/react-native-in-app-review'
 
   pod 'BVLinearGradient', :path => '../node_modules/react-native-linear-gradient'
   # CUSTOM DEPS - END
-
-  target 'NegativeHarmonyTests' do
-    inherit! :complete
-    # Pods for testing
-  end
 
   post_install do |installer|
     # https://github.com/facebook/react-native/blob/main/packages/react-native/scripts/react_native_pods.rb#L197-L202

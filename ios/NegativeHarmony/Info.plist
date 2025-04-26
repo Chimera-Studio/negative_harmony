@@ -36,6 +36,8 @@
 	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string></string>
+	<key>NSUserTrackingUsageDescription</key>
+  <string>This app uses minimal tracking that is anonymous and only used for analytics, no marketing.</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>NegativeHarmony-Bold.ttf</string>

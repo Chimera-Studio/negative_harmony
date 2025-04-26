@@ -52,18 +52,18 @@ function TonicSlider(props: Props) {
           {map(props.scales.positive, (note: string, index: number) => (
             <React.Fragment key={note + index}>
               {props.scales.positive.length - 1 !== index && (
-              <TouchableHighlight
-                style={[chordsStyle.scrollChordsNote, index === props.value && chordsStyle.scrollChordsNoteSelected]}
-                underlayColor={colors.lightBlue}
-                activeOpacity={1}
-                onPress={() => handlePress(index)}
-              >
-                <GridNote
-                  note={note}
-                  selected={index === props.value}
-                  fontSize={20}
-                />
-              </TouchableHighlight>
+                <TouchableHighlight
+                  style={[chordsStyle.scrollChordsNote, index === props.value && chordsStyle.scrollChordsNoteSelected]}
+                  underlayColor={colors.lightBlue}
+                  activeOpacity={1}
+                  onPress={() => handlePress(index)}
+                >
+                  <GridNote
+                    note={note}
+                    selected={index === props.value}
+                    fontSize={20}
+                  />
+                </TouchableHighlight>
               )}
             </React.Fragment>
           ))}

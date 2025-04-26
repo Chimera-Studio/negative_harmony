@@ -74,7 +74,7 @@ export const useReview = () => {
             const newTimestamp = addMonths(currentTime, 1).valueOf();
             localStorage.setItem(localStorageKeys.reviewTimestamp, JSON.stringify(newTimestamp));
           }
-        }).catch(() => {});
+        }).catch(() => { });
       }
     }
   };
@@ -112,15 +112,15 @@ export type ChordNotes = {
 };
 
 type SoundChords = {
-  positive: Sound[]
-  negative: Sound[]
+  positive: Array<any>
+  negative: Array<any>
 };
 
 export const useSoundChords = () => {
   const playbackRef = useRef<SoundChords>({ positive: [], negative: [] });
   Sound.setCategory('Playback');
 
-  const initSound = (soundPath: string): Sound => {
+  const initSound = (soundPath: string): any => {
     const sound = new Sound(soundPath, Sound.MAIN_BUNDLE, (error) => {
       if (error) return;
 
@@ -145,7 +145,7 @@ export const useSoundChords = () => {
   const switchChords = (chords: ChordNotes) => {
     const sounds = flatten(values(playbackRef.current));
     forEach(sounds, (sound) => {
-      sound.release();
+      sound?.release();
     });
     playbackRef.current = { positive: [], negative: [] };
     initChords(chords);
@@ -155,26 +155,25 @@ export const useSoundChords = () => {
     if (type === ChordPlaying.both) {
       const sounds = flatten(values(playbackRef.current));
       forEach(sounds, (sound) => {
-        sound.play();
+        sound?.play();
       });
 
       return;
     }
 
     forEach(playbackRef.current[type], (sound) => {
-      sound.play();
+      sound?.play();
     });
   };
 
   const pause = () => {
     const sounds = flatten(values(playbackRef.current));
     forEach(sounds, (sound) => {
-      sound.stop();
+      sound?.stop();
     });
   };
 
   return {
-    initChords,
     switchChords,
     play,
     pause,

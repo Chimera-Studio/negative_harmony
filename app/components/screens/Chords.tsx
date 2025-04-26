@@ -145,7 +145,7 @@ function Chords() {
 
   useEffect(() => {
     handleChords(selectedChord, tonic);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleSelect = (val: Object) => {

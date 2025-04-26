@@ -19,7 +19,7 @@ function ChordSounds(props: Props) {
   const { t } = useLocale();
   const chords = useSoundChords();
   const [chordPlaying, setChordPlaying] = useState<ChordPlaying | null>(null);
-  const timeoutRef = useRef<any>();
+  const timeoutRef = useRef<number>(undefined);
   const { data } = props;
 
   useEffect(() => {
@@ -27,7 +27,7 @@ function ChordSounds(props: Props) {
       positive: data.positive,
       negative: data.negative,
     });
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data.positive, data.negative]);
 
   useEffect(() => {
@@ -36,8 +36,10 @@ function ChordSounds(props: Props) {
       setChordPlaying(null);
     }, secondsToMilliseconds(5));
 
-    return () => clearTimeout(timeoutRef.current);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [chordPlaying]);
 
   const handlePlayPause = (type: ChordPlaying) => {
@@ -59,7 +61,7 @@ function ChordSounds(props: Props) {
         underlayColor={colors.blueTransparent}
         style={chordsStyle.soundButtonBoth}
       >
-        <>
+        <View style={chordsStyle.soundButtonContainer}>
           {chordPlaying === 'both' ? (
             <Pause fill={colors.white} style={chordsStyle.soundButtonIcon} />
           ) : (
@@ -73,7 +75,7 @@ function ChordSounds(props: Props) {
           >
             {t('chords.play_both')}
           </Text>
-        </>
+        </View>
       </TouchableHighlight>
       <View style={chordsStyle.soundButtonSplitWrapper}>
         <TouchableHighlight
@@ -81,7 +83,7 @@ function ChordSounds(props: Props) {
           underlayColor={colors.blueTransparent}
           style={chordsStyle.soundButton}
         >
-          <>
+          <View style={chordsStyle.soundButtonContainer}>
             {chordPlaying === 'positive' ? (
               <Pause fill={colors.white} style={chordsStyle.soundButtonIcon} />
             ) : (
@@ -103,14 +105,14 @@ function ChordSounds(props: Props) {
             >
               {data.positiveName}
             </Text>
-          </>
+          </View>
         </TouchableHighlight>
         <TouchableHighlight
           onPress={() => handlePlayPause(ChordPlaying.negative)}
           underlayColor={colors.blueTransparent}
           style={chordsStyle.soundButton}
         >
-          <>
+          <View style={chordsStyle.soundButtonContainer}>
             {chordPlaying === 'negative' ? (
               <Pause fill={colors.white} style={chordsStyle.soundButtonIcon} />
             ) : (
@@ -132,7 +134,7 @@ function ChordSounds(props: Props) {
             >
               {props.negativeChordName}
             </Text>
-          </>
+          </View>
         </TouchableHighlight>
       </View>
     </View>

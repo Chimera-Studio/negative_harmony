@@ -86,9 +86,9 @@ function BottomChords(props: Props) {
                     bottomStyle.name,
                     {
                       color:
-                          data.positiveName === '5 chord'
-                            ? colors.red
-                            : colors.negativeText,
+                        data.positiveName === '5 chord'
+                          ? colors.red
+                          : colors.negativeText,
                     },
                   ]}
                 >
