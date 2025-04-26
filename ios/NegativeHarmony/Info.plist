@@ -36,6 +36,7 @@
 	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string></string>
+	<!-- ios/Podfile setup_permissions() -->
 	<key>NSUserTrackingUsageDescription</key>
   <string>This app uses minimal tracking that is anonymous and only used for analytics, no marketing.</string>
 	<key>UIAppFonts</key>

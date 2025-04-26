@@ -77,7 +77,8 @@ You have to build it using Xcode `archive` command
 
 ### Debug
 
-file path: `node_modules/react-native-sound/sound.js` | line: `9`
+- file path: `node_modules/react-native-sound/sound.js`
+- line: `9`
 ```diff
 - var resolveAssetSource = require("react-native/Libraries/Image/resolveAssetSource");
 + var resolveAssetSource = ReactNative.Image.resolveAssetSource
